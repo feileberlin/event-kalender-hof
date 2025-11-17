@@ -6,6 +6,10 @@ let filteredEvents = [];
 
 // Initialisierung
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Event-Kalender initialisiert');
+    console.log('Anzahl aller Events:', allEvents.length);
+    console.log('Events:', allEvents);
+    
     initMap();
     calculateDawnTime();
     filterAndDisplayEvents();
@@ -36,16 +40,22 @@ function initMap() {
 // Morgendämmerung berechnen
 function calculateDawnTime() {
     const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    let dawnDate = new Date(now);
     
-    // Vereinfachte Berechnung für ~6:30 Uhr am nächsten Tag
-    const dawn = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 6, 30);
+    // Wenn es nach 6:30 Uhr ist, nimm morgen früh 6:30
+    // Wenn es vor 6:30 Uhr ist, nimm heute 6:30
+    if (now.getHours() >= 6 && now.getMinutes() >= 30) {
+        dawnDate.setDate(dawnDate.getDate() + 1);
+    }
+    
+    dawnDate.setHours(6, 30, 0, 0);
     
     const dawnElement = document.getElementById('dawnTime');
-    dawnElement.textContent = `⏰ Morgendämmerung: ${dawn.toLocaleDateString('de-DE')} ${dawn.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
+    if (dawnElement) {
+        dawnElement.textContent = `⏰ Events bis: ${dawnDate.toLocaleDateString('de-DE')} ${dawnDate.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
+    }
     
-    return dawn;
+    return dawnDate;
 }
 
 // Events filtern (nur kommende bis Morgendämmerung)
@@ -53,14 +63,21 @@ function getUpcomingEvents() {
     const now = new Date();
     const dawn = calculateDawnTime();
     
-    return allEvents.filter(event => {
+    console.log('Jetzt:', now);
+    console.log('Morgendämmerung:', dawn);
+    
+    const upcomingEvents = allEvents.filter(event => {
         const eventDateTime = new Date(`${event.date}T${event.startTime || '00:00'}`);
+        console.log(`Event: ${event.title}, Zeit: ${eventDateTime}, Kommend: ${eventDateTime >= now}, Vor Dämmerung: ${eventDateTime <= dawn}`);
         return eventDateTime >= now && eventDateTime <= dawn;
     }).sort((a, b) => {
         const dateA = new Date(`${a.date}T${a.startTime || '00:00'}`);
         const dateB = new Date(`${b.date}T${b.startTime || '00:00'}`);
         return dateA - dateB;
     });
+    
+    console.log('Gefilterte Events:', upcomingEvents.length);
+    return upcomingEvents;
 }
 
 // Events filtern und anzeigen
@@ -176,8 +193,10 @@ function displayEventsOnMap() {
 function displayEventList() {
     const eventList = document.getElementById('eventList');
     
+    console.log('Anzeige von', filteredEvents.length, 'Events');
+    
     if (filteredEvents.length === 0) {
-        eventList.innerHTML = '<div class="no-events">Keine Events gefunden. 😔</div>';
+        eventList.innerHTML = '<div class="no-events">Keine Events gefunden. 😔<br><small>Tipp: Ändere den Zeitfilter oder prüfe ob Events für die kommenden Stunden eingetragen sind.</small></div>';
         return;
     }
     
