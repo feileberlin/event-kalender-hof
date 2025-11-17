@@ -233,7 +233,9 @@ function useUserLocation() {
         return;
     }
     
-    document.getElementById('useLocation').textContent = '📍 Lade Position...';
+    const locationButton = document.getElementById('useLocation');
+    locationButton.textContent = '📍 Lade Position...';
+    locationButton.disabled = true;
     
     navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -255,14 +257,33 @@ function useUserLocation() {
                 .openPopup();
             
             map.setView([userLocation.lat, userLocation.lng], 14);
-            document.getElementById('useLocation').textContent = '✓ Standort aktiv';
-            document.getElementById('useLocation').classList.add('active');
+            locationButton.textContent = '✓ Standort aktiv';
+            locationButton.disabled = false;
+            locationButton.style.background = '#4CAF50';
             
             filterAndDisplayEvents();
         },
         (error) => {
-            alert('Standort konnte nicht ermittelt werden: ' + error.message);
-            document.getElementById('useLocation').textContent = '📍 Mein Standort';
+            let errorMessage = 'Standort konnte nicht ermittelt werden.';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = 'Standortzugriff wurde verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = 'Standortinformationen sind nicht verfügbar.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = 'Zeitüberschreitung bei der Standortabfrage.';
+                    break;
+            }
+            alert(errorMessage);
+            locationButton.textContent = '📍 Mein Standort';
+            locationButton.disabled = false;
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
         }
     );
 }
@@ -309,18 +330,45 @@ function getCategoryEmoji(category) {
 
 // Event-Listener einrichten
 function setupEventListeners() {
-    document.getElementById('searchInput').addEventListener('input', filterAndDisplayEvents);
-    document.getElementById('categoryFilter').addEventListener('change', filterAndDisplayEvents);
-    document.getElementById('timeFilter').addEventListener('change', filterAndDisplayEvents);
-    document.getElementById('radiusFilter').addEventListener('change', filterAndDisplayEvents);
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const timeFilter = document.getElementById('timeFilter');
+    const radiusFilter = document.getElementById('radiusFilter');
+    const resetFilters = document.getElementById('resetFilters');
+    const useLocation = document.getElementById('useLocation');
     
-    document.getElementById('resetFilters').addEventListener('click', () => {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('categoryFilter').value = '';
-        document.getElementById('timeFilter').value = 'all';
-        document.getElementById('radiusFilter').value = '999';
-        filterAndDisplayEvents();
-    });
+    if (searchInput) {
+        searchInput.addEventListener('input', filterAndDisplayEvents);
+    }
     
-    document.getElementById('useLocation').addEventListener('click', useUserLocation);
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterAndDisplayEvents);
+    }
+    
+    if (timeFilter) {
+        timeFilter.addEventListener('change', filterAndDisplayEvents);
+    }
+    
+    if (radiusFilter) {
+        radiusFilter.addEventListener('change', filterAndDisplayEvents);
+    }
+    
+    if (resetFilters) {
+        resetFilters.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            if (categoryFilter) categoryFilter.value = '';
+            if (timeFilter) timeFilter.value = 'all';
+            if (radiusFilter) radiusFilter.value = '999';
+            filterAndDisplayEvents();
+        });
+    }
+    
+    if (useLocation) {
+        useLocation.addEventListener('click', (e) => {
+            e.preventDefault();
+            useUserLocation();
+        });
+    }
+    
+    console.log('Event-Listener erfolgreich eingerichtet');
 }
