@@ -17,7 +17,7 @@
     --popart-bg: #FFF5F8;
 }
 
-/* Pop-Art Header */
+/* Pop-Art Header mit Hintergrundbild-Integration */
 .popart-header {
     background: linear-gradient(135deg, var(--popart-main) 0%, color-mix(in srgb, var(--popart-main) 70%, black) 100%);
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
@@ -25,6 +25,26 @@
     top: 0;
     z-index: 1000;
     border-bottom: 4px solid var(--popart-contrast);
+}
+
+/* Körper mit Lithographie-Hintergrund */
+body {
+    background-image: url('../images/litho_bg.jpg');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 245, 248, 0.75);
+    z-index: -1;
 }
 
 .popart-svg {

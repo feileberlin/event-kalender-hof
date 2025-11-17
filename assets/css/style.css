@@ -17,6 +17,24 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: var(--background);
     color: var(--text-color);
+    /* Dürer-Lithographie Hintergrundbild */
+    background-image: url('../images/litho_bg.jpg');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Overlay für bessere Lesbarkeit */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(248, 249, 250, 0.85);
+    z-index: -1;
 }
 
 /* Skeleton button overrides */
@@ -294,12 +312,13 @@ textarea:focus {
 }
 
 .event-card {
-    background: var(--card-background);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
     box-shadow: var(--shadow);
     transition: all 0.3s;
     cursor: pointer;
     overflow: hidden;
+    backdrop-filter: blur(10px);
 }
 
 .event-card:hover {
