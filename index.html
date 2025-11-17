@@ -3,67 +3,86 @@ layout: popart
 title: "Event-Kalender Hof"
 ---
 
-<div class="calendar-container">
-    <!-- Suchmaske und Filter -->
-    <div class="search-filter-section">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 Events durchsuchen..." />
+<div class="container">
+    <div class="calendar-container">
+        <!-- Suchmaske und Filter -->
+        <div class="search-filter-section">
+            <div class="row">
+                <div class="twelve columns">
+                    <input type="text" id="searchInput" class="u-full-width" placeholder="🔍 Events durchsuchen..." />
+                </div>
+            </div>
+            
+            <div class="filters">
+                <div class="row">
+                    <div class="three columns">
+                        <label for="categoryFilter">Kategorie</label>
+                        <select id="categoryFilter" class="u-full-width">
+                            <option value="">Alle Kategorien</option>
+                            <option value="Musik">Musik</option>
+                            <option value="Theater">Theater</option>
+                            <option value="Sport">Sport</option>
+                            <option value="Kultur">Kultur</option>
+                            <option value="Markt">Markt</option>
+                            <option value="Fest">Fest</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                    
+                    <div class="three columns">
+                        <label for="timeFilter">Zeitraum</label>
+                        <select id="timeFilter" class="u-full-width">
+                            <option value="all">Bis Sonnenaufgang</option>
+                            <option value="today">Heute</option>
+                            <option value="tomorrow">Morgen</option>
+                            <option value="next-hours">Nächste 6 Stunden</option>
+                        </select>
+                    </div>
+                    
+                    <div class="two columns">
+                        <label for="radiusFilter">Umkreis</label>
+                        <select id="radiusFilter" class="u-full-width">
+                            <option value="999">Alle</option>
+                            <option value="1">1 km</option>
+                            <option value="2">2 km</option>
+                            <option value="5">5 km</option>
+                            <option value="10">10 km</option>
+                        </select>
+                    </div>
+                    
+                    <div class="four columns">
+                        <label>&nbsp;</label>
+                        <button id="resetFilters" class="button">Filter zurücksetzen</button>
+                        <button id="useLocation" class="button button-primary">📍 Mein Standort</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="twelve columns info-banner">
+                    <span id="eventCount">0 Events</span> gefunden
+                    <span id="dawnTime" style="margin-left: 20px;"></span>
+                </div>
+            </div>
         </div>
         
-        <div class="filters">
-            <div class="filter-group">
-                <label for="categoryFilter">Kategorie:</label>
-                <select id="categoryFilter">
-                    <option value="">Alle Kategorien</option>
-                    <option value="Musik">Musik</option>
-                    <option value="Theater">Theater</option>
-                    <option value="Sport">Sport</option>
-                    <option value="Kultur">Kultur</option>
-                    <option value="Markt">Markt</option>
-                    <option value="Fest">Fest</option>
-                    <option value="Sonstiges">Sonstiges</option>
-                </select>
+        <!-- Karte -->
+        <div class="row">
+            <div class="twelve columns">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
             </div>
-            
-            <div class="filter-group">
-                <label for="timeFilter">Zeitraum:</label>
-                <select id="timeFilter">
-                    <option value="all">Bis Sonnenaufgang</option>
-                    <option value="today">Heute</option>
-                    <option value="tomorrow">Morgen</option>
-                    <option value="next-hours">Nächste 6 Stunden</option>
-                </select>
-            </div>
-            
-            <div class="filter-group">
-                <label for="radiusFilter">Umkreis:</label>
-                <select id="radiusFilter">
-                    <option value="999">Alle</option>
-                    <option value="1">1 km</option>
-                    <option value="2">2 km</option>
-                    <option value="5">5 km</option>
-                    <option value="10">10 km</option>
-                </select>
-            </div>
-            
-            <button id="resetFilters" class="btn-secondary">Filter zurücksetzen</button>
-            <button id="useLocation" class="btn-primary">📍 Mein Standort</button>
         </div>
         
-        <div class="info-banner">
-            <span id="eventCount">0 Events</span> gefunden
-            <span id="dawnTime" style="margin-left: 20px;"></span>
+        <!-- Event-Liste (wird dynamisch gefüllt) -->
+        <div class="row">
+            <div class="twelve columns">
+                <div class="event-list" id="eventList">
+                    <div class="loading">Lade Events...</div>
+                </div>
+            </div>
         </div>
-    </div>
-    
-    <!-- Karte -->
-    <div class="map-container">
-        <div id="map"></div>
-    </div>
-    
-    <!-- Event-Liste (wird dynamisch gefüllt) -->
-    <div class="event-list" id="eventList">
-        <div class="loading">Lade Events...</div>
     </div>
 </div>
 

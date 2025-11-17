@@ -1,4 +1,5 @@
 /* Event-Kalender Hof - Stylesheet */
+/* Skeleton CSS Framework Integration */
 
 :root {
     --primary-color: #2c3e50;
@@ -11,17 +12,61 @@
     --shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* Skeleton overrides and enhancements */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: var(--background);
     color: var(--text-color);
-    line-height: 1.6;
+}
+
+/* Skeleton button overrides */
+.button,
+button {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.button:hover,
+button:hover,
+.button:focus,
+button:focus {
+    background-color: #6d3710;
+    border-color: #6d3710;
+    color: white;
+}
+
+.button.button-primary,
+button.button-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.button.button-primary:hover,
+button.button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus {
+    background-color: #1a252f;
+    border-color: #1a252f;
+}
+
+/* Skeleton input overrides */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+select,
+textarea {
+    border-color: var(--border-color);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary-color);
 }
 
 /* Header mit Scherenschnitt */
@@ -187,6 +232,7 @@ body {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: var(--shadow);
+    margin-bottom: 30px;
 }
 
 #map {
