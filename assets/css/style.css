@@ -108,6 +108,15 @@ textarea:focus {
     display: block;
 }
 
+/* Skeleton Container mit Hintergrund-Transparenz */
+.container {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 30px 20px;
+    backdrop-filter: blur(10px);
+}
+
 /* Main Content */
 .site-content {
     min-height: calc(100vh - 400px);
