@@ -1,0 +1,75 @@
+---
+layout: default
+---
+
+<article class="event-detail">
+    <h1>{{ page.title }}</h1>
+    
+    <div class="event-meta">
+        <div class="event-datetime">
+            <strong>📅 Datum:</strong> {{ page.date | date: "%d.%m.%Y" }}<br>
+            <strong>🕐 Zeit:</strong> {{ page.start_time }}{% if page.end_time %} - {{ page.end_time }}{% endif %} Uhr
+        </div>
+        
+        <div class="event-location">
+            <strong>📍 Ort:</strong> {{ page.location }}<br>
+            {% if page.address %}
+            <span class="address">{{ page.address }}</span>
+            {% endif %}
+        </div>
+        
+        {% if page.category %}
+        <div class="event-category">
+            <strong>Kategorie:</strong> <span class="category-badge">{{ page.category }}</span>
+        </div>
+        {% endif %}
+        
+        {% if page.tags %}
+        <div class="event-tags">
+            <strong>Tags:</strong>
+            {% for tag in page.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if page.description %}
+    <div class="event-description">
+        <p>{{ page.description }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="event-content">
+        {{ content }}
+    </div>
+    
+    {% if page.coordinates %}
+    <div class="event-map">
+        <h2>Standort</h2>
+        <div id="eventMap" style="height: 300px; margin: 20px 0;"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const map = L.map('eventMap').setView([{{ page.coordinates.lat }}, {{ page.coordinates.lng }}], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                L.marker([{{ page.coordinates.lat }}, {{ page.coordinates.lng }}])
+                    .addTo(map)
+                    .bindPopup('<strong>{{ page.title }}</strong><br>{{ page.location }}')
+                    .openPopup();
+            });
+        </script>
+    </div>
+    {% endif %}
+    
+    {% if page.url %}
+    <div class="event-link">
+        <a href="{{ page.url }}" target="_blank" class="btn-primary">Mehr Informationen</a>
+    </div>
+    {% endif %}
+    
+    <div class="event-footer">
+        <a href="/" class="btn-secondary">← Zurück zur Übersicht</a>
+    </div>
+</article>

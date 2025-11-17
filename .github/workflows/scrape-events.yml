@@ -1,0 +1,53 @@
+name: Event Scraper
+
+on:
+  schedule:
+    # Täglich um 6:00 und 18:00 Uhr (UTC)
+    - cron: '0 6,18 * * *'
+  workflow_dispatch: # Manuelle Ausführung ermöglichen
+
+permissions:
+  contents: write
+
+jobs:
+  scrape-events:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Run Event Scraper
+        run: |
+          python scripts/scrape_events.py
+      
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          git diff --quiet _events/ || echo "changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and Push Changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add _events/
+          git commit -m "🤖 Auto-scraped events [$(date +'%Y-%m-%d %H:%M')]"
+          git push
+      
+      - name: No Changes
+        if: steps.check_changes.outputs.changes != 'true'
+        run: |
+          echo "ℹ️ Keine neuen Events gefunden"

@@ -1,0 +1,304 @@
+# 📊 Projekt-Übersicht: Event-Kalender Hof
+
+## Zusammenfassung
+
+Der Event-Kalender Hof ist eine Jekyll-basierte Website für GitHub Pages, die automatisch Events aus verschiedenen Quellen sammelt und auf einer interaktiven Karte darstellt. Das Besondere: Es werden nur Events bis zur Morgendämmerung angezeigt - perfekt für spontane Abendplanungen!
+
+## 🎯 Kernfunktionen
+
+### 1. Interaktive Event-Karte
+- **Technologie**: Leaflet.js + OpenStreetMap
+- **Zentrum**: Rathaus Hof an der Saale (50.3197, 11.9168)
+- **Features**: 
+  - Automatische Marker für Events
+  - Click-to-focus Funktionalität
+  - Responsive Design
+  - Geolocation-Unterstützung
+
+### 2. Intelligente Zeitfilterung
+- Zeigt nur Events bis zur nächsten Morgendämmerung
+- Berechnung: ~6:30 Uhr am Folgetag
+- Zusätzliche Filter: Heute, Morgen, Nächste 6 Stunden
+
+### 3. Automatisches Event-Scraping
+- **GitHub Actions**: Täglich um 6:00 und 18:00 UTC
+- **Duplikatsprüfung**: Hash-basiert
+- **Status-System**: Entwurf → Öffentlich
+- **Quellen**: Erweiterbar (aktuell 2 Beispiel-Quellen)
+
+### 4. Admin-Interface
+- Übersicht aller Events
+- Entwürfe verwalten
+- Direkte GitHub-Integration
+- Statistiken Dashboard
+
+### 5. Scherenschnitt-Design
+- Historisches Flair im Stil Albrecht Dürers
+- SVG-basierte Grafiken
+- Altstadt-Silhouette mit Wirtshäusern
+- Animierte Butzenfenster mit Kerzenlicht
+
+## 📁 Dateistruktur
+
+```
+event-kalender-hof/
+├── 📄 Konfiguration
+│   ├── _config.yml           # Jekyll-Config
+│   ├── Gemfile               # Ruby-Gems
+│   ├── requirements.txt      # Python-Packages
+│   └── .gitignore            # Git-Ignore
+│
+├── 🎨 Layouts & Templates
+│   ├── _layouts/
+│   │   ├── default.html      # Haupt-Layout
+│   │   └── event.html        # Event-Details
+│   ├── index.html            # Hauptseite
+│   └── admin.html            # Admin-Interface
+│
+├── 💎 Assets
+│   ├── assets/css/
+│   │   └── style.css         # Haupt-Stylesheet (600+ Zeilen)
+│   └── assets/js/
+│       └── main.js           # JavaScript-Logik (350+ Zeilen)
+│
+├── 📅 Content
+│   └── _events/              # Event-Markdown-Dateien
+│       ├── 2025-11-18-beispiel-konzert.md
+│       ├── 2025-11-25-jazz-night-in-der-freiheitshalle.md
+│       └── 2025-12-15-weihnachtsmarkt-hof.md
+│
+├── 🤖 Automation
+│   ├── .github/workflows/
+│   │   ├── jekyll.yml        # Build & Deploy
+│   │   └── scrape-events.yml # Auto-Scraping
+│   └── scripts/
+│       └── scrape_events.py  # Event-Scraper (300+ Zeilen)
+│
+├── 📚 Dokumentation
+│   ├── README.md             # Hauptdokumentation (900+ Zeilen)
+│   ├── QUICKSTART.md         # Schnellstart
+│   ├── CONTRIBUTING.md       # Contribution Guide
+│   ├── CHANGELOG.md          # Änderungsprotokoll
+│   ├── CODE_OF_CONDUCT.md    # Code of Conduct
+│   └── LICENSE               # MIT-Lizenz
+│
+└── 🛠️ Tools
+    ├── setup.sh              # Setup-Skript
+    └── dev.sh                # Dev-Server-Skript
+```
+
+## 🔧 Technischer Stack
+
+### Frontend
+| Technologie | Version | Zweck |
+|------------|---------|-------|
+| Jekyll | 4.3 | Static Site Generator |
+| Leaflet.js | 1.9.4 | Kartenvisualisierung |
+| JavaScript | ES6+ | Interaktivität |
+| CSS3 | - | Styling (Flexbox, Grid) |
+| HTML5 | - | Struktur |
+
+### Backend/Automation
+| Technologie | Version | Zweck |
+|------------|---------|-------|
+| Python | 3.11+ | Scraping & Automation |
+| BeautifulSoup4 | 4.12+ | HTML-Parsing |
+| PyYAML | 6.0+ | YAML-Verarbeitung |
+| Requests | 2.31+ | HTTP-Requests |
+
+### CI/CD
+| Service | Zweck |
+|---------|-------|
+| GitHub Actions | Automatisierung |
+| GitHub Pages | Hosting |
+
+## 📊 Datenmodell
+
+### Event-Struktur (YAML)
+
+```yaml
+title: String         # Event-Titel (Pflicht)
+date: Date           # YYYY-MM-DD (Pflicht)
+start_time: String   # HH:MM (Pflicht)
+end_time: String     # HH:MM (Optional)
+location: String     # Ort (Pflicht)
+address: String      # Vollständige Adresse (Optional)
+coordinates:         # GPS-Koordinaten (Pflicht)
+  lat: Float
+  lng: Float
+category: String     # Kategorie (Optional)
+tags: Array          # Tags (Optional)
+description: String  # Beschreibung (Optional)
+url: String          # Externe URL (Optional)
+image: String        # Bild-URL (Optional)
+status: String       # "Entwurf" oder "Öffentlich" (Pflicht)
+source: String       # Datenquelle (Optional)
+event_hash: String   # Hash für Duplikatsprüfung (Optional)
+```
+
+### Kategorien
+
+1. 🎵 **Musik** - Konzerte, Festivals, Live-Musik
+2. 🎭 **Theater** - Schauspiel, Kabarett, Comedy
+3. ⚽ **Sport** - Sportveranstaltungen, Turniere
+4. 🎨 **Kultur** - Ausstellungen, Lesungen, Kunst
+5. 🛒 **Markt** - Wochenmärkte, Flohmärkte
+6. 🎉 **Fest** - Stadtfeste, Volksfeste
+7. 📅 **Sonstiges** - Andere Events
+
+## 🔄 Workflows
+
+### Automatisches Scraping
+
+```mermaid
+graph LR
+A[GitHub Actions Trigger] --> B[Python Scraper]
+B --> C[Event-Quellen scrapen]
+C --> D[Duplikate prüfen]
+D --> E[YAML-Dateien erstellen]
+E --> F[Git Commit & Push]
+F --> G[Jekyll Build]
+G --> H[GitHub Pages Deploy]
+```
+
+**Frequenz**: Täglich 6:00 & 18:00 UTC  
+**Status**: Neue Events als "Entwurf"
+
+### Admin-Workflow
+
+```mermaid
+graph LR
+A[Admin öffnet Interface] --> B[Entwürfe prüfen]
+B --> C[Event bearbeiten]
+C --> D[Status ändern]
+D --> E[Commit auf GitHub]
+E --> F[Automatisches Deployment]
+```
+
+### User-Experience
+
+```mermaid
+graph LR
+A[User öffnet Website] --> B[Standort erfassen optional]
+B --> C[Events bis Morgendämmerung laden]
+C --> D[Auf Karte anzeigen]
+D --> E[Filter anwenden]
+E --> F[Event-Details öffnen]
+```
+
+## 📈 Performance-Metriken
+
+### Geschwindigkeit
+- **Build-Zeit**: ~30 Sekunden (Jekyll)
+- **Deployment**: ~2 Minuten (GitHub Actions)
+- **Seitenladezeit**: <2 Sekunden
+- **Kartenladezeit**: <1 Sekunde
+
+### Kapazität
+- **Max Events**: Unbegrenzt (Jekyll-Collection)
+- **Scraping-Rate**: 10-20 Events pro Durchlauf
+- **Speicherbedarf**: ~1 MB pro 100 Events
+
+## 🔒 Sicherheit
+
+### Authentifizierung
+- **Admin**: GitHub OAuth (implizit)
+- **User**: Keine Anmeldung erforderlich
+
+### Daten
+- **Keine persönlichen Daten** gespeichert
+- **Geolocation**: Nur temporär im Browser
+- **Cookies**: Keine (rein statisch)
+
+### Dependencies
+- Automatische Updates via Dependabot
+- Security-Scanning via GitHub
+
+## 🎨 Design-System
+
+### Farbpalette
+
+```css
+--primary-color: #2c3e50    /* Dunkelblau */
+--secondary-color: #8b4513  /* Braun */
+--accent-color: #ffaa33     /* Orange/Gold */
+--background: #f8f9fa       /* Hellgrau */
+```
+
+### Typografie
+- **Primär**: Segoe UI, Tahoma, Geneva
+- **Größen**: 14px (Body), 16-32px (Headlines)
+- **Gewichte**: 400 (Normal), 600 (Semi-Bold), 700 (Bold)
+
+### Komponenten
+- Event-Karten (Cards)
+- Filter-Leisten
+- Modals
+- Buttons (Primary, Secondary, Small)
+- Badges (Status, Kategorie, Tags)
+
+## 🚀 Deployment
+
+### GitHub Pages
+1. **Build**: Jekyll kompiliert Markdown → HTML
+2. **Deploy**: GitHub Actions pusht zu gh-pages Branch
+3. **Serve**: GitHub Pages hostet statische Files
+
+### Custom Domain (optional)
+1. CNAME-Datei erstellen
+2. DNS-Einträge setzen
+3. HTTPS automatisch via Let's Encrypt
+
+## 📊 Monitoring & Analytics (optional)
+
+### Google Analytics Integration
+
+```html
+<!-- In _layouts/default.html -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_ID');
+</script>
+```
+
+### Plausible Analytics (Privacy-friendly)
+
+```html
+<script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
+```
+
+## 🔮 Roadmap
+
+### v1.1 (Q1 2026)
+- [ ] RSS-Feed
+- [ ] iCal-Export
+- [ ] Mehr Event-Quellen
+
+### v1.2 (Q2 2026)
+- [ ] PWA-Support
+- [ ] Dark Mode
+- [ ] Mehrsprachigkeit
+
+### v2.0 (Q3 2026)
+- [ ] KI-gestützte Event-Beschreibungen
+- [ ] Social Media Integration
+- [ ] Event-Empfehlungen
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/feileberlin/event-kalender-hof/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
+- **Dokumentation**: [README.md](README.md)
+
+## 📜 Lizenz
+
+MIT License - Siehe [LICENSE](LICENSE)
+
+---
+
+**Stand**: 17. November 2025  
+**Version**: 1.0.0  
+**Maintainer**: feileberlin

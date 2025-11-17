@@ -1,0 +1,498 @@
+---
+layout: default
+title: "Admin - Event-Verwaltung"
+---
+
+<style>
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.admin-header h1 {
+    margin: 0 0 10px 0;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    display: block;
+}
+
+.stat-label {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.tab-button {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+    color: #2c3e50;
+}
+
+.tab-button.active {
+    color: #2c3e50;
+    border-bottom-color: #2c3e50;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.event-admin-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #ffc107;
+}
+
+.event-admin-card.published {
+    border-left-color: #4caf50;
+}
+
+.event-admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+}
+
+.event-admin-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.event-status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.event-status-badge.draft {
+    background: #ffc107;
+    color: #000;
+}
+
+.event-status-badge.published {
+    background: #4caf50;
+    color: white;
+}
+
+.event-admin-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.event-admin-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-edit, .btn-publish, .btn-delete, .btn-preview {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-edit {
+    background: #2196f3;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #1976d2;
+}
+
+.btn-publish {
+    background: #4caf50;
+    color: white;
+}
+
+.btn-publish:hover {
+    background: #388e3c;
+}
+
+.btn-delete {
+    background: #f44336;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #d32f2f;
+}
+
+.btn-preview {
+    background: #ff9800;
+    color: white;
+}
+
+.btn-preview:hover {
+    background: #f57c00;
+}
+
+.edit-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 90%;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-modal {
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+}
+
+.close-modal:hover {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    color: #1565c0;
+}
+
+.alert-warning {
+    background: #fff3e0;
+    border-left: 4px solid #ff9800;
+    color: #e65100;
+}
+</style>
+
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>🔧 Admin-Bereich</h1>
+        <p>Event-Verwaltung für Hof an der Saale</p>
+        
+        <div class="admin-stats">
+            <div class="stat-card">
+                <span class="stat-number" id="stat-total">0</span>
+                <span class="stat-label">Gesamt Events</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="stat-drafts">0</span>
+                <span class="stat-label">Entwürfe</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="stat-published">0</span>
+                <span class="stat-label">Veröffentlicht</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="stat-upcoming">0</span>
+                <span class="stat-label">Kommende</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-warning">
+        <strong>⚠️ Hinweis:</strong> Dies ist eine vereinfachte Admin-Oberfläche. 
+        Für vollständige Event-Bearbeitung öffne die Markdown-Dateien direkt im Repository 
+        unter <code>_events/</code> oder nutze die GitHub Web-Oberfläche.
+    </div>
+
+    <div class="admin-tabs">
+        <button class="tab-button active" onclick="switchTab('drafts')">📝 Entwürfe</button>
+        <button class="tab-button" onclick="switchTab('published')">✓ Veröffentlicht</button>
+        <button class="tab-button" onclick="switchTab('all')">📋 Alle Events</button>
+    </div>
+
+    <div id="tab-drafts" class="tab-content active">
+        <h2>Entwürfe zur Überprüfung</h2>
+        <div id="drafts-list"></div>
+    </div>
+
+    <div id="tab-published" class="tab-content">
+        <h2>Veröffentlichte Events</h2>
+        <div id="published-list"></div>
+    </div>
+
+    <div id="tab-all" class="tab-content">
+        <h2>Alle Events</h2>
+        <div id="all-list"></div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="edit-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Event bearbeiten</h2>
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+        </div>
+        
+        <div class="alert alert-info">
+            <strong>ℹ️ Info:</strong> Änderungen werden als GitHub Issue vorgeschlagen, 
+            da direkte Dateibearbeitung aus dem Browser nur mit GitHub API möglich ist.
+        </div>
+        
+        <div id="editForm">
+            <!-- Wird dynamisch gefüllt -->
+        </div>
+    </div>
+</div>
+
+<script>
+// Alle Events aus Jekyll laden
+const allEvents = [
+    {% for event in site.events %}
+    {
+        title: {{ event.title | jsonify }},
+        date: "{{ event.date | date: '%Y-%m-%d' }}",
+        startTime: "{{ event.start_time }}",
+        endTime: "{{ event.end_time }}",
+        location: {{ event.location | jsonify }},
+        category: {{ event.category | jsonify }},
+        description: {{ event.description | jsonify }},
+        status: {{ event.status | jsonify }},
+        source: {{ event.source | jsonify }},
+        url: "{{ event.url | relative_url }}",
+        filename: "{{ event.path | split: '/' | last }}"
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+];
+
+// Statistiken berechnen
+function calculateStats() {
+    const now = new Date();
+    const drafts = allEvents.filter(e => e.status === 'Entwurf');
+    const published = allEvents.filter(e => e.status === 'Öffentlich');
+    const upcoming = allEvents.filter(e => {
+        const eventDate = new Date(e.date + 'T' + (e.startTime || '00:00'));
+        return eventDate >= now;
+    });
+    
+    document.getElementById('stat-total').textContent = allEvents.length;
+    document.getElementById('stat-drafts').textContent = drafts.length;
+    document.getElementById('stat-published').textContent = published.length;
+    document.getElementById('stat-upcoming').textContent = upcoming.length;
+}
+
+// Events anzeigen
+function displayEvents(filter = 'all') {
+    let events = allEvents;
+    
+    if (filter === 'drafts') {
+        events = events.filter(e => e.status === 'Entwurf');
+    } else if (filter === 'published') {
+        events = events.filter(e => e.status === 'Öffentlich');
+    }
+    
+    // Nach Datum sortieren
+    events.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    const listId = filter === 'all' ? 'all-list' : 
+                   filter === 'drafts' ? 'drafts-list' : 'published-list';
+    const container = document.getElementById(listId);
+    
+    if (events.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">Keine Events gefunden.</p>';
+        return;
+    }
+    
+    container.innerHTML = events.map(event => `
+        <div class="event-admin-card ${event.status === 'Öffentlich' ? 'published' : ''}">
+            <div class="event-admin-header">
+                <h3 class="event-admin-title">${event.title}</h3>
+                <span class="event-status-badge ${event.status === 'Entwurf' ? 'draft' : 'published'}">
+                    ${event.status}
+                </span>
+            </div>
+            
+            <div class="event-admin-meta">
+                <div><strong>📅 Datum:</strong> ${new Date(event.date).toLocaleDateString('de-DE')}</div>
+                <div><strong>🕐 Zeit:</strong> ${event.startTime || 'N/A'}</div>
+                <div><strong>📍 Ort:</strong> ${event.location}</div>
+                <div><strong>🏷️ Kategorie:</strong> ${event.category || 'N/A'}</div>
+                <div><strong>📦 Quelle:</strong> ${event.source || 'Manuell'}</div>
+            </div>
+            
+            <p><strong>Beschreibung:</strong> ${event.description || 'Keine Beschreibung'}</p>
+            
+            <div class="event-admin-actions">
+                <button class="btn-preview" onclick="window.open('${event.url}', '_blank')">
+                    👁️ Vorschau
+                </button>
+                <button class="btn-edit" onclick="editEvent('${event.filename}')">
+                    ✏️ Bearbeiten (GitHub)
+                </button>
+                ${event.status === 'Entwurf' ? 
+                    `<button class="btn-publish" onclick="publishEvent('${event.filename}')">
+                        ✓ Publizieren
+                    </button>` : ''}
+                <button class="btn-delete" onclick="deleteEvent('${event.filename}')">
+                    🗑️ Löschen
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Tabs wechseln
+function switchTab(tab) {
+    // Tab-Buttons aktualisieren
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Tab-Content aktualisieren
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    
+    // Events anzeigen
+    displayEvents(tab);
+}
+
+// Event bearbeiten (zu GitHub weiterleiten)
+function editEvent(filename) {
+    const repoUrl = 'https://github.com/feileberlin/event-kalender-hof';
+    const editUrl = `${repoUrl}/edit/main/_events/${filename}`;
+    window.open(editUrl, '_blank');
+}
+
+// Event publizieren
+function publishEvent(filename) {
+    if (confirm(`Event "${filename}" wirklich veröffentlichen?\n\nDies ändert den Status von "Entwurf" auf "Öffentlich".`)) {
+        alert(`Um das Event zu publizieren, öffne die Datei _events/${filename} und ändere:\n\nstatus: "Entwurf"\n→\nstatus: "Öffentlich"\n\nDann committe und pushe die Änderung.`);
+        editEvent(filename);
+    }
+}
+
+// Event löschen
+function deleteEvent(filename) {
+    if (confirm(`Event "${filename}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden!`)) {
+        alert(`Um das Event zu löschen, entferne die Datei _events/${filename} aus dem Repository und committe die Änderung.`);
+        const repoUrl = 'https://github.com/feileberlin/event-kalender-hof';
+        window.open(`${repoUrl}/tree/main/_events`, '_blank');
+    }
+}
+
+// Modal schließen
+function closeModal() {
+    document.getElementById('editModal').classList.remove('active');
+}
+
+// Initialisierung
+document.addEventListener('DOMContentLoaded', function() {
+    calculateStats();
+    displayEvents('drafts');
+});
+</script>

@@ -1,0 +1,47 @@
+# Event-Kalender Hof an der Saale
+title: "hof.ist/jetzt"
+description: "Events bis Sonnenaufgang in Hof an der Saale"
+baseurl: ""
+url: "https://feileberlin.github.io"
+
+# Jekyll Einstellungen
+markdown: kramdown
+permalink: pretty
+timezone: Europe/Berlin
+
+# Collections
+collections:
+  events:
+    output: true
+    permalink: /events/:name/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "events"
+    values:
+      layout: "event"
+      status: "Entwurf"
+
+# Hof an der Saale Koordinaten (Rathaus)
+default_center:
+  lat: 50.3197
+  lng: 11.9168
+
+# Plugins (GitHub Pages kompatibel)
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude
+exclude:
+  - scripts/
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - "*.py"
+  - requirements.txt
+  - .github/
