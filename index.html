@@ -86,6 +86,7 @@ title: "Event-Kalender Hof"
     </div>
 </div>
 
+<!-- Event-Daten MÜSSEN VOR main.js geladen werden -->
 <script>
 // Event-Daten aus Jekyll
 const allEvents = [
@@ -119,4 +120,7 @@ const config = {
     },
     defaultZoom: 13
 };
+
+console.log('Event-Daten geladen:', allEvents.length, 'Events');
+console.log('Config:', config);
 </script>
