@@ -115,6 +115,7 @@ textarea:focus {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     padding: 30px 20px;
     backdrop-filter: blur(10px);
+    position: relative;
 }
 
 /* Main Content */
@@ -260,11 +261,50 @@ textarea:focus {
     overflow: hidden;
     box-shadow: var(--shadow);
     margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.95);
 }
 
 #map {
     width: 100%;
     height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Leaflet Container Fix */
+.leaflet-container {
+    background: #ddd !important;
+    outline: 0;
+}
+
+.leaflet-tile-pane {
+    z-index: 200;
+}
+
+.leaflet-overlay-pane {
+    z-index: 400;
+}
+
+.leaflet-shadow-pane {
+    z-index: 500;
+}
+
+.leaflet-marker-pane {
+    z-index: 600;
+}
+
+.leaflet-tooltip-pane {
+    z-index: 650;
+}
+
+.leaflet-popup-pane {
+    z-index: 700;
+}
+
+.leaflet-map-pane canvas {
+    z-index: 100;
 }
 
 /* Custom Marker */

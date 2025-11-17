@@ -18,23 +18,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Karte initialisieren
 function initMap() {
-    map = L.map('map').setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
+    console.log('Initialisiere Karte...');
     
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
-    }).addTo(map);
+    // Prüfen, ob das Karten-Element existiert
+    const mapElement = document.getElementById('map');
+    if (!mapElement) {
+        console.error('Karten-Element nicht gefunden!');
+        return;
+    }
     
-    // Rathaus-Marker (Zentrum)
-    const rathausIcon = L.divIcon({
-        className: 'rathaus-marker',
-        html: '<div class="marker-icon">🏛️</div>',
-        iconSize: [30, 30]
-    });
-    
-    L.marker([config.defaultCenter.lat, config.defaultCenter.lng], {icon: rathausIcon})
-        .addTo(map)
-        .bindPopup('<strong>Rathaus Hof an der Saale</strong><br>Zentrum des Kalenders');
+    try {
+        map = L.map('map').setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Rathaus-Marker (Zentrum)
+        const rathausIcon = L.divIcon({
+            className: 'rathaus-marker',
+            html: '<div class="marker-icon">🏛️</div>',
+            iconSize: [30, 30]
+        });
+        
+        L.marker([config.defaultCenter.lat, config.defaultCenter.lng], {icon: rathausIcon})
+            .addTo(map)
+            .bindPopup('<strong>Rathaus Hof an der Saale</strong><br>Zentrum des Kalenders');
+        
+        console.log('Karte erfolgreich initialisiert');
+        
+        // Karte nach kurzer Verzögerung neu laden (für korrekte Tile-Darstellung)
+        setTimeout(() => {
+            map.invalidateSize();
+            console.log('Kartengröße aktualisiert');
+        }, 100);
+    } catch (error) {
+        console.error('Fehler beim Initialisieren der Karte:', error);
+    }
 }
 
 // Morgendämmerung berechnen
