@@ -12,8 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initMap();
     calculateDawnTime();
-    filterAndDisplayEvents();
-    setupEventListeners();
+    
+    // Warten bis Karte geladen ist, dann Events anzeigen
+    setTimeout(() => {
+        filterAndDisplayEvents();
+        setupEventListeners();
+    }, 200);
 });
 
 // Karte initialisieren
@@ -174,12 +178,21 @@ function updateEventCount() {
 
 // Events auf Karte anzeigen
 function displayEventsOnMap() {
+    if (!map) {
+        console.error('Karte noch nicht initialisiert');
+        return;
+    }
+    
+    console.log('Zeige', filteredEvents.length, 'Events auf Karte');
+    
     // Alte Marker entfernen
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
     
     // Neue Marker hinzufügen
     filteredEvents.forEach((event, index) => {
+        console.log(`Marker für Event: ${event.title} bei [${event.coordinates.lat}, ${event.coordinates.lng}]`);
+        
         const eventIcon = L.divIcon({
             className: 'event-marker',
             html: `<div class="marker-icon" style="background: ${getCategoryColor(event.category)}">${getCategoryEmoji(event.category)}</div>`,
@@ -203,10 +216,15 @@ function displayEventsOnMap() {
         markers.push(marker);
     });
     
-    // Karte an Marker anpassen
+    // Karte an Marker anpassen oder auf Standard-Zentrum setzen
     if (markers.length > 0) {
         const group = L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.1));
+        console.log('Karte an', markers.length, 'Marker angepasst');
+    } else {
+        // Wenn keine Marker, zeige Standard-Ansicht
+        map.setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
+        console.log('Keine Marker - Standard-Ansicht');
     }
 }
 
