@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title | default: site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/popart.css' | relative_url }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    {% seo %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="popart-header">
+            <!-- Pop-Art Lithographie im Dürer-Stil: "Der Feldhase" -->
+            <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" class="popart-svg">
+                <defs>
+                    <!-- Halftone-Pattern für Lithographie-Effekt -->
+                    <pattern id="halftone" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+                        <circle cx="4" cy="4" r="2" fill="currentColor" opacity="0.3"/>
+                    </pattern>
+                    
+                    <!-- Raster für Warhol-Effekt -->
+                    <pattern id="dots" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+                        <circle cx="5" cy="5" r="3" fill="currentColor" opacity="0.6"/>
+                    </pattern>
+                    
+                    <!-- Schraffur-Patterns à la Dürer -->
+                    <pattern id="crosshatch" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                        <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="3" y1="0" x2="3" y2="6" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                    </pattern>
+                    
+                    <pattern id="finelines" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+                        <line x1="0" y1="0" x2="4" y2="0" stroke="currentColor" stroke-width="0.3" opacity="0.5"/>
+                    </pattern>
+                </defs>
+                
+                <!-- Hintergrund -->
+                <rect width="1200" height="200" fill="#FFF5F8" class="bg-layer"/>
+                
+                <!-- LINKER HASE (Dürer's Feldhase) -->
+                <g transform="translate(80, 100)">
+                    <!-- Körper mit Schraffur -->
+                    <ellipse cx="0" cy="0" rx="45" ry="38" fill="url(#crosshatch)" class="hase-body"/>
+                    <ellipse cx="0" cy="0" rx="45" ry="38" fill="none" stroke="currentColor" stroke-width="2" class="hase-outline"/>
+                    
+                    <!-- Kopf -->
+                    <ellipse cx="-25" cy="-28" rx="22" ry="25" fill="url(#finelines)" class="hase-head"/>
+                    <ellipse cx="-25" cy="-28" rx="22" ry="25" fill="none" stroke="currentColor" stroke-width="2"/>
+                    
+                    <!-- Ohren (charakteristisch lang) -->
+                    <ellipse cx="-30" cy="-50" rx="6" ry="28" fill="url(#finelines)" class="hase-ear"/>
+                    <ellipse cx="-30" cy="-50" rx="6" ry="28" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <ellipse cx="-20" cy="-52" rx="5" ry="26" fill="url(#crosshatch)" class="hase-ear"/>
+                    <ellipse cx="-20" cy="-52" rx="5" ry="26" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    
+                    <!-- Innenohr-Details -->
+                    <ellipse cx="-30" cy="-50" rx="3" ry="20" fill="currentColor" opacity="0.2"/>
+                    <ellipse cx="-20" cy="-52" rx="2.5" ry="18" fill="currentColor" opacity="0.2"/>
+                    
+                    <!-- Auge -->
+                    <circle cx="-30" cy="-32" r="2.5" fill="currentColor" class="hase-eye"/>
+                    <circle cx="-30" cy="-32" r="1" fill="#FFF" opacity="0.8"/>
+                    
+                    <!-- Nase -->
+                    <ellipse cx="-40" cy="-24" rx="3" ry="2" fill="currentColor"/>
+                    
+                    <!-- Schnurrhaare -->
+                    <line x1="-40" y1="-24" x2="-55" y2="-26" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                    <line x1="-40" y1="-23" x2="-54" y2="-23" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                    <line x1="-40" y1="-22" x2="-53" y2="-20" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                    
+                    <!-- Vorderbeine -->
+                    <ellipse cx="-18" cy="20" rx="6" ry="18" fill="url(#finelines)" class="hase-leg"/>
+                    <ellipse cx="-18" cy="20" rx="6" ry="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <ellipse cx="-5" cy="22" rx="5" ry="16" fill="url(#crosshatch)" class="hase-leg"/>
+                    <ellipse cx="-5" cy="22" rx="5" ry="16" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    
+                    <!-- Hinterbeine (angewinkelt) -->
+                    <ellipse cx="15" cy="15" rx="12" ry="20" fill="url(#crosshatch)" class="hase-leg" transform="rotate(30 15 15)"/>
+                    <ellipse cx="15" cy="15" rx="12" ry="20" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(30 15 15)"/>
+                    
+                    <!-- Pfoten -->
+                    <ellipse cx="-18" cy="35" rx="7" ry="4" fill="currentColor" opacity="0.3"/>
+                    <ellipse cx="-5" cy="36" rx="6" ry="3.5" fill="currentColor" opacity="0.3"/>
+                    
+                    <!-- Schwanz -->
+                    <ellipse cx="35" cy="5" rx="8" ry="7" fill="url(#dots)" class="hase-tail"/>
+                    <ellipse cx="35" cy="5" rx="8" ry="7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    
+                    <!-- Fell-Details (Schraffuren) -->
+                    <path d="M -15,-10 Q -12,-8 -10,-6" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                    <path d="M -8,-5 Q -5,-3 -2,0" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                    <path d="M 5,-8 Q 8,-5 10,-2" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                    <path d="M 15,0 Q 18,3 20,6" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                </g>
+                
+                <!-- MITTLERER TEXT-BEREICH -->
+                <g transform="translate(400, 100)">
+                    <!-- Rahmen im Dürer-Stil mit Ornamentik -->
+                    <rect x="-120" y="-45" width="440" height="95" class="logo-frame" fill="none" stroke="currentColor" stroke-width="3"/>
+                    
+                    <!-- Eck-Ornamente -->
+                    <circle cx="-115" cy="-40" r="5" fill="currentColor"/>
+                    <circle cx="315" cy="-40" r="5" fill="currentColor"/>
+                    <circle cx="-115" cy="45" r="5" fill="currentColor"/>
+                    <circle cx="315" cy="45" r="5" fill="currentColor"/>
+                    
+                    <!-- Haupttext -->
+                    <text x="100" y="-5" class="logo-main" text-anchor="middle">hof.ist/jetzt</text>
+                    <text x="100" y="28" class="logo-sub" text-anchor="middle">Events bis Sonnenaufgang · Hof an der Saale</text>
+                    
+                    <!-- Dürer-Jahr-Signatur -->
+                    <text x="280" y="38" class="year-text" text-anchor="end" font-size="11" fill="currentColor" opacity="0.6">1502</text>
+                </g>
+                
+                <!-- RECHTER HASE (gespiegelt) -->
+                <g transform="translate(1120, 100) scale(-1, 1)">
+                    <!-- Körper mit Schraffur -->
+                    <ellipse cx="0" cy="0" rx="45" ry="38" fill="url(#crosshatch)" class="hase-body"/>
+                    <ellipse cx="0" cy="0" rx="45" ry="38" fill="none" stroke="currentColor" stroke-width="2" class="hase-outline"/>
+                    
+                    <!-- Kopf -->
+                    <ellipse cx="-25" cy="-28" rx="22" ry="25" fill="url(#finelines)" class="hase-head"/>
+                    <ellipse cx="-25" cy="-28" rx="22" ry="25" fill="none" stroke="currentColor" stroke-width="2"/>
+                    
+                    <!-- Ohren -->
+                    <ellipse cx="-30" cy="-50" rx="6" ry="28" fill="url(#finelines)" class="hase-ear"/>
+                    <ellipse cx="-30" cy="-50" rx="6" ry="28" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <ellipse cx="-20" cy="-52" rx="5" ry="26" fill="url(#crosshatch)" class="hase-ear"/>
+                    <ellipse cx="-20" cy="-52" rx="5" ry="26" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    
+                    <!-- Innenohr-Details -->
+                    <ellipse cx="-30" cy="-50" rx="3" ry="20" fill="currentColor" opacity="0.2"/>
+                    <ellipse cx="-20" cy="-52" rx="2.5" ry="18" fill="currentColor" opacity="0.2"/>
+                    
+                    <!-- Auge -->
+                    <circle cx="-30" cy="-32" r="2.5" fill="currentColor" class="hase-eye"/>
+                    <circle cx="-30" cy="-32" r="1" fill="#FFF" opacity="0.8"/>
+                    
+                    <!-- Nase -->
+                    <ellipse cx="-40" cy="-24" rx="3" ry="2" fill="currentColor"/>
+                    
+                    <!-- Schnurrhaare -->
+                    <line x1="-40" y1="-24" x2="-55" y2="-26" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                    <line x1="-40" y1="-23" x2="-54" y2="-23" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                    <line x1="-40" y1="-22" x2="-53" y2="-20" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                    
+                    <!-- Vorderbeine -->
+                    <ellipse cx="-18" cy="20" rx="6" ry="18" fill="url(#finelines)" class="hase-leg"/>
+                    <ellipse cx="-18" cy="20" rx="6" ry="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <ellipse cx="-5" cy="22" rx="5" ry="16" fill="url(#crosshatch)" class="hase-leg"/>
+                    <ellipse cx="-5" cy="22" rx="5" ry="16" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    
+                    <!-- Hinterbeine -->
+                    <ellipse cx="15" cy="15" rx="12" ry="20" fill="url(#crosshatch)" class="hase-leg" transform="rotate(30 15 15)"/>
+                    <ellipse cx="15" cy="15" rx="12" ry="20" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(30 15 15)"/>
+                    
+                    <!-- Pfoten -->
+                    <ellipse cx="-18" cy="35" rx="7" ry="4" fill="currentColor" opacity="0.3"/>
+                    <ellipse cx="-5" cy="36" rx="6" ry="3.5" fill="currentColor" opacity="0.3"/>
+                    
+                    <!-- Schwanz -->
+                    <ellipse cx="35" cy="5" rx="8" ry="7" fill="url(#dots)" class="hase-tail"/>
+                    <ellipse cx="35" cy="5" rx="8" ry="7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    
+                    <!-- Fell-Details -->
+                    <path d="M -15,-10 Q -12,-8 -10,-6" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                    <path d="M -8,-5 Q -5,-3 -2,0" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                    <path d="M 5,-8 Q 8,-5 10,-2" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                    <path d="M 15,0 Q 18,3 20,6" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.4"/>
+                </g>
+                
+                <!-- Bodenlinie -->
+                <line x1="0" y1="160" x2="1200" y2="160" class="ground-line"/>
+                
+                <!-- Dürer-Monogramm (prominent wie auf dem Original) -->
+                <g transform="translate(600, 175)">
+                    <rect x="-25" y="-18" width="50" height="35" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.7"/>
+                    <text class="monogram" text-anchor="middle">A D</text>
+                    <text x="0" y="12" font-family="serif" font-size="9" fill="currentColor" text-anchor="middle" opacity="0.6">1502</text>
+                </g>
+            </svg>
+        </div>
+    </header>
+
+    <main class="site-content">
+        {{ content }}
+    </main>
+
+    <footer class="site-footer">
+        <div class="popart-footer">
+            <svg viewBox="0 0 1200 80" xmlns="http://www.w3.org/2000/svg" class="popart-svg">
+                <rect width="1200" height="80" fill="#FFF5F8" class="bg-layer"/>
+                
+                <!-- Gräser und Boden im Dürer-Stil -->
+                <g class="nature-scene">
+                    <!-- Bodenlinie -->
+                    <line x1="0" y1="60" x2="1200" y2="60" stroke="currentColor" stroke-width="2"/>
+                    
+                    <!-- Grashalme (wie auf Dürer's Hase) -->
+                    <g opacity="0.7">
+                        <path d="M 100,60 Q 95,45 92,30" stroke="currentColor" stroke-width="1" fill="none"/>
+                        <path d="M 105,60 Q 105,42 108,28" stroke="currentColor" stroke-width="1" fill="none"/>
+                        <path d="M 110,60 Q 113,44 118,32" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                        
+                        <path d="M 300,60 Q 295,48 290,35" stroke="currentColor" stroke-width="1" fill="none"/>
+                        <path d="M 308,60 Q 310,45 315,30" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                        <path d="M 315,60 Q 318,47 320,34" stroke="currentColor" stroke-width="1" fill="none"/>
+                        
+                        <path d="M 500,60 Q 498,46 495,32" stroke="currentColor" stroke-width="1" fill="none"/>
+                        <path d="M 508,60 Q 508,44 510,30" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                        
+                        <path d="M 700,60 Q 695,45 692,30" stroke="currentColor" stroke-width="1" fill="none"/>
+                        <path d="M 710,60 Q 713,46 718,33" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                        
+                        <path d="M 900,60 Q 895,48 890,34" stroke="currentColor" stroke-width="1" fill="none"/>
+                        <path d="M 908,60 Q 910,45 915,31" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                        <path d="M 915,60 Q 918,47 920,35" stroke="currentColor" stroke-width="1" fill="none"/>
+                        
+                        <path d="M 1100,60 Q 1095,46 1090,32" stroke="currentColor" stroke-width="1" fill="none"/>
+                        <path d="M 1110,60 Q 1113,44 1118,30" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                    </g>
+                    
+                    <!-- Kleine Pflanzen -->
+                    <circle cx="200" cy="58" r="3" fill="currentColor" opacity="0.4"/>
+                    <circle cx="205" cy="56" r="2" fill="currentColor" opacity="0.4"/>
+                    <circle cx="400" cy="57" r="3" fill="currentColor" opacity="0.4"/>
+                    <circle cx="600" cy="58" r="2.5" fill="currentColor" opacity="0.4"/>
+                    <circle cx="605" cy="56" r="2" fill="currentColor" opacity="0.4"/>
+                    <circle cx="800" cy="57" r="3" fill="currentColor" opacity="0.4"/>
+                    <circle cx="1000" cy="58" r="2.5" fill="currentColor" opacity="0.4"/>
+                </g>
+            </svg>
+        </div>
+        <div class="footer-content">
+            <p>&copy; {{ 'now' | date: "%Y" }} {{ site.title }} | Ein Projekt für Hof an der Saale</p>
+            <p><a href="/admin.html">Admin-Bereich</a> | <a href="https://github.com/feileberlin/event-kalender-hof">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

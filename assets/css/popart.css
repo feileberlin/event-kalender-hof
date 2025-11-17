@@ -1,0 +1,342 @@
+/* Pop-Art Lithographie Stil à la Andy Warhol meets Albrecht Dürer */
+
+:root {
+    /* Warhol-inspirierte Pop-Farben (wähle eine für das Theme) */
+    --popart-magenta: #FF00FF;
+    --popart-cyan: #00FFFF;
+    --popart-yellow: #FFFF00;
+    --popart-orange: #FF6600;
+    --popart-lime: #CCFF00;
+    --popart-pink: #FF1493;
+    --popart-hotpink: #FF69B4;
+    
+    /* Aktive Farbe - ÄNDERE DIESE ZEILE FÜR ANDERE FARBEN */
+    /* Warhol-Rosa (Hot Pink) wie auf seinen Siebdrucken */
+    --popart-main: var(--popart-hotpink);
+    --popart-contrast: #000000;
+    --popart-bg: #FFF5F8;
+}
+
+/* Pop-Art Header */
+.popart-header {
+    background: linear-gradient(135deg, var(--popart-main) 0%, color-mix(in srgb, var(--popart-main) 70%, black) 100%);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 4px solid var(--popart-contrast);
+}
+
+.popart-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    color: var(--popart-main);
+}
+
+/* Hintergrund-Layer */
+.bg-layer {
+    fill: var(--popart-bg);
+}
+
+/* Gebäude im Lithographie-Stil */
+.building-fill {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+    opacity: 0.9;
+}
+
+.building-stroke {
+    fill: none;
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.roof {
+    fill: none;
+    stroke: var(--popart-contrast);
+    stroke-width: 2.5;
+}
+
+.tower-top {
+    fill: color-mix(in srgb, var(--popart-main) 60%, black);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.spire {
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.spire-top {
+    fill: var(--popart-contrast);
+}
+
+/* Fenster im Dürer-Stil */
+.window {
+    fill: var(--popart-contrast);
+    opacity: 0.8;
+    stroke: var(--popart-contrast);
+    stroke-width: 1;
+}
+
+.door {
+    fill: color-mix(in srgb, var(--popart-main) 40%, black);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+/* Erker */
+.erker {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+    opacity: 0.85;
+}
+
+/* Logo-Bereich */
+.logo-frame {
+    stroke: var(--popart-contrast);
+    stroke-width: 3;
+}
+
+.frame-ornament {
+    fill: none;
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.logo-main {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    fill: var(--popart-contrast);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.logo-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    fill: var(--popart-contrast);
+    font-style: italic;
+}
+
+.ornament {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+/* Uhr */
+.clock-face {
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.clock-hand {
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+/* Wirtshausschild */
+.sign-pole {
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.sign-board {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.sign-text {
+    font-family: 'Impact', sans-serif;
+    font-weight: bold;
+    fill: var(--popart-contrast);
+}
+
+/* Bodenlinie */
+.ground-line {
+    stroke: var(--popart-contrast);
+    stroke-width: 4;
+}
+
+/* Dürer-Monogramm (prominent wie auf dem Original) */
+.monogram {
+    font-family: 'Times New Roman', serif;
+    font-size: 18px;
+    font-weight: bold;
+    fill: var(--popart-contrast);
+    letter-spacing: 3px;
+}
+
+.year-text {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+}
+
+/* Footer Pop-Art */
+.popart-footer {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--popart-main) 70%, black) 0%, var(--popart-main) 100%);
+    border-top: 4px solid var(--popart-contrast);
+}
+
+/* Figuren im Footer */
+.figure-head {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.figure-body {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+    opacity: 0.9;
+}
+
+.figure-arm {
+    stroke: var(--popart-contrast);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+/* Gläser und Wein */
+.glass {
+    fill: none;
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+.wine {
+    fill: var(--popart-main);
+    opacity: 0.7;
+}
+
+/* Musiknoten */
+.note {
+    fill: var(--popart-contrast);
+}
+
+.note-stem {
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+/* Sterne */
+.star {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+/* Herzen */
+.heart {
+    fill: var(--popart-main);
+    stroke: var(--popart-contrast);
+    stroke-width: 2;
+}
+
+/* Dürer-Hase spezifische Styles */
+.hase-body,
+.hase-head,
+.hase-ear,
+.hase-leg,
+.hase-tail {
+    color: var(--popart-main);
+}
+
+.hase-outline {
+    stroke: var(--popart-contrast);
+}
+
+.hase-eye {
+    fill: var(--popart-contrast);
+}
+
+/* Animation für Hasen (subtil, würdevoll wie Dürer) */
+@keyframes hase-breathe {
+    0%, 100% { transform: translateY(0) scaleY(1); }
+    50% { transform: translateY(-2px) scaleY(1.02); }
+}
+
+.hase-body {
+    animation: hase-breathe 4s ease-in-out infinite;
+    transform-origin: center;
+}
+
+/* Ohren bewegen sich leicht */
+@keyframes ear-twitch {
+    0%, 90%, 100% { transform: rotate(0deg); }
+    95% { transform: rotate(-2deg); }
+}
+
+.hase-ear {
+    animation: ear-twitch 8s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+/* Natur-Szene im Footer */
+.nature-scene {
+    color: var(--popart-main);
+}
+
+.nature-scene path,
+.nature-scene line {
+    stroke: var(--popart-main);
+}
+
+.nature-scene circle {
+    fill: var(--popart-main);
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .logo-main {
+        font-size: 28px;
+    }
+    
+    .logo-sub {
+        font-size: 12px;
+    }
+}
+
+/* Alternative Farbschemata (zum Wechseln) */
+body.popart-cyan {
+    --popart-main: var(--popart-cyan);
+}
+
+body.popart-yellow {
+    --popart-main: var(--popart-yellow);
+}
+
+body.popart-orange {
+    --popart-main: var(--popart-orange);
+}
+
+body.popart-lime {
+    --popart-main: var(--popart-lime);
+}
+
+body.popart-pink {
+    --popart-main: var(--popart-pink);
+}
+
+/* Warhol-Style Druck-Effekt */
+.building-fill,
+.tower-top,
+.figure-body {
+    filter: contrast(1.2) saturate(1.4);
+}
+
+/* Lithographie-Textur */
+@media print {
+    .popart-svg {
+        filter: contrast(1.5);
+    }
+}
