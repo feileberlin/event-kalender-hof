@@ -90,8 +90,13 @@ textarea:focus {
     display: block;
 }
 
-/* Skeleton Container mit Hintergrund-Transparenz */
+/* Skeleton Container Enhancement (nicht überschreiben!) */
 .container {
+    /* Skeleton behält seine Werte: position, width, max-width, margin, padding, box-sizing */
+}
+
+/* Calendar-spezifischer Container */
+.calendar-container {
     background: rgba(255, 255, 255, 0.85);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -109,9 +114,7 @@ textarea:focus {
 
 /* Calendar Container */
 .calendar-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    /* Skeleton Grid übernimmt das Layout */
 }
 
 /* Suchmaske und Filter */
@@ -141,16 +144,13 @@ textarea:focus {
 }
 
 .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: flex-end;
+    /* Skeleton Grid übernimmt das Layout über .row und .columns */
+    margin-bottom: 15px;
 }
 
 .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    /* Skeleton übernimmt Layout - Labels sind natürlich block */
+    margin-bottom: 10px;
 }
 
 .filter-group label {
@@ -294,9 +294,8 @@ textarea:focus {
 .marker-icon {
     width: 35px;
     height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    line-height: 35px;
+    text-align: center;
     border-radius: 50%;
     font-size: 18px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -366,9 +365,7 @@ textarea:focus {
 .event-card-header {
     padding: 15px;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    overflow: hidden;
 }
 
 .event-card-header h3 {
@@ -404,10 +401,13 @@ textarea:focus {
 }
 
 .event-tags-inline {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
     margin-top: 10px;
+}
+
+.event-tags-inline .tag-small {
+    display: inline-block;
+    margin-right: 6px;
+    margin-bottom: 6px;
 }
 
 .tag-small {
