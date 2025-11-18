@@ -40,6 +40,34 @@ layout: popart
     </div>
     {% endif %}
     
+    <div class="event-reminder">
+        <button id="reminderButton" class="btn-reminder">
+            <span id="reminderIcon">⏰</span>
+            <span id="reminderText">Erinnere mich 1h vorher</span>
+        </button>
+        <div id="countdown" class="countdown" style="display: none;">
+            <div class="countdown-label">Event beginnt in:</div>
+            <div class="countdown-timer">
+                <span class="countdown-unit">
+                    <span id="days" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Tage</span>
+                </span>
+                <span class="countdown-unit">
+                    <span id="hours" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Std</span>
+                </span>
+                <span class="countdown-unit">
+                    <span id="minutes" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Min</span>
+                </span>
+                <span class="countdown-unit">
+                    <span id="seconds" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Sek</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
     <div class="event-attendance">
         <button id="attendanceButton" class="btn-attendance">
             <span id="attendanceIcon">👋</span>
@@ -375,15 +403,188 @@ class EventRating {
     }
 }
 
+// Event Reminder System
+class EventReminder {
+    constructor(eventId, eventDateTime) {
+        this.eventId = eventId;
+        this.eventDateTime = new Date(eventDateTime);
+        this.reminderKey = `reminder_${eventId}`;
+        this.countdownInterval = null;
+    }
+    
+    async init() {
+        this.fingerprint = await generateFingerprint();
+        this.loadReminder();
+        
+        // Zeige Reminder nur für zukünftige Events
+        if (this.isFutureEvent()) {
+            document.querySelector('.event-reminder').style.display = 'block';
+            this.updateUI();
+            this.setupEventListeners();
+            this.startCountdown();
+            this.checkReminder();
+        }
+    }
+    
+    isFutureEvent() {
+        const now = new Date();
+        return this.eventDateTime > now;
+    }
+    
+    loadReminder() {
+        const data = localStorage.getItem(this.reminderKey);
+        this.reminderSet = data === this.fingerprint;
+    }
+    
+    saveReminder() {
+        if (this.reminderSet) {
+            localStorage.setItem(this.reminderKey, this.fingerprint);
+        } else {
+            localStorage.removeItem(this.reminderKey);
+        }
+    }
+    
+    async requestNotificationPermission() {
+        if (!('Notification' in window)) {
+            alert('Dein Browser unterstützt keine Push-Benachrichtigungen.');
+            return false;
+        }
+        
+        if (Notification.permission === 'granted') {
+            return true;
+        }
+        
+        if (Notification.permission !== 'denied') {
+            const permission = await Notification.requestPermission();
+            return permission === 'granted';
+        }
+        
+        return false;
+    }
+    
+    async toggleReminder() {
+        if (!this.reminderSet) {
+            const hasPermission = await this.requestNotificationPermission();
+            if (!hasPermission) {
+                alert('Bitte erlaube Benachrichtigungen in den Browser-Einstellungen.');
+                return;
+            }
+            this.reminderSet = true;
+        } else {
+            this.reminderSet = false;
+        }
+        
+        this.saveReminder();
+        this.updateUI();
+        this.checkReminder();
+    }
+    
+    checkReminder() {
+        if (!this.reminderSet) return;
+        
+        const now = new Date();
+        const oneHourBefore = new Date(this.eventDateTime.getTime() - 60 * 60 * 1000);
+        const timeUntilReminder = oneHourBefore - now;
+        
+        if (timeUntilReminder > 0) {
+            // Setze Timeout für Erinnerung
+            setTimeout(() => {
+                this.sendNotification();
+            }, timeUntilReminder);
+        }
+    }
+    
+    sendNotification() {
+        if (!this.reminderSet || Notification.permission !== 'granted') return;
+        
+        const eventTitle = document.querySelector('h1').textContent;
+        const eventLocation = document.querySelector('.event-location').textContent.trim();
+        
+        const notification = new Notification('🎉 Event-Erinnerung', {
+            body: `${eventTitle}\n\nBeginn in 1 Stunde!\n${eventLocation}`,
+            icon: '/event-kalender-hof/assets/images/favicon.svg',
+            badge: '/event-kalender-hof/assets/images/favicon.ico',
+            tag: this.eventId,
+            requireInteraction: true
+        });
+        
+        notification.onclick = function() {
+            window.focus();
+            this.close();
+        };
+    }
+    
+    startCountdown() {
+        const countdownEl = document.getElementById('countdown');
+        
+        if (!this.isFutureEvent()) {
+            countdownEl.style.display = 'none';
+            return;
+        }
+        
+        countdownEl.style.display = 'block';
+        
+        const updateCountdown = () => {
+            const now = new Date();
+            const diff = this.eventDateTime - now;
+            
+            if (diff <= 0) {
+                clearInterval(this.countdownInterval);
+                countdownEl.innerHTML = '<div class="countdown-label">🎉 Event läuft jetzt!</div>';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        };
+        
+        updateCountdown();
+        this.countdownInterval = setInterval(updateCountdown, 1000);
+    }
+    
+    updateUI() {
+        const button = document.getElementById('reminderButton');
+        const icon = document.getElementById('reminderIcon');
+        const text = document.getElementById('reminderText');
+        
+        if (this.reminderSet) {
+            button.classList.add('reminder-active');
+            icon.textContent = '✓';
+            text.textContent = 'Erinnerung aktiv';
+        } else {
+            button.classList.remove('reminder-active');
+            icon.textContent = '⏰';
+            text.textContent = 'Erinnere mich 1h vorher';
+        }
+    }
+    
+    setupEventListeners() {
+        document.getElementById('reminderButton').addEventListener('click', () => {
+            this.toggleReminder();
+        });
+    }
+}
+
 // Initialisierung
 document.addEventListener('DOMContentLoaded', function() {
     const eventId = '{{ page.id | replace: "/", "_" }}';
     const eventDate = '{{ page.date | date: "%Y-%m-%d" }}T{{ page.end_time | default: "23:59" }}';
+    const eventStartTime = '{{ page.date | date: "%Y-%m-%d" }}T{{ page.start_time }}';
     
     const counter = new AttendanceCounter(eventId);
     counter.init();
     
     const rating = new EventRating(eventId, eventDate);
     rating.init();
+    
+    const reminder = new EventReminder(eventId, eventStartTime);
+    reminder.init();
 });
 </script>
