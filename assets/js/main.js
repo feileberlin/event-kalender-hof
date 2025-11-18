@@ -240,6 +240,12 @@ function displayEventList() {
 
     console.log('Anzeige von', filteredEvents.length, 'Events');
 
+    // Loading Spinner ausblenden
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    if (loadingSpinner) {
+        loadingSpinner.style.display = 'none';
+    }
+
     if (filteredEvents.length === 0) {
         eventList.innerHTML = '<div class="no-events">Keine Events gefunden. 😔<br><small>Tipp: Ändere den Zeitfilter oder prüfe ob Events für die kommenden Stunden eingetragen sind.</small></div>';
         return;
