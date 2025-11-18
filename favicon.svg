@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Hintergrund mit Farbverlauf -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2c3e50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3498db;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Runder Hintergrund -->
+  <circle cx="32" cy="32" r="30" fill="url(#grad)"/>
+  
+  <!-- Kalender-Icon -->
+  <rect x="16" y="18" width="32" height="30" rx="3" fill="white"/>
+  
+  <!-- Kalender-Header -->
+  <rect x="16" y="18" width="32" height="8" rx="3" fill="#e74c3c"/>
+  
+  <!-- Kalender-Bindung (zwei Clips) -->
+  <rect x="22" y="15" width="3" height="6" rx="1.5" fill="white"/>
+  <rect x="39" y="15" width="3" height="6" rx="1.5" fill="white"/>
+  
+  <!-- Datum: 18 (für 18. November) -->
+  <text x="32" y="40" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2c3e50" text-anchor="middle">18</text>
+  
+  <!-- Kleiner Standort-Marker unten -->
+  <circle cx="32" cy="47" r="1.5" fill="#e74c3c"/>
+</svg>
