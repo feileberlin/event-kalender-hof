@@ -595,10 +595,258 @@ textarea:focus {
     }
 }
 
+/* Event Attendance Counter */
+.event-attendance {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 25px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid #dee2e6;
+}
+
+.btn-attendance {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 44px;
+}
+
+.btn-attendance:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgb(44 62 80 / 25%);
+}
+
+.btn-attendance.attending {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-attendance.attending:hover {
+    background: #1a2a3a;
+    border-color: #1a2a3a;
+}
+
+#attendanceIcon {
+    font-size: 20px;
+}
+
+.attendance-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+}
+
+#countNumber {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.attendance-count {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+@media (max-width: 549px) {
+    .event-attendance {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+    
+    .btn-attendance {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .attendance-count {
+        width: 100%;
+    }
+}
+
+/* Event Rating System */
+.event-rating {
+    margin: 30px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%);
+    border-radius: 12px;
+    border: 2px solid #ffd700;
+}
+
+.event-rating h3 {
+    margin: 0 0 20px 0;
+    color: var(--primary-color);
+    font-size: 20px;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.star-btn {
+    background: none;
+    border: none;
+    font-size: 36px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 5px;
+    filter: grayscale(100%);
+    opacity: 0.4;
+}
+
+.star-btn:not(:disabled):hover,
+.star-btn.hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.star-btn.rated {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.star-btn:disabled {
+    cursor: not-allowed;
+}
+
+.rating-summary {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.average-rating {
+    text-align: center;
+}
+
+#avgRating {
+    display: block;
+    font-size: 48px;
+    font-weight: bold;
+    color: #ffd700;
+    line-height: 1;
+}
+
+.rating-stars-display {
+    display: block;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.total-ratings {
+    text-align: center;
+    color: #6c757d;
+}
+
+#totalRatings {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.user-rating-status {
+    text-align: center;
+    margin: 15px 0;
+    min-height: 30px;
+}
+
+.user-rating-display {
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #ffd700;
+}
+
+.rating-date {
+    color: #6c757d;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.success-message {
+    color: #28a745;
+    font-weight: bold;
+    animation: fadeIn 0.5s;
+}
+
+.edit-mode {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.btn-edit-rating {
+    display: inline-block;
+    padding: 10px 20px;
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit-rating:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 549px) {
+    .rating-stars {
+        flex-wrap: wrap;
+    }
+    
+    .star-btn {
+        font-size: 28px;
+    }
+    
+    .rating-summary {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
 /* Print Styles */
 @media print {
     .search-filter-section,
     .map-container,
+    .event-attendance,
+    .event-rating,
     button,
     .button {
         display: none;
