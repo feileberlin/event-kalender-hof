@@ -14,6 +14,7 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 - **🔍 Intelligente Filter**: Textsuche, Kategorie, Zeitraum, Umkreis (Fuß, Rad, ÖPNV, Taxi)
 - **📱 Geolocation**: GPS-basierte Umkreissuche
 - **🤖 Automatisches Scraping**: Sammelt Events von lokalen Websites
+- **🖼️ AI-Flyer-Analyse**: Extrahiert Events aus Bildern/PDFs (GitHub Models / DuckDuckGo AI)
 - **🎨 Minimalistisch**: Skeleton CSS, Mobile-First, Touch-optimiert
 - **🖨️ Druckfreundlich**: Optimierte Print-Styles
 

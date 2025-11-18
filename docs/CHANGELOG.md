@@ -12,6 +12,22 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 - PWA-Unterstützung
 - Dark Mode
 
+## [1.2.0] - 2025-11-18
+
+### Hinzugefügt
+- 🖼️ **AI-Flyer-Analyse**: Automatische Event-Extraktion aus Bildern/PDFs
+  - GitHub Models API (GPT-4o-mini, kostenlos für GitHub-User)
+  - DuckDuckGo AI Chat als Fallback (kostenlos, kein API-Key)
+  - Lokales OCR (Tesseract) als letzte Option
+  - Automatisches Geocoding (OpenStreetMap Nominatim)
+  - Erstellt Events mit `status: "Entwurf"` für manuelle Prüfung
+  - Script: `python scripts/analyze_flyer.py <URL>`
+
+### Dokumentation
+- 📖 **ADMIN.md**: Sektion "Flyer-Analyse" mit Workflow und Beispielen
+- 📖 **QUICKSTART.md**: AI-Flyer-Analyse in Erste Schritte integriert
+- 📖 **README.md**: Feature-Liste um AI-Analyse erweitert
+
 ## [1.1.0] - 2025-11-18
 
 ### Geändert

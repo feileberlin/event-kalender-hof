@@ -96,7 +96,30 @@ Hier kommt die Beschreibung...
 python scripts/scrape_events.py
 ```
 
-### 3. Admin-Bereich nutzen
+### 3. Flyer analysieren (AI-powered) 🆕
+
+**Automatische Event-Extraktion aus Flyern:**
+
+```bash
+# Beispiel: Event-Flyer von URL analysieren
+python scripts/analyze_flyer.py https://example.com/flyer.jpg
+
+# Oder PDF-Flyer
+python scripts/analyze_flyer.py https://example.com/programm.pdf
+```
+
+**Was passiert:**
+- 🤖 AI analysiert Bild/PDF (GitHub Models oder DuckDuckGo AI)
+- 📝 Extrahiert Titel, Datum, Ort, Zeit, Beschreibung
+- 🗺️ Geocodiert Adresse automatisch
+- 💾 Erstellt Event-Datei mit `status: "Entwurf"`
+- ⚠️ Manuelle Prüfung erforderlich!
+
+**Benötigt:**
+- PIL/Pillow, PyPDF2 (automatisch installiert)
+- Optional: Tesseract für OCR-Fallback
+
+### 4. Admin-Bereich nutzen
 
 Öffne: `/admin.html`
 

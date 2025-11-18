@@ -34,6 +34,77 @@ Als Admin bist du verantwortlich für:
 5. **Speichern**: Commit Message eingeben → "Commit changes"
 6. **Deployment**: Automatisch in 1-2 Minuten live
 
+### Flyer-Analyse (AI-powered)
+
+**Automatische Event-Extraktion aus Flyern (Bilder/PDFs)**
+
+#### Verwendung
+
+```bash
+python scripts/analyze_flyer.py <URL>
+```
+
+**Beispiel:**
+```bash
+python scripts/analyze_flyer.py https://example.com/event-flyer.jpg
+```
+
+#### Unterstützte Formate
+
+- **Bilder**: JPG, PNG, GIF, WebP
+- **PDFs**: Mehrseitige Dokumente
+
+#### AI-Provider (automatische Auswahl)
+
+1. **GitHub Models API** (GPT-4o-mini via GITHUB_TOKEN)
+   - Beste Qualität
+   - Kostenlos für GitHub-User
+   - Automatisch verfügbar im Dev Container
+
+2. **DuckDuckGo AI Chat** (Fallback)
+   - Kostenlos, keine API-Key nötig
+   - Nutzt GPT-3.5-turbo
+
+3. **Lokales OCR** (Tesseract, letzte Option)
+   - Reine Texterkennung
+   - Regex-basierte Extraktion
+
+#### Workflow
+
+1. **Flyer-URL kopieren** (z.B. von Facebook, Instagram, Website)
+2. **Script ausführen**:
+   ```bash
+   python scripts/analyze_flyer.py https://example.com/flyer.jpg
+   ```
+3. **Event-Datei wird erstellt** in `_events/` mit `status: "Entwurf"`
+4. **Prüfen und korrigieren** im Admin-Interface
+5. **Publizieren**: Status auf `"Öffentlich"` ändern
+
+#### Extrahierte Daten
+
+- ✅ Titel
+- ✅ Datum & Uhrzeit
+- ✅ Veranstaltungsort
+- ✅ Adresse (automatisch geocodiert)
+- ✅ Kategorie
+- ✅ Beschreibung
+- ✅ Tags
+- ✅ URL
+- ✅ Eintrittspreis
+
+#### Geocoding
+
+Adressen werden automatisch in Koordinaten umgewandelt:
+- **API**: OpenStreetMap Nominatim
+- **Fallback**: Rathaus Hof (50.3197, 11.9168)
+
+#### Wichtig
+
+- ⚠️ **Immer prüfen!** AI kann Fehler machen
+- ⚠️ **Status bleibt "Entwurf"** bis manuelle Freigabe
+- ✅ Koordinaten werden validiert
+- ✅ Datum/Zeit-Format wird normalisiert
+
 ### Manuelles Event erstellen
 
 #### Schritt 1: Datei erstellen
