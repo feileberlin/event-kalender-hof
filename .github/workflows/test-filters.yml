@@ -1,0 +1,48 @@
+name: Test Event Filters
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'index.html'
+      - 'assets/js/main.js'
+      - 'tests/**'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'assets/js/main.js'
+      - 'tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Run Filter Tests
+        run: |
+          cd tests
+          node test_filters.js
+      
+      - name: Report Success
+        if: success()
+        run: echo "✅ Alle Filter-Tests bestanden!"
+      
+      - name: Report Failure
+        if: failure()
+        run: |
+          echo "❌ Filter-Tests fehlgeschlagen!"
+          echo "Bitte prüfen Sie die Konsistenz zwischen HTML und JavaScript."
+          exit 1
