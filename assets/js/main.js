@@ -46,9 +46,15 @@ function initMap() {
             iconSize: [30, 30]
         });
         
-        L.marker([config.defaultCenter.lat, config.defaultCenter.lng], {icon: rathausIcon})
+        // Rathaus-Marker (immer sichtbar)
+        const rathausMarker = L.marker([config.defaultCenter.lat, config.defaultCenter.lng], {icon: rathausIcon})
             .addTo(map)
             .bindPopup('<strong>Rathaus Hof an der Saale</strong><br>Zentrum des Kalenders');
+        
+        // Öffne Popup standardmäßig wenn keine Events
+        if (allEvents.length === 0) {
+            rathausMarker.openPopup();
+        }
         
         console.log('Karte erfolgreich initialisiert');
         
