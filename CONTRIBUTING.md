@@ -38,6 +38,42 @@ Feature-Requests als Issue mit Label "enhancement" einreichen.
 
 ## Testing
 
+### Automatische Tests ausführen
+
+**Vor jedem Commit solltest du die Tests ausführen:**
+
+```bash
+cd tests
+node test_filters.js
+```
+
+**Was wird getestet:**
+- ✅ HTML `<select>` Optionen stimmen mit erwarteten Werten überein
+- ✅ JavaScript Filter-Logik ist konsistent (z.B. `radiusFilter < 999`)
+- ✅ Distanzberechnung funktioniert für alle Fortbewegungsarten
+- ✅ Edge Cases (mit/ohne Standort, extreme Werte)
+
+**CI/CD Integration:**
+- Tests laufen automatisch bei jedem Push zu `index.html` oder `assets/js/main.js`
+- Workflow: `.github/workflows/test-filters.yml`
+- Verhindert Inkonsistenzen zwischen UI und Logik
+
+**Test-Konfiguration anpassen:**
+
+Wenn du Filter-Optionen änderst, aktualisiere `tests/test_filters.js`:
+```javascript
+const EXPECTED_RADIUS_OPTIONS = [
+    { value: '999', label: 'Alle', shouldFilter: false },
+    { value: '1', label: '10 min zu Fuß', shouldFilter: true },
+    { value: '3', label: '10 min Rad', shouldFilter: true },
+    // ... weitere Optionen
+];
+```
+
+📖 Details: [tests/README.md](tests/README.md)
+
+### Manuelle Tests
+
 Teste deine Änderungen lokal:
 
 ```bash

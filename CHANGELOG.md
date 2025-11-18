@@ -35,6 +35,11 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 - ✅ **Facebook-Quellen**: 3 neue Event-Quellen im Scraper
 - ✅ **Popup**: Rathaus-Marker öffnet Popup wenn keine Events
 - ✅ **Test-Events**: 2 Events für 18.11. Nacht zum Testen
+- ✅ **Test Suite**: Automatische Validierung HTML ↔ JS Konsistenz (tests/test_filters.js)
+- ✅ **CI/CD Tests**: GitHub Actions Workflow für Filter-Tests
+- ✅ **UX Verbesserung**: Umkreis-Filter mit Fortbewegungsarten (Fuß, Rad, ÖPNV, Taxi)
+- ✅ **KISS Prinzip**: Nur noch ein Layout (popart.html), default.html entfernt
+- ✅ **Dokumentations-Workflow**: Automatische Prüfung auf veraltete Docs (täglich 3:00 UTC)
 
 ## [1.0.0] - 2025-11-17
 

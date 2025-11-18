@@ -40,6 +40,18 @@ Der Event-Kalender Hof ist eine Jekyll-basierte Website für GitHub Pages, die a
 
 ### 4. Admin-Interface (admin.html)
 - Übersicht aller Events (inkl. Entwürfe)
+- Status-Verwaltung (Entwurf ↔ Öffentlich)
+- Direktlink zu GitHub Editor
+
+### 5. Automatische Tests
+- **Filter-Tests**: Validiert HTML ↔ JavaScript Konsistenz
+- **CI/CD Integration**: Tests laufen bei jedem relevanten Push
+- **Test Suite**: `tests/test_filters.js` mit 4 Test-Kategorien:
+  1. HTML Radius-Optionen validieren
+  2. JavaScript Filter-Logik prüfen
+  3. Distanzberechnung simulieren
+  4. Edge Cases testen
+- **Workflow**: `.github/workflows/test-filters.yml`
 - Entwürfe verwalten
 - Direkte GitHub-Integration
 - Statistiken Dashboard
