@@ -35,6 +35,11 @@ plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
 
+# Include assets
+include:
+  - assets/images/favicon.ico
+  - assets/images/favicon.svg
+
 # Exclude
 exclude:
   - scripts/
