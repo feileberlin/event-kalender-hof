@@ -45,3 +45,4 @@ exclude:
   - "*.py"
   - requirements.txt
   - .github/
+
