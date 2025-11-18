@@ -160,7 +160,7 @@ function filterAndDisplayEvents() {
         });
     }
     
-    // Radius-Filter (wenn Benutzerstandort vorhanden)
+    // Radius-Filter (nur wenn Benutzerstandort vorhanden UND Filter nicht "Alle" oder "Taxi")
     if (userLocation && radiusFilter < 999) {
         events = events.filter(event => {
             const distance = calculateDistance(
