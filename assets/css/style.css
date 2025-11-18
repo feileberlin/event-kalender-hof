@@ -1,15 +1,16 @@
 /* Event-Kalender Hof - Stylesheet */
+
 /* Skeleton CSS Framework Integration */
 
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #8b4513;
-    --accent-color: #ffaa33;
+    --accent-color: #fa3;
     --background: #f8f9fa;
-    --card-background: #ffffff;
-    --text-color: #333333;
+    --card-background: #fff;
+    --text-color: #333;
     --border-color: #dee2e6;
-    --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 /* Skeleton overrides and enhancements */
@@ -72,7 +73,7 @@ textarea:focus {
 /* Header mit Scherenschnitt */
 .site-header {
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -97,9 +98,9 @@ textarea:focus {
 
 /* Calendar-spezifischer Container */
 .calendar-container {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgb(255 255 255 / 85%);
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
     padding: 30px 20px;
     position: relative;
 }
@@ -110,11 +111,6 @@ textarea:focus {
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
-}
-
-/* Calendar Container */
-.calendar-container {
-    /* Skeleton Grid übernimmt das Layout */
 }
 
 /* Suchmaske und Filter */
@@ -194,7 +190,7 @@ textarea:focus {
 .btn-primary:hover {
     background: #1a252f;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
 }
 
 .btn-primary.active {
@@ -230,6 +226,10 @@ textarea:focus {
     font-size: 14px;
 }
 
+.dawn-time {
+    margin-left: 20px;
+}
+
 #eventCount {
     font-weight: bold;
     color: var(--primary-color);
@@ -244,7 +244,7 @@ textarea:focus {
     margin-bottom: 30px;
     position: relative;
     z-index: 999;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgb(255 255 255 / 95%);
 }
 
 #map {
@@ -298,7 +298,7 @@ textarea:focus {
     text-align: center;
     border-radius: 50%;
     font-size: 18px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
     border: 2px solid white;
     background: var(--primary-color);
 }
@@ -343,7 +343,7 @@ textarea:focus {
 }
 
 .event-card {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgb(255 255 255 / 95%);
     border-radius: 12px;
     box-shadow: var(--shadow);
     transition: all 0.3s;
@@ -354,7 +354,7 @@ textarea:focus {
 
 .event-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 16px rgb(0 0 0 / 15%);
 }
 
 .event-card.highlighted {
@@ -529,12 +529,13 @@ textarea:focus {
 }
 
 /* Responsive Design */
+
 /* ========================================
    RESPONSIVE DESIGN - Mobile First
    ======================================== */
 
 /* Tablet (550px+ - Skeleton Breakpoint) */
-@media (min-width: 550px) {
+@media (width >= 550px) {
     .site-content {
         padding: 20px;
     }
@@ -545,14 +546,14 @@ textarea:focus {
 }
 
 /* Desktop (960px+ - Skeleton Container max-width) */
-@media (min-width: 960px) {
+@media (width >= 960px) {
     .map-container {
         height: 500px;
     }
 }
 
 /* Mobile Anpassungen */
-@media (max-width: 549px) {
+@media (width <= 549px) {
     .site-content {
         padding: 10px;
     }
@@ -604,7 +605,7 @@ textarea:focus {
     }
     
     .event-card {
-        page-break-inside: avoid;
+        break-inside: avoid;
         border: 1px solid #000;
         margin-bottom: 20px;
     }

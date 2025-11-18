@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Event-Kalender initialisiert');
     console.log('Anzahl aller Events:', allEvents.length);
     console.log('Events:', allEvents);
-    
+
     initMap();
     calculateDawnTime();
-    
+
     // Warten bis Karte geladen ist, dann Events anzeigen
     setTimeout(() => {
         filterAndDisplayEvents();
@@ -23,41 +23,41 @@ document.addEventListener('DOMContentLoaded', function() {
 // Karte initialisieren
 function initMap() {
     console.log('Initialisiere Karte...');
-    
+
     // Prüfen, ob das Karten-Element existiert
     const mapElement = document.getElementById('map');
     if (!mapElement) {
         console.error('Karten-Element nicht gefunden!');
         return;
     }
-    
+
     try {
         map = L.map('map').setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
-        
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19
         }).addTo(map);
-        
+
         // Rathaus-Marker (Zentrum)
         const rathausIcon = L.divIcon({
             className: 'rathaus-marker',
             html: '<div class="marker-icon">🏛️</div>',
             iconSize: [30, 30]
         });
-        
+
         // Rathaus-Marker (immer sichtbar)
         const rathausMarker = L.marker([config.defaultCenter.lat, config.defaultCenter.lng], {icon: rathausIcon})
             .addTo(map)
             .bindPopup('<strong>Rathaus Hof an der Saale</strong><br>Zentrum des Kalenders');
-        
+
         // Öffne Popup standardmäßig wenn keine Events
         if (allEvents.length === 0) {
             rathausMarker.openPopup();
         }
-        
+
         console.log('Karte erfolgreich initialisiert');
-        
+
         // Karte nach kurzer Verzögerung neu laden (für korrekte Tile-Darstellung)
         setTimeout(() => {
             map.invalidateSize();
@@ -72,20 +72,20 @@ function initMap() {
 function calculateDawnTime() {
     const now = new Date();
     let dawnDate = new Date(now);
-    
+
     // Wenn es nach 6:30 Uhr ist, nimm morgen früh 6:30
     // Wenn es vor 6:30 Uhr ist, nimm heute 6:30
     if (now.getHours() >= 6 && now.getMinutes() >= 30) {
         dawnDate.setDate(dawnDate.getDate() + 1);
     }
-    
+
     dawnDate.setHours(6, 30, 0, 0);
-    
+
     const dawnElement = document.getElementById('dawnTime');
     if (dawnElement) {
         dawnElement.textContent = `⏰ Events bis: ${dawnDate.toLocaleDateString('de-DE')} ${dawnDate.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
     }
-    
+
     return dawnDate;
 }
 
@@ -93,10 +93,10 @@ function calculateDawnTime() {
 function getUpcomingEvents() {
     const now = new Date();
     const dawn = calculateDawnTime();
-    
+
     console.log('Jetzt:', now);
     console.log('Morgendämmerung:', dawn);
-    
+
     const upcomingEvents = allEvents.filter(event => {
         const eventDateTime = new Date(`${event.date}T${event.startTime || '00:00'}`);
         console.log(`Event: ${event.title}, Zeit: ${eventDateTime}, Kommend: ${eventDateTime >= now}, Vor Dämmerung: ${eventDateTime <= dawn}`);
@@ -106,7 +106,7 @@ function getUpcomingEvents() {
         const dateB = new Date(`${b.date}T${b.startTime || '00:00'}`);
         return dateA - dateB;
     });
-    
+
     console.log('Gefilterte Events:', upcomingEvents.length);
     return upcomingEvents;
 }
@@ -117,23 +117,23 @@ function filterAndDisplayEvents() {
     const categoryFilter = document.getElementById('categoryFilter').value;
     const timeFilter = document.getElementById('timeFilter').value;
     const radiusFilter = parseFloat(document.getElementById('radiusFilter').value);
-    
+
     let events = getUpcomingEvents();
-    
+
     // Suchfilter
     if (searchTerm) {
-        events = events.filter(event => 
+        events = events.filter(event =>
             event.title.toLowerCase().includes(searchTerm) ||
             event.description.toLowerCase().includes(searchTerm) ||
             event.location.toLowerCase().includes(searchTerm)
         );
     }
-    
+
     // Kategorie-Filter
     if (categoryFilter) {
         events = events.filter(event => event.category === categoryFilter);
     }
-    
+
     // Zeit-Filter
     const now = new Date();
     if (timeFilter === 'today') {
@@ -159,7 +159,7 @@ function filterAndDisplayEvents() {
             return eventDate <= sixHoursLater;
         });
     }
-    
+
     // Radius-Filter (nur wenn Benutzerstandort vorhanden UND Filter nicht "Alle" oder "Taxi")
     if (userLocation && radiusFilter < 999) {
         events = events.filter(event => {
@@ -170,7 +170,7 @@ function filterAndDisplayEvents() {
             return distance <= radiusFilter;
         });
     }
-    
+
     filteredEvents = events;
     updateEventCount();
     displayEventsOnMap();
@@ -188,23 +188,23 @@ function displayEventsOnMap() {
         console.error('Karte noch nicht initialisiert');
         return;
     }
-    
+
     console.log('Zeige', filteredEvents.length, 'Events auf Karte');
-    
+
     // Alte Marker entfernen
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
-    
+
     // Neue Marker hinzufügen
     filteredEvents.forEach((event, index) => {
         console.log(`Marker für Event: ${event.title} bei [${event.coordinates.lat}, ${event.coordinates.lng}]`);
-        
+
         const eventIcon = L.divIcon({
             className: 'event-marker',
             html: `<div class="marker-icon" style="background: ${getCategoryColor(event.category)}">${getCategoryEmoji(event.category)}</div>`,
             iconSize: [35, 35]
         });
-        
+
         const marker = L.marker([event.coordinates.lat, event.coordinates.lng], {icon: eventIcon})
             .addTo(map)
             .bindPopup(`
@@ -217,11 +217,11 @@ function displayEventsOnMap() {
                     <a href="${event.url}" class="popup-link">Details →</a>
                 </div>
             `);
-        
+
         marker.on('click', () => highlightEvent(index));
         markers.push(marker);
     });
-    
+
     // Karte an Marker anpassen oder auf Standard-Zentrum setzen
     if (markers.length > 0) {
         const group = L.featureGroup(markers);
@@ -237,14 +237,14 @@ function displayEventsOnMap() {
 // Event-Liste anzeigen
 function displayEventList() {
     const eventList = document.getElementById('eventList');
-    
+
     console.log('Anzeige von', filteredEvents.length, 'Events');
-    
+
     if (filteredEvents.length === 0) {
         eventList.innerHTML = '<div class="no-events">Keine Events gefunden. 😔<br><small>Tipp: Ändere den Zeitfilter oder prüfe ob Events für die kommenden Stunden eingetragen sind.</small></div>';
         return;
     }
-    
+
     eventList.innerHTML = filteredEvents.map((event, index) => `
         <div class="event-card" data-index="${index}" onclick="focusEvent(${index})">
             <div class="event-card-header" style="border-left: 4px solid ${getCategoryColor(event.category)}">
@@ -259,9 +259,9 @@ function displayEventList() {
                 </p>
                 <p class="event-location">📍 ${event.location}</p>
                 <p class="event-description">${event.description || ''}</p>
-                ${event.tags && event.tags.length > 0 ? 
-                    `<div class="event-tags-inline">${event.tags.map(tag => `<span class="tag-small">${tag}</span>`).join('')}</div>` 
-                    : ''}
+                ${event.tags && event.tags.length > 0 ?
+        `<div class="event-tags-inline">${event.tags.map(tag => `<span class="tag-small">${tag}</span>`).join('')}</div>`
+        : ''}
             </div>
             <div class="event-card-footer">
                 <a href="${event.url}" class="btn-small">Details ansehen →</a>
@@ -296,49 +296,49 @@ function useUserLocation() {
         alert('Geolocation wird von Ihrem Browser nicht unterstützt.');
         return;
     }
-    
+
     const locationButton = document.getElementById('useLocation');
     locationButton.textContent = '📍 Lade Position...';
     locationButton.disabled = true;
-    
+
     navigator.geolocation.getCurrentPosition(
         (position) => {
             userLocation = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-            
+
             // Benutzerpunkt auf Karte
             const userIcon = L.divIcon({
                 className: 'user-marker',
                 html: '<div class="marker-icon" style="background: #4CAF50">👤</div>',
                 iconSize: [30, 30]
             });
-            
+
             L.marker([userLocation.lat, userLocation.lng], {icon: userIcon})
                 .addTo(map)
                 .bindPopup('<strong>Ihr Standort</strong>')
                 .openPopup();
-            
+
             map.setView([userLocation.lat, userLocation.lng], 14);
             locationButton.textContent = '✓ Standort aktiv';
             locationButton.disabled = false;
             locationButton.style.background = '#4CAF50';
-            
+
             filterAndDisplayEvents();
         },
         (error) => {
             let errorMessage = 'Standort konnte nicht ermittelt werden.';
             switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    errorMessage = 'Standortzugriff wurde verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.';
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = 'Standortinformationen sind nicht verfügbar.';
-                    break;
-                case error.TIMEOUT:
-                    errorMessage = 'Zeitüberschreitung bei der Standortabfrage.';
-                    break;
+            case error.PERMISSION_DENIED:
+                errorMessage = 'Standortzugriff wurde verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.';
+                break;
+            case error.POSITION_UNAVAILABLE:
+                errorMessage = 'Standortinformationen sind nicht verfügbar.';
+                break;
+            case error.TIMEOUT:
+                errorMessage = 'Zeitüberschreitung bei der Standortabfrage.';
+                break;
             }
             alert(errorMessage);
             locationButton.textContent = '📍 Mein Standort';
@@ -400,23 +400,23 @@ function setupEventListeners() {
     const radiusFilter = document.getElementById('radiusFilter');
     const resetFilters = document.getElementById('resetFilters');
     const useLocation = document.getElementById('useLocation');
-    
+
     if (searchInput) {
         searchInput.addEventListener('input', filterAndDisplayEvents);
     }
-    
+
     if (categoryFilter) {
         categoryFilter.addEventListener('change', filterAndDisplayEvents);
     }
-    
+
     if (timeFilter) {
         timeFilter.addEventListener('change', filterAndDisplayEvents);
     }
-    
+
     if (radiusFilter) {
         radiusFilter.addEventListener('change', filterAndDisplayEvents);
     }
-    
+
     if (resetFilters) {
         resetFilters.addEventListener('click', () => {
             if (searchInput) searchInput.value = '';
@@ -426,13 +426,13 @@ function setupEventListeners() {
             filterAndDisplayEvents();
         });
     }
-    
+
     if (useLocation) {
         useLocation.addEventListener('click', (e) => {
             e.preventDefault();
             useUserLocation();
         });
     }
-    
+
     console.log('Event-Listener erfolgreich eingerichtet');
 }

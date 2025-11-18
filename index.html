@@ -9,10 +9,10 @@ title: "Event-Kalender Hof"
         <div class="search-filter-section">
             <div class="row">
                 <div class="twelve columns">
-                    <input type="text" id="searchInput" class="u-full-width" placeholder="🔍 Events durchsuchen..." />
+                    <input type="text" id="searchInput" class="u-full-width" placeholder="🔍 Events durchsuchen...">
                 </div>
             </div>
-            
+
             <div class="filters">
                 <div class="row">
                     <div class="three columns">
@@ -28,7 +28,7 @@ title: "Event-Kalender Hof"
                             <option value="Sonstiges">Sonstiges</option>
                         </select>
                     </div>
-                    
+
                     <div class="three columns">
                         <label for="timeFilter">Zeitraum</label>
                         <select id="timeFilter" class="u-full-width">
@@ -38,34 +38,34 @@ title: "Event-Kalender Hof"
                             <option value="next-hours">Nächste 6 Stunden</option>
                         </select>
                     </div>
-                    
+
                     <div class="two columns">
                         <label for="radiusFilter">Umkreis</label>
                         <select id="radiusFilter" class="u-full-width">
                             <option value="999">Alle</option>
                             <option value="1">🚶 10 min zu Fuß (ca. 1 km)</option>
                             <option value="3">🚴 10 min Rad (ca. 3 km)</option>
-                            <option value="10">🚌 30 min Bus & Bahn (bis 10 km)</option>
+                            <option value="10">🚌 30 min Bus &amp; Bahn (bis 10 km)</option>
                             <option value="999999">🚕 Taxi! Beliebige Distanz </option>
                         </select>
                     </div>
-                    
+
                     <div class="four columns">
                         <label>&nbsp;</label>
-                        <button id="resetFilters" class="button">Filter zurücksetzen</button>
-                        <button id="useLocation" class="button button-primary">📍 Mein Standort</button>
+                        <button type="button" id="resetFilters" class="button">Filter zurücksetzen</button>
+                        <button type="button" id="useLocation" class="button button-primary">📍 Mein Standort</button>
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="twelve columns info-banner">
                     <span id="eventCount">0 Events</span> gefunden
-                    <span id="dawnTime" style="margin-left: 20px;"></span>
+                    <span id="dawnTime" class="dawn-time"></span>
                 </div>
             </div>
         </div>
-        
+
         <!-- Karte -->
         <div class="row">
             <div class="twelve columns">
@@ -74,7 +74,7 @@ title: "Event-Kalender Hof"
                 </div>
             </div>
         </div>
-        
+
         <!-- Event-Liste (wird dynamisch gefüllt) -->
         <div class="row">
             <div class="twelve columns">
