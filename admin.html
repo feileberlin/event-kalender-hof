@@ -438,10 +438,13 @@ function displayEvents(filter = 'all') {
                 ${event.status === 'Entwurf' ? 
                     `<button class="btn-publish" onclick="publishEvent('${event.filename}')">
                         ✓ Publizieren
-                    </button>` : ''}
-                <button class="btn-delete" onclick="deleteEvent('${event.filename}')">
-                    🗑️ Löschen
-                </button>
+                    </button>
+                    <button class="btn-delete" onclick="deleteEvent('${event.filename}')">
+                        🗑️ Löschen
+                    </button>` : 
+                    `<button class="btn-delete" onclick="archiveEvent('${event.filename}')">
+                        📦 Archivieren
+                    </button>`}
             </div>
         </div>
     `).join('');
@@ -476,12 +479,21 @@ function publishEvent(filename) {
     }
 }
 
-// Event löschen
+// Event löschen (nur für Entwürfe)
 function deleteEvent(filename) {
-    if (confirm(`Event "${filename}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden!`)) {
-        alert(`Um das Event zu löschen, entferne die Datei _events/${filename} aus dem Repository und committe die Änderung.`);
+    if (confirm(`Entwurf "${filename}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden!`)) {
+        alert(`Um den Entwurf zu löschen, entferne die Datei _events/${filename} aus dem Repository und committe die Änderung.`);
         const repoUrl = 'https://github.com/feileberlin/event-kalender-hof';
         window.open(`${repoUrl}/tree/main/_events`, '_blank');
+    }
+}
+
+// Event archivieren (für veröffentlichte Events)
+function archiveEvent(filename) {
+    if (confirm(`Event "${filename}" archivieren?\n\nArchivierte Events werden nicht mehr angezeigt, bleiben aber im Repository erhalten.`)) {
+        alert(`Um das Event zu archivieren:\n\n1. Öffne die Datei _events/${filename} auf GitHub\n2. Ändere status: "Öffentlich" zu status: "Archiviert"\n3. Committe die Änderung\n\nDas Event wird dann nicht mehr auf der Website angezeigt.`);
+        const repoUrl = 'https://github.com/feileberlin/event-kalender-hof';
+        window.open(`${repoUrl}/edit/main/_events/${filename}`, '_blank');
     }
 }
 

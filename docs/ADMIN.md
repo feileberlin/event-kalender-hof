@@ -20,10 +20,13 @@ Als Admin bist du verantwortlich für:
 
 ### Event-Status
 
-| Status | Bedeutung | Sichtbarkeit |
-|--------|-----------|--------------|
-| `Entwurf` | Automatisch gescraped oder unveröffentlicht | ❌ Nicht auf Website |
-| `Öffentlich` | Geprüft und freigegeben | ✅ Auf Website sichtbar |
+| Status | Bedeutung | Sichtbarkeit | Löschbar |
+|--------|-----------|--------------|----------|
+| `Entwurf` | Automatisch gescraped oder unveröffentlicht | ❌ Nicht auf Website | ✅ Ja |
+| `Öffentlich` | Geprüft und freigegeben | ✅ Auf Website sichtbar | ❌ Nein* |
+| `Archiviert` | Vergangene oder stornierte Events | ❌ Nicht auf Website | ❌ Nein* |
+
+**\*Wichtig:** Einmal veröffentlichte Events können **nicht gelöscht** werden, nur archiviert! Dies verhindert defekte Links und bewahrt die Event-Historie.
 
 ### Workflow: Entwurf publizieren
 
@@ -33,6 +36,35 @@ Als Admin bist du verantwortlich für:
 4. **Status ändern**: `status: "Entwurf"` → `status: "Öffentlich"`
 5. **Speichern**: Commit Message eingeben → "Commit changes"
 6. **Deployment**: Automatisch in 1-2 Minuten live
+
+### Workflow: Event archivieren
+
+**Für vergangene oder stornierte Events:**
+
+1. **Admin-Interface öffnen**: `/admin/`
+2. **Event auswählen**: Veröffentlichtes Event finden
+3. **Archivieren klicken**: Button "📦 Archivieren"
+4. **GitHub Editor öffnet sich** automatisch
+5. **Status ändern**: `status: "Öffentlich"` → `status: "Archiviert"`
+6. **Speichern**: Commit Message: "Event archiviert"
+7. **Deployment**: Event verschwindet von der Website
+
+**Archivierte Events:**
+- ❌ Nicht mehr auf Website sichtbar
+- ✅ Bleiben im Repository erhalten
+- ✅ URLs bleiben gültig (404-Seite zeigt Archiv-Hinweis)
+- ✅ Git-Historie bleibt vollständig
+
+### Workflow: Entwurf löschen
+
+**Nur für unveröffentlichte Entwürfe:**
+
+1. **Admin-Interface öffnen**: Tab "Entwürfe"
+2. **Event auswählen**: Entwurf finden
+3. **Löschen klicken**: Button "🗑️ Löschen"
+4. **GitHub Repository öffnet sich**
+5. **Datei löschen**: `_events/YYYY-MM-DD-titel.md` entfernen
+6. **Commit**: "Entwurf gelöscht"
 
 ### Flyer-Analyse (AI-powered)
 
