@@ -99,25 +99,25 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 
 ### Für Admins
 
-1. **Admin-Bereich öffnen**: [/admin.html](https://feileberlin.github.io/event-kalender-hof/admin.html)
+**→ Siehe [ADMIN.md](ADMIN.md) für vollständige Admin-Dokumentation**
 
-2. **Entwürfe prüfen**:
-   - Automatisch gescrapte Events erscheinen als "Entwurf"
-   - Prüfe Titel, Datum, Ort und Beschreibung
-
-3. **Event publizieren**:
-   - Klicke auf "Bearbeiten (GitHub)"
-   - Ändere `status: "Entwurf"` zu `status: "Öffentlich"`
-   - Committe die Änderung
-
-4. **Event editieren**:
-   - Öffne Datei im GitHub Editor
-   - Bearbeite YAML Front Matter oder Markdown-Inhalt
-   - Speichern und committen
+Schnellzugriff:
+- Admin-Interface: [/admin.html](https://feileberlin.github.io/event-kalender-hof/admin.html)
+- Entwürfe prüfen und publizieren
+- Events manuell erstellen
+- Scraping-Quellen verwalten
 
 ---
 
-## 🔧 Admin-Dokumentation
+## 📚 Weiterführende Dokumentation
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Schnelleinstieg in 5 Minuten
+- **[ADMIN.md](ADMIN.md)** - Admin-Dokumentation (Event-Verwaltung, Scraping)
+- **[PROJECT.md](PROJECT.md)** - Technische Projekt-Übersicht
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Entwickler-Guide (Tests, Code-Style)
+- **[CHANGELOG.md](CHANGELOG.md)** - Versionshistorie
+
+---
 
 ### Event-Verwaltung
 

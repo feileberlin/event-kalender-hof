@@ -52,15 +52,6 @@ Der Event-Kalender Hof ist eine Jekyll-basierte Website für GitHub Pages, die a
   3. Distanzberechnung simulieren
   4. Edge Cases testen
 - **Workflow**: `.github/workflows/test-filters.yml`
-- Entwürfe verwalten
-- Direkte GitHub-Integration
-- Statistiken Dashboard
-
-### 5. Scherenschnitt-Design
-- Historisches Flair im Stil Albrecht Dürers
-- SVG-basierte Grafiken
-- Altstadt-Silhouette mit Wirtshäusern
-- Animierte Butzenfenster mit Kerzenlicht
 
 ## 📁 Dateistruktur
 
@@ -74,16 +65,17 @@ event-kalender-hof/
 │
 ├── 🎨 Layouts & Templates
 │   ├── _layouts/
-│   │   ├── default.html      # Haupt-Layout
-│   │   └── event.html        # Event-Details
+│   │   ├── popart.html       # Haupt-Layout (37 Zeilen, minimalistisch)
+│   │   └── event.html        # Event-Details (nutzt popart)
 │   ├── index.html            # Hauptseite
 │   └── admin.html            # Admin-Interface
 │
 ├── 💎 Assets
 │   ├── assets/css/
-│   │   └── style.css         # Haupt-Stylesheet (600+ Zeilen)
+│   │   ├── style.css         # Haupt-Stylesheet (566 Zeilen)
+│   │   └── popart.css        # Layout-spezifische Styles
 │   └── assets/js/
-│       └── main.js           # JavaScript-Logik (350+ Zeilen)
+│       └── main.js           # JavaScript-Logik (439 Zeilen)
 │
 ├── 📅 Content
 │   └── _events/              # Event-Markdown-Dateien
@@ -94,9 +86,16 @@ event-kalender-hof/
 ├── 🤖 Automation
 │   ├── .github/workflows/
 │   │   ├── jekyll.yml        # Build & Deploy
-│   │   └── scrape-events.yml # Auto-Scraping
+│   │   ├── scrape-events.yml # Auto-Scraping
+│   │   ├── test-filters.yml  # Filter-Tests
+│   │   └── update-docs.yml   # Doku-Prüfung
 │   └── scripts/
-│       └── scrape_events.py  # Event-Scraper (300+ Zeilen)
+│       └── scrape_events.py  # Event-Scraper (330 Zeilen)
+│
+├── 🧪 Tests
+│   ├── tests/
+│   │   ├── test_filters.js   # Filter-Konsistenz Tests
+│   │   └── README.md         # Test-Dokumentation
 │
 ├── 📚 Dokumentation
 │   ├── README.md             # Hauptdokumentation (900+ Zeilen)
@@ -117,9 +116,10 @@ event-kalender-hof/
 | Technologie | Version | Zweck |
 |------------|---------|-------|
 | Jekyll | 4.3 | Static Site Generator |
+| Skeleton CSS | 2.0.4 | Responsive Grid Framework (Mobile-First) |
+| Normalize CSS | 8.0.1 | Browser CSS Reset |
 | Leaflet.js | 1.9.4 | Kartenvisualisierung |
-| JavaScript | ES6+ | Interaktivität |
-| CSS3 | - | Styling (Flexbox, Grid) |
+| JavaScript | ES6+ | Interaktivität (Vanilla, keine jQuery) |
 | HTML5 | - | Struktur |
 
 ### Backend/Automation
