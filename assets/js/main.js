@@ -308,24 +308,47 @@ function useUserLocation() {
                 lng: position.coords.longitude
             };
 
+            console.log('Standort ermittelt:', userLocation);
+
+            // Entferne alten Standort-Marker
+            markers.forEach(marker => {
+                if (marker.options.className === 'user-location-marker') {
+                    map.removeLayer(marker);
+                }
+            });
+
             // Benutzerpunkt auf Karte
             const userIcon = L.divIcon({
-                className: 'user-marker',
-                html: '<div class="marker-icon" style="background: #4CAF50">👤</div>',
+                className: 'user-location-marker',
+                html: '<div class="marker-icon" style="background: #4CAF50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);">👤</div>',
                 iconSize: [30, 30]
             });
 
-            L.marker([userLocation.lat, userLocation.lng], {icon: userIcon})
+            const userMarker = L.marker([userLocation.lat, userLocation.lng], {icon: userIcon})
                 .addTo(map)
-                .bindPopup('<strong>Ihr Standort</strong>')
+                .bindPopup('<strong>📍 Dein Standort</strong>')
                 .openPopup();
 
+            // Karte zentrieren
             map.setView([userLocation.lat, userLocation.lng], 14);
+
+            // Button-Status aktualisieren
             locationButton.textContent = '✓ Standort aktiv';
             locationButton.disabled = false;
             locationButton.style.background = '#4CAF50';
+            locationButton.style.color = 'white';
 
+            // Radius-Filter automatisch auf "10 min Rad" setzen, wenn noch auf "Alle" steht
+            const radiusFilterElement = document.getElementById('radiusFilter');
+            if (radiusFilterElement && radiusFilterElement.value === '999') {
+                radiusFilterElement.value = '3'; // 3 km = Rad
+                console.log('Radius-Filter automatisch auf 3 km gesetzt');
+            }
+
+            // Events neu filtern und anzeigen
             filterAndDisplayEvents();
+
+            console.log('Standort-basierte Filterung aktiv');
         },
         (error) => {
             let errorMessage = 'Standort konnte nicht ermittelt werden.';
