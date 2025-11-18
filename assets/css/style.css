@@ -529,37 +529,88 @@ textarea:focus {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .filter-group {
-        width: 100%;
-    }
-    
-    .event-list {
-        grid-template-columns: 1fr;
+/* ========================================
+   RESPONSIVE DESIGN - Mobile First
+   ======================================== */
+
+/* Tablet (550px+ - Skeleton Breakpoint) */
+@media (min-width: 550px) {
+    .site-content {
+        padding: 20px;
     }
     
     .map-container {
-        height: 350px;
-    }
-    
-    .site-content {
-        padding: 10px;
+        height: 450px;
     }
 }
 
-@media (max-width: 480px) {
-    .event-card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+/* Desktop (960px+ - Skeleton Container max-width) */
+@media (min-width: 960px) {
+    .map-container {
+        height: 500px;
+    }
+}
+
+/* Mobile Anpassungen */
+@media (max-width: 549px) {
+    .site-content {
+        padding: 10px;
     }
     
-    .header-silhouette svg text {
-        font-size: 24px;
+    .map-container {
+        height: 300px;
+    }
+    
+    .search-filter-section {
+        padding: 15px;
+    }
+    
+    .event-card {
+        margin-bottom: 15px;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Touch-Geräte - größere Touch-Targets */
+@media (hover: none) and (pointer: coarse) {
+    button,
+    .button,
+    a.btn-small {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 20px;
+    }
+    
+    input,
+    select {
+        min-height: 44px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .search-filter-section,
+    .map-container,
+    button,
+    .button {
+        display: none;
+    }
+    
+    .event-card {
+        page-break-inside: avoid;
+        border: 1px solid #000;
+        margin-bottom: 20px;
+    }
+    
+    body {
+        background: white;
+        color: black;
     }
 }
