@@ -1,0 +1,101 @@
+name: Update Documentation
+
+on:
+  schedule:
+    # Täglich um 3:00 UTC (4:00 MEZ / 5:00 MESZ)
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Manueller Trigger
+  push:
+    branches:
+      - main
+    paths:
+      - '_config.yml'
+      - '_layouts/**'
+      - 'assets/**'
+      - 'scripts/**'
+      - '.github/workflows/**'
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-update-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0 # Für git log
+      
+      - name: Check Documentation Freshness
+        id: check_docs
+        run: |
+          # Letztes Änderungsdatum der Code-Dateien
+          LAST_CODE_CHANGE=$(git log -1 --format=%ct -- _config.yml _layouts assets scripts .github/workflows)
+          
+          # Letztes Änderungsdatum der Dokumentation
+          LAST_DOC_CHANGE=$(git log -1 --format=%ct -- README.md PROJECT.md CHANGELOG.md QUICKSTART.md)
+          
+          echo "Code zuletzt geändert: $(date -d @$LAST_CODE_CHANGE)"
+          echo "Docs zuletzt geändert: $(date -d @$LAST_DOC_CHANGE)"
+          
+          # Wenn Code neuer ist als Docs
+          if [ $LAST_CODE_CHANGE -gt $LAST_DOC_CHANGE ]; then
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Dokumentation ist veraltet!"
+          else
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+            echo "✅ Dokumentation ist aktuell"
+          fi
+      
+      - name: Create Issue for Doc Update
+        if: steps.check_docs.outputs.needs_update == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '📚 Dokumentation aktualisieren';
+            const body = `## Automatische Prüfung
+            
+            Die Code-Dateien wurden kürzlich geändert, aber die Dokumentation nicht aktualisiert.
+            
+            **Zu prüfende Dateien:**
+            - [ ] README.md
+            - [ ] PROJECT.md
+            - [ ] CHANGELOG.md
+            - [ ] QUICKSTART.md
+            
+            **Geänderte Code-Bereiche:**
+            - Layouts (_layouts/)
+            - Styles (assets/)
+            - Scripts (scripts/)
+            - Workflows (.github/workflows/)
+            
+            Bitte prüfen und aktualisieren.
+            
+            ---
+            *Automatisch erstellt am ${new Date().toISOString()}*`;
+            
+            // Prüfe ob Issue bereits existiert
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'documentation'
+            });
+            
+            const existingIssue = issues.data.find(issue => issue.title === title);
+            
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['documentation', 'automated']
+              });
+              console.log('Issue erstellt');
+            } else {
+              console.log('Issue existiert bereits: #' + existingIssue.number);
+            }
