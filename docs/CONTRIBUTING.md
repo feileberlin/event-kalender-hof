@@ -70,7 +70,7 @@ const EXPECTED_RADIUS_OPTIONS = [
 ];
 ```
 
-📖 Details: [tests/README.md](tests/README.md)
+📖 Details: [../tests/README.md](../tests/README.md)
 
 ### Manuelle Tests
 

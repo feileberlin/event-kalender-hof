@@ -315,7 +315,7 @@ E --> F[Event-Details öffnen]
 
 - **Issues**: [GitHub Issues](https://github.com/feileberlin/event-kalender-hof/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
-- **Dokumentation**: [README.md](README.md)
+- **Dokumentation**: [../README.md](../README.md)
 
 ## 📜 Lizenz
 

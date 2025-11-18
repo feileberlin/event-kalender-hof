@@ -38,7 +38,7 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 - Events manuell erstellen
 - Scraping-Quellen verwalten
 
-📖 **Vollständige Anleitung**: [ADMIN.md](ADMIN.md)
+📖 **Vollständige Anleitung**: [docs/ADMIN.md](docs/ADMIN.md)
 
 ### Für Entwickler
 
@@ -57,7 +57,7 @@ bundle exec jekyll serve --livereload
 
 ➡️ Öffne: http://localhost:4000
 
-📖 **Entwickler-Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
+📖 **Entwickler-Guide**: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## 🛠️ Tech Stack
 
@@ -73,11 +73,11 @@ bundle exec jekyll serve --livereload
 
 | Datei | Zielgruppe | Inhalt |
 |-------|------------|--------|
-| **[QUICKSTART.md](QUICKSTART.md)** | Alle | Schnelleinstieg in 5 Minuten |
-| **[ADMIN.md](ADMIN.md)** | Admins | Event-Verwaltung, Scraping-Konfiguration |
-| **[CONTRIBUTING.md](CONTRIBUTING.md)** | Entwickler | Tests, Code-Style, Pull Requests |
-| **[PROJECT.md](PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz |
-| **[CHANGELOG.md](CHANGELOG.md)** | Alle | Versionshistorie |
+| **[docs/QUICKSTART.md](docs/QUICKSTART.md)** | Alle | Schnelleinstieg in 5 Minuten |
+| **[docs/ADMIN.md](docs/ADMIN.md)** | Admins | Event-Verwaltung, Scraping-Konfiguration |
+| **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** | Entwickler | Tests, Code-Style, Pull Requests |
+| **[docs/PROJECT.md](docs/PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz |
+| **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | Alle | Versionshistorie |
 
 ## 📝 Event erstellen
 
@@ -97,7 +97,7 @@ status: "Öffentlich"
 ---
 ```
 
-Details: [ADMIN.md](ADMIN.md#manuelles-event-erstellen)
+Details: [docs/ADMIN.md](docs/ADMIN.md#manuelles-event-erstellen)
 
 ## 🧪 Testing
 
@@ -108,7 +108,7 @@ node test_filters.js
 
 Die Test Suite validiert HTML ↔ JavaScript Konsistenz automatisch.
 
-Details: [CONTRIBUTING.md](CONTRIBUTING.md#testing)
+Details: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md#testing)
 
 ## 🤝 Beitragen
 
@@ -118,7 +118,7 @@ Details: [CONTRIBUTING.md](CONTRIBUTING.md#testing)
 4. Push zum Branch: `git push origin feature/AmazingFeature`
 5. Öffne Pull Request
 
-Details: [CONTRIBUTING.md](CONTRIBUTING.md)
+Details: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## 📄 Lizenz
 
@@ -137,7 +137,7 @@ MIT License - siehe [LICENSE](LICENSE)
 - PWA-Support
 - Dark Mode
 
-Vollständige Roadmap: [PROJECT.md](PROJECT.md#roadmap)
+Vollständige Roadmap: [docs/PROJECT.md](docs/PROJECT.md#roadmap)
 
 ---
 
