@@ -37,8 +37,9 @@ plugins:
 
 # Include assets
 include:
-  - assets/images/favicon.ico
-  - assets/images/favicon.svg
+  - favicon.ico
+  - favicon.svg
+  - assets/
 
 # Exclude
 exclude:
