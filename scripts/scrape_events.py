@@ -27,6 +27,21 @@ SOURCES = [
         "url": "https://www.freiheitshalle-hof.de/veranstaltungen/",
         "type": "html"
     },
+    {
+        "name": "Galeriehaus Hof (Fb)",
+        "url": "https://www.facebook.com/GaleriehausHof/",
+        "type": "html"
+    },
+      {
+        "name": "Vanishing Walls (Fb)",
+        "url": "https://www.facebook.com/people/Vanishing-Walls/100093518893300/#",
+        "type": "html"
+    },
+    {
+        "name": "Punkrock in Hof (Fb)",
+        "url": "https://www.facebook.com/people/Punk-in-Hof/100090512583516/",
+        "type": "html"
+    },
     # Weitere Quellen können hier hinzugefügt werden
 ]
 
