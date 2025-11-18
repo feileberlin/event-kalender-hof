@@ -14,7 +14,7 @@ Als Admin bist du verantwortlich für:
 
 ### Admin-Interface öffnen
 
-→ [https://feileberlin.github.io/event-kalender-hof/admin.html](https://feileberlin.github.io/event-kalender-hof/admin.html)
+→ [https://feileberlin.github.io/event-kalender-hof/admin/](https://feileberlin.github.io/event-kalender-hof/admin/)
 
 ## 📅 Event-Verwaltung
 
@@ -27,7 +27,7 @@ Als Admin bist du verantwortlich für:
 
 ### Workflow: Entwurf publizieren
 
-1. **Admin-Interface öffnen**: `/admin.html`
+1. **Admin-Interface öffnen**: `/admin/`
 2. **Event prüfen**: Titel, Datum, Ort, Beschreibung kontrollieren
 3. **GitHub Editor öffnen**: Klick auf "Bearbeiten (GitHub)"
 4. **Status ändern**: `status: "Entwurf"` → `status: "Öffentlich"`

@@ -32,7 +32,7 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 
 ### Für Admins
 
-➡️ **Admin-Interface**: [admin.html](https://feileberlin.github.io/event-kalender-hof/admin.html)
+➡️ **Admin-Interface**: [admin/](https://feileberlin.github.io/event-kalender-hof/admin/)
 
 **Aufgaben:**
 - Entwürfe prüfen und publizieren

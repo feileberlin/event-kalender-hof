@@ -121,7 +121,7 @@ python scripts/analyze_flyer.py https://example.com/programm.pdf
 
 ### 4. Admin-Bereich nutzen
 
-Öffne: `/admin.html`
+Öffne: `/admin/`
 
 ---
 
