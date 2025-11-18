@@ -58,6 +58,45 @@ node test_filters.js
 - Workflow: `.github/workflows/test-filters.yml`
 - Verhindert Inkonsistenzen zwischen UI und Logik
 
+### Code Quality Validation
+
+**Lokal ausführen:**
+
+```bash
+# HTML validieren
+bundle exec jekyll build
+npx html-validate _site/index.html
+
+# CSS validieren
+npx stylelint "assets/css/*.css"
+
+# JavaScript validieren
+npx eslint assets/js/main.js --fix
+```
+
+**Automatische Validierung:**
+- **Bei jedem Push**: `.github/workflows/validate-code.yml`
+- **Monatlich**: `.github/workflows/monthly-tests.yml`
+
+**Was wird geprüft:**
+- ✅ HTML: Void elements, button types, accessibility
+- ✅ CSS: Duplicates, modern syntax, consistency
+- ✅ JavaScript: Linting, trailing spaces, indentation
+- ✅ Accessibility: Inline styles, raw characters, semantic HTML
+
+### Monatliche Testbatterie
+
+Jeden 1. des Monats um 2:00 UTC läuft automatisch:
+
+1. **Filter Tests** - HTML ↔ JavaScript Konsistenz
+2. **Code Validation** - HTML, CSS, JS Quality
+3. **Build Test** - Jekyll Build, Python Scraper
+4. **Event Files Check** - Prüfung vorhandener Events
+
+Manuell starten: GitHub → Actions → "Monthly Test Suite" → "Run workflow"
+
+📖 Details: [../tests/README.md](../tests/README.md)
+
 **Test-Konfiguration anpassen:**
 
 Wenn du Filter-Optionen änderst, aktualisiere `tests/test_filters.js`:

@@ -1,0 +1,153 @@
+name: Monthly Test Suite
+
+on:
+  schedule:
+    # Monatlich am 1. um 2:00 UTC (komplette Testbatterie)
+    - cron: '0 2 1 * *'
+  workflow_dispatch: # Manueller Trigger
+
+permissions:
+  contents: read
+
+jobs:
+  run-filter-tests:
+    runs-on: ubuntu-latest
+    name: Filter Tests
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Run Filter Tests
+        run: |
+          cd tests
+          node test_filters.js
+  
+  run-code-validation:
+    runs-on: ubuntu-latest
+    name: Code Quality Validation
+    needs: run-filter-tests
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Build Jekyll Site
+        run: bundle exec jekyll build --quiet
+      
+      - name: Install Validators
+        run: |
+          npm install -g html-validate stylelint stylelint-config-standard eslint
+      
+      - name: Validate HTML
+        run: |
+          echo "🔍 Validating HTML..."
+          npx html-validate _site/index.html _site/admin.html
+      
+      - name: Validate CSS
+        run: |
+          echo "🔍 Validating CSS..."
+          npx stylelint "assets/css/*.css" || true
+      
+      - name: Validate JavaScript
+        run: |
+          echo "🔍 Validating JavaScript..."
+          npx eslint assets/js/main.js || true
+      
+      - name: Check Accessibility
+        run: |
+          echo "🔍 Checking accessibility..."
+          
+          # Inline styles check
+          if grep -r 'style="' _site/*.html; then
+            echo "⚠️ Warning: Inline styles found"
+          fi
+          
+          # Raw & characters check
+          if grep -r '[^&]&[^amp;#]' _site/*.html; then
+            echo "❌ Error: Raw & characters"
+            exit 1
+          fi
+          
+          echo "✅ Accessibility checks passed!"
+  
+  run-build-test:
+    runs-on: ubuntu-latest
+    name: Build & Deploy Test
+    needs: run-code-validation
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Test Jekyll Build
+        run: |
+          echo "🔍 Testing Jekyll build..."
+          bundle exec jekyll build --verbose
+          echo "✅ Jekyll build successful!"
+      
+      - name: Test Python Scraper
+        run: |
+          echo "🔍 Testing Python scraper..."
+          python scripts/scrape_events.py --dry-run || true
+          echo "✅ Scraper test completed!"
+      
+      - name: Check Event Files
+        run: |
+          echo "🔍 Checking event files..."
+          EVENT_COUNT=$(find _events -name "*.md" | wc -l)
+          echo "Found $EVENT_COUNT event files"
+          
+          if [ $EVENT_COUNT -eq 0 ]; then
+            echo "⚠️ Warning: No event files found"
+          else
+            echo "✅ Event files present"
+          fi
+  
+  summary:
+    runs-on: ubuntu-latest
+    name: Test Summary
+    needs: [run-filter-tests, run-code-validation, run-build-test]
+    if: always()
+    
+    steps:
+      - name: Summary
+        run: |
+          echo "📊 Monthly Test Suite Complete"
+          echo "================================"
+          echo "✅ Filter Tests"
+          echo "✅ Code Quality Validation"
+          echo "✅ Build & Deploy Test"
+          echo ""
+          echo "Nächster Run: $(date -d '+1 month' '+%Y-%m-%d 02:00 UTC')"

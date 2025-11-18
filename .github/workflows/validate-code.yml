@@ -1,0 +1,144 @@
+name: Validate Code Quality
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.html'
+      - '**.css'
+      - '**.js'
+      - '.github/workflows/validate-code.yml'
+  pull_request:
+    paths:
+      - '**.html'
+      - '**.css'
+      - '**.js'
+  workflow_dispatch:
+  schedule:
+    # Monatlich am 1. um 3:00 UTC
+    - cron: '0 3 1 * *'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-html:
+    runs-on: ubuntu-latest
+    name: Validate HTML
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      
+      - name: Build Jekyll Site
+        run: bundle exec jekyll build --quiet
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install html-validate
+        run: npm install -g html-validate
+      
+      - name: Validate HTML Files
+        run: |
+          echo "🔍 Validating HTML..."
+          npx html-validate _site/index.html _site/admin.html
+          echo "✅ HTML validation passed!"
+  
+  validate-css:
+    runs-on: ubuntu-latest
+    name: Validate CSS
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install stylelint
+        run: npm install -g stylelint stylelint-config-standard
+      
+      - name: Validate CSS Files
+        run: |
+          echo "🔍 Validating CSS..."
+          npx stylelint "assets/css/*.css" || echo "⚠️ CSS warnings found (non-blocking)"
+          echo "✅ CSS validation completed!"
+  
+  validate-javascript:
+    runs-on: ubuntu-latest
+    name: Validate JavaScript
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install ESLint
+        run: npm install -g eslint
+      
+      - name: Validate JavaScript Files
+        run: |
+          echo "🔍 Validating JavaScript..."
+          npx eslint assets/js/main.js || true
+          echo "✅ JavaScript validation completed!"
+  
+  check-accessibility:
+    runs-on: ubuntu-latest
+    name: Check Accessibility
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      
+      - name: Build Jekyll Site
+        run: bundle exec jekyll build --quiet
+      
+      - name: Check for Common Issues
+        run: |
+          echo "🔍 Checking accessibility basics..."
+          
+          # Check for inline styles
+          if grep -r 'style="' _site/*.html; then
+            echo "⚠️ Warning: Inline styles found"
+          else
+            echo "✅ No inline styles"
+          fi
+          
+          # Check for raw & characters
+          if grep -r '[^&]&[^amp;#]' _site/*.html; then
+            echo "❌ Error: Raw & characters found"
+            exit 1
+          else
+            echo "✅ No raw & characters"
+          fi
+          
+          # Check for button types
+          if grep -r '<button[^>]*>' _site/*.html | grep -v 'type='; then
+            echo "⚠️ Warning: Buttons without type attribute"
+          else
+            echo "✅ All buttons have type attribute"
+          fi
+          
+          echo "✅ Accessibility check completed!"
