@@ -1,22 +1,32 @@
 # 🎉 Event-Kalender Hof an der Saale
 
-**hof.ist/jetzt** - Dein Event-Kalender bis Sonnenaufgang
+**hof.ist/jetzt** - Events bis Sonnenaufgang in Hof an der Saale
 
 Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events aus verschiedenen Quellen sammelt und auf einer interaktiven Karte darstellt.
 
 ## 🌟 Features
 
-- **📍 Interaktive Karte** mit Leaflet.js, zentriert auf Hof an der Saale
-- **🕐 Zeitfilter**: Zeigt nur Events bis zur Morgendämmerung
+- **📍 Interaktive Karte** mit Leaflet.js 1.9.4, immer zentriert auf Hof an der Saale
+- **🕐 Zeitfilter "Bis Sonnenaufgang"**: Zeigt nur Events bis zur Morgendämmerung (6:30 Uhr)
 - **🔍 Such- und Filterfunktionen**
-  - Textsuche
-  - Kategorie-Filter
+  - Textsuche (Titel, Beschreibung, Ort)
+  - Kategorie-Filter (Musik, Theater, Sport, Kultur, Markt, Fest)
   - Zeitraum-Filter (heute, morgen, nächste 6 Stunden)
-  - Radius-Filter (basierend auf Standort)
-- **📱 Geolocation**: Nutzt Browser-Standort für personalisierte Umkreissuche
-- **🤖 Automatisches Scraping**: GitHub Actions sammeln Events von lokalen Websites
-- **✏️ Admin-Interface**: Einfache Verwaltung von Event-Entwürfen
-- **🎨 Scherenschnitt-Design**: Historisches Flair im Stil Albrecht Dürers
+  - Radius-Filter (1-10 km, basierend auf Standort)
+- **📱 Geolocation**: Browser-Standort für personalisierte Umkreissuche mit Fehlerbehandlung
+- **🤖 Automatisches Scraping**: Python-Script sammelt Events von lokalen Websites und Facebook
+- **✏️ Admin-Interface**: Einfache Verwaltung von Event-Entwürfen (admin.html)
+- **🎨 Minimalistisches Design**: Skeleton CSS Framework, Mobile-First, Touch-optimiert
+- **📱 Responsive**: Funktioniert auf Desktop, Tablet, Smartphone
+- **🖨️ Druckfreundlich**: Optimierte Print-Styles
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Jekyll 4.3, Skeleton CSS 2.0.4, Leaflet.js 1.9.4
+- **JavaScript**: Vanilla ES6+, keine jQuery
+- **Backend**: Python 3.11+ (Scraping mit BeautifulSoup, PyYAML)
+- **Deployment**: GitHub Pages, GitHub Actions
+- **CSS**: Mobile-First, keine Flexbox (nur Skeleton Grid)
 
 ## 📋 Inhaltsverzeichnis
 

@@ -1,33 +1,45 @@
 # 📊 Projekt-Übersicht: Event-Kalender Hof
 
+**Letzte Aktualisierung:** 18. November 2025
+
 ## Zusammenfassung
 
 Der Event-Kalender Hof ist eine Jekyll-basierte Website für GitHub Pages, die automatisch Events aus verschiedenen Quellen sammelt und auf einer interaktiven Karte darstellt. Das Besondere: Es werden nur Events bis zur Morgendämmerung angezeigt - perfekt für spontane Abendplanungen!
 
+**Live-URL:** https://feileberlin.github.io/event-kalender-hof/
+
 ## 🎯 Kernfunktionen
 
 ### 1. Interaktive Event-Karte
-- **Technologie**: Leaflet.js + OpenStreetMap
+- **Technologie**: Leaflet.js 1.9.4 + OpenStreetMap Tiles
 - **Zentrum**: Rathaus Hof an der Saale (50.3197, 11.9168)
 - **Features**: 
-  - Automatische Marker für Events
+  - Rathaus-Marker immer sichtbar (auch ohne Events)
+  - Automatische Event-Marker mit farbigen Icons
   - Click-to-focus Funktionalität
-  - Responsive Design
-  - Geolocation-Unterstützung
+  - Responsive: 300px (Mobile) → 500px (Desktop)
+  - Geolocation-Unterstützung mit Fehlerbehandlung
+  - z-index: 999-1001 für korrekte Layering
 
 ### 2. Intelligente Zeitfilterung
-- Zeigt nur Events bis zur nächsten Morgendämmerung
-- Berechnung: ~6:30 Uhr am Folgetag
-- Zusätzliche Filter: Heute, Morgen, Nächste 6 Stunden
+- **"Bis Sonnenaufgang"**: Zeigt nur Events bis 6:30 Uhr am Folgetag
+- **Dawn-Berechnung**: Dynamisch basierend auf aktueller Uhrzeit
+- **Zusätzliche Filter**: Heute, Morgen, Nächste 6 Stunden
+- **Radius-Filter**: 1-10 km Umkreis (wenn Standort verfügbar)
 
 ### 3. Automatisches Event-Scraping
 - **GitHub Actions**: Täglich um 6:00 und 18:00 UTC
-- **Duplikatsprüfung**: Hash-basiert
+- **Duplikatsprüfung**: MD5-Hash aus Titel+Datum+Zeit+Ort
 - **Status-System**: Entwurf → Öffentlich
-- **Quellen**: Erweiterbar (aktuell 2 Beispiel-Quellen)
+- **Quellen**: 
+  - Stadt Hof
+  - Freiheitshalle Hof
+  - Galeriehaus Hof (Facebook)
+  - Vanishing Walls (Facebook)
+  - Punkrock in Hof (Facebook)
 
-### 4. Admin-Interface
-- Übersicht aller Events
+### 4. Admin-Interface (admin.html)
+- Übersicht aller Events (inkl. Entwürfe)
 - Entwürfe verwalten
 - Direkte GitHub-Integration
 - Statistiken Dashboard

@@ -9,13 +9,18 @@ Event-Kalender Hof in 5 Minuten starten!
 2. Klicke auf "Fork"
 3. Wähle deinen Account
 
-### Schritt 2: GitHub Pages aktivieren
+### Schritt 2: Baseurl anpassen
+1. Öffne `_config.yml` in deinem Fork
+2. Ändere `baseurl: "/event-kalender-hof"` zu `baseurl: "/DEIN-REPO-NAME"`
+3. Commit & Push
+
+### Schritt 3: GitHub Pages aktivieren
 1. Gehe zu deinem Fork → Settings → Pages
 2. Source: "GitHub Actions"
 3. Warte ~2 Minuten auf Deployment
 
-### Schritt 3: Website öffnen
-→ `https://DEIN-USERNAME.github.io/event-kalender-hof`
+### Schritt 4: Website öffnen
+→ `https://DEIN-USERNAME.github.io/DEIN-REPO-NAME`
 
 **Fertig!** 🎉
 
@@ -54,7 +59,7 @@ cd event-kalender-hof
 bundle install
 pip install -r requirements.txt
 
-# 3. Server starten
+# 3. Server starten (baseurl wird automatisch leer für lokale Entwicklung)
 bundle exec jekyll serve --livereload
 ```
 
