@@ -126,7 +126,7 @@ function syncZoomWithRadius() {
     } else if (radius === '10') {
         targetZoom = 12;
     } else {
-        targetZoom = 12; // Unbegrenzt: Zeige trotzdem 10 km Zoom
+        targetZoom = 9; // Unbegrenzt: Zeige ~60 km Zoom
     }
     
     // Nur zoomen wenn deutlicher Unterschied
