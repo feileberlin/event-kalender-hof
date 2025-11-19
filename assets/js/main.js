@@ -409,7 +409,17 @@ function displayEventsOnMap() {
                 </div>
             `);
 
-        marker.on('click', () => highlightEvent(index));
+        marker.on('click', () => {
+            highlightEvent(index);
+            // GoatCounter Event-Tracking
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/event/${event.category}/${event.title.toLowerCase().replace(/\s+/g, '-')}`,
+                    title: `Event: ${event.title}`,
+                    event: true
+                });
+            }
+        });
         markers.push(marker);
     });
 
@@ -685,6 +695,14 @@ function setupEventListeners() {
         categoryFilter.addEventListener('change', () => {
             filterAndDisplayEvents();
             savePrefsToCookie();
+            // Track Filter-Nutzung
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/filter/category/${categoryFilter.value || 'all'}`,
+                    title: `Filter: Kategorie ${categoryFilter.value || 'alle'}`,
+                    event: true
+                });
+            }
         });
     }
 
@@ -692,6 +710,14 @@ function setupEventListeners() {
         timeFilter.addEventListener('change', () => {
             filterAndDisplayEvents();
             savePrefsToCookie();
+            // Track Filter-Nutzung
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/filter/time/${timeFilter.value}`,
+                    title: `Filter: Zeit ${timeFilter.value}`,
+                    event: true
+                });
+            }
         });
     }
 
@@ -700,6 +726,14 @@ function setupEventListeners() {
             syncZoomWithRadius();
             filterAndDisplayEvents();
             savePrefsToCookie();
+            // Track Filter-Nutzung
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/filter/radius/${radiusFilter.value}km`,
+                    title: `Filter: Radius ${radiusFilter.value}km`,
+                    event: true
+                });
+            }
         });
     }
 

@@ -37,7 +37,41 @@ Wenn Sie die Option **"🎯 Mein Standort"** wählen:
 
 **Alternative Standorte:** Sie können stattdessen "🏛️ Rathaus" oder "🚂 Hauptbahnhof" als feste Bezugspunkte wählen.
 
-### 2.3 Externe Inhalte
+### 2.3 Webanalyse (GoatCounter)
+
+Diese Website nutzt **GoatCounter**, einen privacy-first Webanalyse-Dienst.
+
+**Was wird erfasst:**
+- Seitenaufrufe (welche Seiten werden besucht)
+- Referrer (woher kommen Besucher)
+- Browser-Typ und Betriebssystem (z.B. "Firefox auf Linux")
+- Bildschirmauflösung (z.B. "1920x1080")
+- Land (basierend auf IP, aber IP wird nicht gespeichert)
+- Custom Events (Event-Klicks, Filter-Nutzung)
+
+**Was wird NICHT erfasst:**
+- ❌ Keine IP-Adressen (werden nicht gespeichert)
+- ❌ Keine Cookies für Tracking
+- ❌ Kein Fingerprinting
+- ❌ Keine personenbezogenen Daten
+- ❌ Keine Cross-Site-Tracking
+
+**Zweck:**
+- Verbesserung der Website
+- Verständnis der Nutzungsmuster (Peak-Zeiten, beliebte Events)
+- Technische Optimierung
+
+**Rechtsgrundlage:** Berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO)
+
+**Anbieter:** GoatCounter (https://www.goatcounter.com)  
+**Datenschutz:** [GoatCounter Privacy Policy](https://www.goatcounter.com/help/privacy)
+
+**Dashboard:** Unsere Statistiken sind öffentlich einsehbar unter:  
+https://event-kalender-hof.goatcounter.com
+
+**Widerspruch:** Sie können GoatCounter mit einem Browser-Add-on wie uBlock Origin blockieren.
+
+### 2.4 Externe Inhalte
 
 #### OpenStreetMap (Kartenmaterial)
 - **Anbieter:** OpenStreetMap Foundation
@@ -105,9 +139,11 @@ Bei Fragen zum Datenschutz:
 ## Zusammenfassung (TL;DR)
 
 ✅ **Was wir speichern:** Nur Ihre Filter-Einstellungen in einem Cookie  
-✅ **Was wir NICHT tun:** Tracking, Analytics, Datenverkauf  
+✅ **Analytics:** GoatCounter (privacy-first, keine IPs, keine Cookies für Tracking)  
+✅ **Was wir NICHT tun:** Fingerprinting, Datenverkauf, personalisierte Werbung  
 ✅ **Standort:** Nur lokal in Ihrem Browser, nicht auf unseren Servern  
-✅ **Ihre Kontrolle:** Alles jederzeit löschbar in Browser-Einstellungen  
+✅ **Ihre Kontrolle:** Alles jederzeit löschbar, Analytics blockierbar  
+✅ **Transparenz:** Statistiken sind öffentlich einsehbar  
 ✅ **Open Source:** Code ist öffentlich einsehbar  
 
 **Privacy-First Design** 🔒
