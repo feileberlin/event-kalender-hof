@@ -27,17 +27,17 @@ title: "Event-Kalender Hof"
                 <option value="Sonstiges" data-icon="📌">Sonstiges</option>
             </select>
             
+            <select id="timeFilter" class="inline-select">
+                <option value="sunrise">🌅 bis Sonnenaufgang</option>
+                <option value="tatort">📺 bis Tatort</option>
+                <option value="all">🎸 alle Events</option>
+            </select>
+            
             <select id="radiusFilter" class="inline-select">
                 <option value="1">🚶 1 km Umkreis</option>
                 <option value="3" selected>🚴 3 km Umkreis</option>
                 <option value="10">🚌 10 km Umkreis</option>
                 <option value="999999">🚕 unbegrenzt</option>
-            </select>
-            
-            <select id="timeFilter" class="inline-select">
-                <option value="sunrise">🌅 bis Sonnenaufgang</option>
-                <option value="tatort">📺 bis Tatort</option>
-                <option value="all">🎸 alle Events</option>
             </select>
             
             <button type="button" id="useLocation" class="button-icon" title="Mein Standort">📍</button>
