@@ -140,7 +140,7 @@ function syncZoomWithRadius() {
     }
 }
 
-// Morgendämmerung berechnen und anzeigen
+// Morgendämmerung berechnen
 function calculateDawnTime() {
     const now = new Date();
     let dawnDate = new Date(now);
@@ -153,43 +153,7 @@ function calculateDawnTime() {
 
     dawnDate.setHours(6, 30, 0, 0);
 
-    updateTimeFilterDisplay();
-
     return dawnDate;
-}
-
-// Zeitfilter-Anzeige aktualisieren
-function updateTimeFilterDisplay() {
-    const dawnElement = document.getElementById('dawnTime');
-    if (!dawnElement) return;
-
-    const timeFilter = document.getElementById('timeFilter').value;
-    const now = new Date();
-
-    let displayText = '';
-
-    if (timeFilter === 'sunrise') {
-        const dawn = new Date(now);
-        if (now.getHours() >= 6 && now.getMinutes() >= 30) {
-            dawn.setDate(dawn.getDate() + 1);
-        }
-        dawn.setHours(6, 30, 0, 0);
-        displayText = `🌅 Bis Sonnenaufgang: ${dawn.toLocaleDateString('de-DE')} ${dawn.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
-    } else if (timeFilter === 'tatort') {
-        const tatortTime = new Date(now);
-        const daysUntilSunday = (7 - tatortTime.getDay()) % 7;
-        if (daysUntilSunday === 0 && (tatortTime.getHours() > 20 || (tatortTime.getHours() === 20 && tatortTime.getMinutes() >= 15))) {
-            tatortTime.setDate(tatortTime.getDate() + 7);
-        } else if (daysUntilSunday > 0) {
-            tatortTime.setDate(tatortTime.getDate() + daysUntilSunday);
-        }
-        tatortTime.setHours(20, 15, 0, 0);
-        displayText = `📺 Bis zum Tatort: ${tatortTime.toLocaleDateString('de-DE')} ${tatortTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
-    } else if (timeFilter === 'all') {
-        displayText = `🎸 Volle Breitseite RockCity - alle kommenden Events`;
-    }
-
-    dawnElement.textContent = displayText;
 }
 
 // Events filtern (nur kommende, Zeitfilter wird in filterAndDisplayEvents angewendet)
@@ -280,29 +244,10 @@ function filterAndDisplayEvents() {
     displayEventList();
 }
 
-// Event-Anzahl und Radius aktualisieren
+// Event-Anzahl aktualisieren
 function updateEventCount() {
     const eventCountText = `${filteredEvents.length} ${filteredEvents.length === 1 ? 'Event' : 'Events'}`;
     document.getElementById('eventCount').textContent = eventCountText;
-    
-    // Radius-Info hinzufügen
-    const radiusFilter = document.getElementById('radiusFilter').value;
-    const radiusInfoElement = document.getElementById('radiusInfo');
-    
-    let radiusText = '';
-    if (radiusFilter === '1') {
-        radiusText = ' in 1 km Umkreis.';
-    } else if (radiusFilter === '3') {
-        radiusText = ' in 3 km Umkreis.';
-    } else if (radiusFilter === '10') {
-        radiusText = ' in 10 km Umkreis.';
-    } else {
-        radiusText = '.';
-    }
-    
-    if (radiusInfoElement) {
-        radiusInfoElement.textContent = radiusText;
-    }
 }
 
 // Events auf Karte anzeigen
@@ -565,10 +510,7 @@ function setupEventListeners() {
     }
 
     if (timeFilter) {
-        timeFilter.addEventListener('change', () => {
-            updateTimeFilterDisplay();
-            filterAndDisplayEvents();
-        });
+        timeFilter.addEventListener('change', filterAndDisplayEvents);
     }
 
     if (radiusFilter) {

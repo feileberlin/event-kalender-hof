@@ -58,6 +58,7 @@ body.fullscreen-layout {
     gap: 10px;
     max-width: 1400px;
     margin: 0 auto;
+    justify-content: space-between;
 }
 
 /* Such-Toggle Button */
@@ -102,31 +103,6 @@ body.fullscreen-layout {
     border: 1px solid #dee2e6;
     border-radius: 4px;
     font-size: 16px;
-}
-
-/* Kompakte Filter */
-.filters-compact {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-    justify-content: flex-end;
-}
-
-.filter-select {
-    height: 44px;
-    padding: 0 10px;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    background: white;
-    font-size: 14px;
-    cursor: pointer;
-    min-width: 150px;
-}
-
-.filter-select:focus {
-    outline: none;
-    border-color: #2c3e50;
 }
 
 .button-icon {
@@ -175,17 +151,41 @@ body.fullscreen-layout {
 
 .event-info {
     display: flex;
-    gap: 15px;
+    gap: 8px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 #eventCount {
     font-weight: bold;
     color: #2c3e50;
+    margin-right: 5px;
 }
 
-#dawnTime {
-    color: #666;
+/* Inline Selects - sehen aus wie Text */
+.inline-select {
+    appearance: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed #2c3e50;
+    padding: 2px 4px;
+    font-size: 14px;
+    color: #2c3e50;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.inline-select:hover {
+    background: rgba(44, 62, 80, 0.05);
+    border-bottom-style: solid;
+}
+
+.inline-select:focus {
+    outline: none;
+    background: rgba(44, 62, 80, 0.1);
+    border-bottom-color: #2c3e50;
+    border-bottom-style: solid;
 }
 
 .logo-link {

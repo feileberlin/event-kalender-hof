@@ -6,7 +6,7 @@ title: "Event-Kalender Hof"
 <!-- Bildschirmfüllende Karte -->
 <div id="map" class="fullscreen-map"></div>
 
-<!-- Transparenter Header mit Filtern -->
+<!-- Transparenter Header mit Suche -->
 <header class="overlay-header">
     <div class="header-content">
         <button type="button" id="searchToggle" class="search-toggle" aria-label="Suche öffnen">🔍</button>
@@ -15,9 +15,18 @@ title: "Event-Kalender Hof"
             <input type="text" id="searchInput" placeholder="Events durchsuchen..." class="search-input">
         </div>
         
-        <div class="filters-compact">
-            <select id="categoryFilter" class="filter-select">
-                <option value="">📁 Alle Kategorien</option>
+        <button type="button" id="useLocation" class="button-icon" title="Mein Standort">📍</button>
+    </div>
+</header>
+
+<!-- Interaktiver Footer -->
+<footer class="overlay-footer">
+    <div class="footer-content">
+        <div class="event-info">
+            <span id="eventCount">0 Events</span>
+            
+            <select id="categoryFilter" class="inline-select">
+                <option value="">📁 alle Kategorien</option>
                 <option value="Musik">🎵 Musik</option>
                 <option value="Theater">🎭 Theater</option>
                 <option value="Sport">⚽ Sport</option>
@@ -27,30 +36,18 @@ title: "Event-Kalender Hof"
                 <option value="Sonstiges">📌 Sonstiges</option>
             </select>
             
-            <select id="timeFilter" class="filter-select">
-                <option value="sunrise">🌅 Bis Sonnenaufgang</option>
-                <option value="tatort">📺 Bis Tatort (So 20:15)</option>
-                <option value="all">🎸 Alle Events (RockCity!)</option>
-            </select>
-            
-            <select id="radiusFilter" class="filter-select">
+            <select id="radiusFilter" class="inline-select">
                 <option value="1">🚶 1 km Umkreis</option>
                 <option value="3" selected>🚴 3 km Umkreis</option>
                 <option value="10">🚌 10 km Umkreis</option>
-                <option value="999999">🚕 Unbegrenzt</option>
+                <option value="999999">🚕 unbegrenzt</option>
             </select>
             
-            <button type="button" id="useLocation" class="button-icon" title="Mein Standort">📍</button>
-        </div>
-    </div>
-</header>
-
-<!-- Transparenter Footer -->
-<footer class="overlay-footer">
-    <div class="footer-content">
-        <div class="event-info">
-            <span id="eventCount">0 Events</span><span id="radiusInfo"></span>
-            <span id="dawnTime"></span>
+            <select id="timeFilter" class="inline-select">
+                <option value="sunrise">🌅 bis Sonnenaufgang</option>
+                <option value="tatort">📺 bis Tatort</option>
+                <option value="all">🎸 alle Events</option>
+            </select>
         </div>
         <a href="https://github.com/feileberlin/event-kalender-hof/discussions" class="logo-link" target="_blank" rel="noopener" title="Diskussionen">
             <img src="{{ '/favicon.svg' | relative_url }}" alt="Logo" class="footer-logo">
