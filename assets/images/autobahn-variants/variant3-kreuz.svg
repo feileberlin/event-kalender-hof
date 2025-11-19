@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
-  <!-- Variante 3: Autobahnkreuz-Symbol -->
-  <rect x="2" y="4" width="20" height="16" rx="2" fill="#003399"/>
-  <path d="M 8 8 L 16 8 M 8 16 L 16 16 M 12 6 L 12 18" stroke="white" stroke-width="1.5"/>
-</svg>
