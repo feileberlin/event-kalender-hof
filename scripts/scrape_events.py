@@ -20,6 +20,7 @@ from venue_manager import VenueManager
 
 # Konfiguration
 EVENTS_DIR = Path("_events")
+LOGS_DIR = Path("_events/_logs")
 SOURCES_CSV = Path("_data/sources.csv")
 
 def load_sources():
@@ -47,12 +48,129 @@ DEFAULT_COORDINATES = {
 }
 
 
+class ScrapingLogger:
+    """Logger für detaillierte Scraping-Protokolle"""
+    
+    def __init__(self):
+        # Stelle sicher, dass Log-Verzeichnis existiert
+        LOGS_DIR.mkdir(parents=True, exist_ok=True)
+        
+        # Timestamp für Dateinamen
+        timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+        self.log_file = LOGS_DIR / f"{timestamp}-scraping.log"
+        
+        # Logging-Daten
+        self.logs = []
+        self.start_time = datetime.now()
+        
+        self.log("="*80)
+        self.log(f"SCRAPING SESSION GESTARTET: {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        self.log("="*80)
+        self.log("")
+    
+    def log(self, message, level="INFO"):
+        """Fügt Log-Eintrag hinzu"""
+        timestamp = datetime.now().strftime('%H:%M:%S')
+        log_entry = f"[{timestamp}] [{level}] {message}"
+        self.logs.append(log_entry)
+        print(log_entry)
+    
+    def log_source(self, source_name, source_url):
+        """Loggt Start einer Quelle"""
+        self.log("")
+        self.log("-"*80)
+        self.log(f"📡 QUELLE: {source_name}")
+        self.log(f"🔗 URL: {source_url}")
+        self.log("-"*80)
+    
+    def log_event_found(self, title, date, time, location):
+        """Loggt ein gefundenes Event"""
+        self.log(f"🔍 Event gefunden: '{title}'")
+        self.log(f"   📅 Datum: {date} | ⏰ Zeit: {time}")
+        self.log(f"   📍 Ort: {location}")
+    
+    def log_event_duplicate(self, title, event_hash):
+        """Loggt ein doppeltes Event"""
+        self.log(f"⚠️  Event übersprungen (Duplikat): '{title}' (Hash: {event_hash})", "WARN")
+    
+    def log_event_created(self, filename, title):
+        """Loggt Erstellung einer Event-Datei"""
+        self.log(f"✅ Event-Datei erstellt: {filename}")
+        self.log(f"   📝 Titel: '{title}'")
+    
+    def log_venue_enrichment(self, location, venue_found=True, venue_data=None):
+        """Loggt Venue-Anreicherung"""
+        if venue_found and venue_data:
+            self.log(f"🏛️  Venue gefunden für '{location}':")
+            self.log(f"   ✓ Kanonischer Name: {venue_data.get('venue_name', 'N/A')}")
+            self.log(f"   ✓ Adresse: {venue_data.get('address', 'N/A')}")
+            self.log(f"   ✓ Koordinaten: {venue_data.get('latitude', 'N/A')}, {venue_data.get('longitude', 'N/A')}")
+            if venue_data.get('wheelchair_accessible'):
+                self.log(f"   ✓ Barrierefrei: Ja")
+        else:
+            self.log(f"⚠️  Keine Venue-Daten für '{location}' gefunden", "WARN")
+    
+    def log_category_guess(self, title, category):
+        """Loggt automatische Kategorie-Zuordnung"""
+        self.log(f"🏷️  Kategorie ermittelt: '{category}' (aus Titel: '{title}')")
+    
+    def log_tags_extracted(self, tags):
+        """Loggt extrahierte Tags"""
+        if tags:
+            self.log(f"🏷️  Tags extrahiert: {', '.join(tags)}")
+    
+    def log_error(self, error_message, context=""):
+        """Loggt einen Fehler"""
+        self.log(f"❌ FEHLER: {error_message}", "ERROR")
+        if context:
+            self.log(f"   Kontext: {context}", "ERROR")
+    
+    def log_summary(self, total_found, total_created, total_duplicates, missing_venues):
+        """Loggt Zusammenfassung am Ende"""
+        end_time = datetime.now()
+        duration = end_time - self.start_time
+        
+        self.log("")
+        self.log("="*80)
+        self.log("📊 SCRAPING SESSION ABGESCHLOSSEN")
+        self.log("="*80)
+        self.log(f"⏱️  Dauer: {duration.total_seconds():.2f} Sekunden")
+        self.log(f"🔍 Events gefunden: {total_found}")
+        self.log(f"✅ Events erstellt: {total_created}")
+        self.log(f"⚠️  Duplikate übersprungen: {total_duplicates}")
+        
+        if missing_venues:
+            self.log("")
+            self.log(f"🏛️  Fehlende Venues ({len(missing_venues)}):")
+            for venue in missing_venues:
+                self.log(f"   • {venue}")
+        else:
+            self.log("✅ Alle Venues in venues.csv vorhanden")
+        
+        self.log("")
+        self.log(f"📄 Log gespeichert: {self.log_file}")
+        self.log("="*80)
+    
+    def save(self):
+        """Speichert Log-Datei"""
+        try:
+            with open(self.log_file, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(self.logs))
+            return str(self.log_file)
+        except Exception as e:
+            print(f"Fehler beim Speichern der Log-Datei: {e}")
+            return None
+
+
 class EventScraper:
     def __init__(self):
         self.events = []
         self.existing_hashes = self.load_existing_hashes()
         self.venue_manager = VenueManager()
-        print(f"📍 Venue Manager geladen: {len(self.venue_manager.venues)} Venues")
+        self.logger = ScrapingLogger()
+        self.duplicates_count = 0
+        
+        self.logger.log(f"📍 Venue Manager geladen: {len(self.venue_manager.venues)} Venues")
     
     def load_existing_hashes(self):
         """Lädt bereits vorhandene Event-Hashes um Duplikate zu vermeiden"""
@@ -77,6 +195,8 @@ class EventScraper:
     
     def scrape_stadt_hof(self, url):
         """Scrapt Events von der Stadt Hof Website"""
+        self.logger.log_source("Stadt Hof", url)
+        
         try:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
@@ -84,6 +204,7 @@ class EventScraper:
             
             # Beispiel-Parsing (muss an tatsächliche HTML-Struktur angepasst werden)
             events = soup.find_all('div', class_='event-item')
+            self.logger.log(f"📄 HTML geparst: {len(events)} Event-Elemente gefunden")
             
             for event in events[:10]:  # Limitierung auf 10 Events
                 try:
@@ -96,29 +217,38 @@ class EventScraper:
                     event_date, event_time = self.parse_date(date_text)
                     
                     if event_date:
+                        self.logger.log_event_found(title, event_date, event_time, location)
                         event_hash = self.generate_event_hash(title, str(event_date), event_time, location)
                         
                         if event_hash not in self.existing_hashes:
                             event_data = {
-                        'title': title,
-                        'date': event_date,
-                        'start_time': event_time,
-                        'location': location,
-                        'description': description,
-                        'source': 'Stadt Hof',
-                        'source_url': url,
-                        'event_hash': event_hash,
-                        'status': 'Entwurf'
-                    }
-                    # Venue-Daten anreichern
-                    event_data = self.venue_manager.enrich_event_data(event_data)
-                    self.events.append(event_data)
+                                'title': title,
+                                'date': event_date,
+                                'start_time': event_time,
+                                'location': location,
+                                'description': description,
+                                'source': 'Stadt Hof',
+                                'source_url': url,
+                                'event_hash': event_hash,
+                                'status': 'Entwurf'
+                            }
+                            # Venue-Daten anreichern
+                            enriched_data = self.venue_manager.enrich_event_data(event_data)
+                            if enriched_data.get('venue_name'):
+                                self.logger.log_venue_enrichment(location, True, enriched_data)
+                            else:
+                                self.logger.log_venue_enrichment(location, False)
+                            
+                            self.events.append(enriched_data)
+                        else:
+                            self.logger.log_event_duplicate(title, event_hash)
+                            self.duplicates_count += 1
                 except Exception as e:
-                    print(f"Fehler beim Parsen eines Events: {e}")
+                    self.logger.log_error(str(e), f"Event: {title if 'title' in locals() else 'unbekannt'}")
                     continue
         
         except Exception as e:
-            print(f"Fehler beim Scrapen von {url}: {e}")
+            self.logger.log_error(str(e), f"Scraping von {url}")
     
     def parse_date(self, date_text):
         """Versucht, Datum und Zeit aus Text zu extrahieren"""
@@ -164,6 +294,11 @@ class EventScraper:
     def save_events(self):
         """Speichert gescrapte Events als Markdown-Dateien"""
         EVENTS_DIR.mkdir(exist_ok=True)
+        
+        self.logger.log("")
+        self.logger.log("-"*80)
+        self.logger.log(f"💾 SPEICHERE {len(self.events)} EVENTS")
+        self.logger.log("-"*80)
         
         for event in self.events:
             # Dateiname generieren
@@ -219,9 +354,9 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
             try:
                 with open(filepath, 'w', encoding='utf-8') as f:
                     f.write(content)
-                print(f"✓ Erstellt: {filename}")
+                self.logger.log_event_created(filename, event_data['title'])
             except Exception as e:
-                print(f"✗ Fehler beim Speichern von {filename}: {e}")
+                self.logger.log_error(f"Fehler beim Speichern von {filename}: {e}")
     
     def guess_category(self, title, description):
         """Rät die Event-Kategorie basierend auf Keywords"""
@@ -238,8 +373,10 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
         
         for category, keywords in categories.items():
             if any(keyword in text for keyword in keywords):
+                self.logger.log_category_guess(title, category)
                 return category
         
+        self.logger.log_category_guess(title, 'Sonstiges')
         return 'Sonstiges'
     
     def extract_tags(self, title, description):
@@ -259,33 +396,39 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
             if any(keyword in text for keyword in keywords):
                 tags.append(tag)
         
-        return tags[:5]  # Maximal 5 Tags
+        tags = tags[:5]  # Maximal 5 Tags
+        if tags:
+            self.logger.log_tags_extracted(tags)
+        return tags
     
     def run(self):
         """Führt den kompletten Scraping-Prozess aus"""
-        print("🔍 Starte Event-Scraping für Hof an der Saale...")
-        print(f"📅 Datum: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print()
+        self.logger.log("🔍 Starte Event-Scraping für Hof an der Saale...")
+        self.logger.log(f"📅 Datum: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         # Beispiel-Events generieren (für Demonstration)
         self.generate_sample_events()
         
         # TODO: Uncomment für echtes Scraping
         # for source in SOURCES:
-        #     print(f"Scraping: {source['name']}...")
         #     if source['type'] == 'html':
         #         self.scrape_stadt_hof(source['url'])
         
-        print(f"\n✅ {len(self.events)} neue Events gefunden")
+        self.logger.log("")
+        self.logger.log(f"✅ {len(self.events)} neue Events gefunden")
         
         if self.events:
             self.save_events()
-            print(f"\n💾 Events gespeichert in {EVENTS_DIR}")
+            self.logger.log("")
+            self.logger.log(f"💾 Events gespeichert in {EVENTS_DIR}")
         else:
-            print("\nℹ️ Keine neuen Events zum Speichern")
+            self.logger.log("")
+            self.logger.log("ℹ️  Keine neuen Events zum Speichern")
     
     def generate_sample_events(self):
         """Generiert Beispiel-Events für Testzwecke"""
+        self.logger.log_source("Beispiel-Generator", "internal://sample-events")
+        
         sample_events = [
             {
                 'title': 'Weihnachtsmarkt Hof',
@@ -308,6 +451,13 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
         ]
         
         for event in sample_events:
+            self.logger.log_event_found(
+                event['title'],
+                event['date'],
+                event['start_time'],
+                event['location']
+            )
+            
             event_hash = self.generate_event_hash(
                 event['title'], 
                 str(event['date']), 
@@ -319,6 +469,9 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
                 event['event_hash'] = event_hash
                 event['status'] = 'Entwurf'
                 self.events.append(event)
+            else:
+                self.logger.log_event_duplicate(event['title'], event_hash)
+                self.duplicates_count += 1
 
 
 def main():
@@ -326,13 +479,24 @@ def main():
     scraper.run()
     
     # Report: Fehlende Venues
-    print("\n" + "="*60)
-    print("📋 VENUE REPORT")
-    print("="*60)
-    
     missing_venues = scraper.venue_manager.find_missing_venues(scraper.events)
     
+    # Log-Zusammenfassung
+    scraper.logger.log_summary(
+        total_found=len(scraper.events) + scraper.duplicates_count,
+        total_created=len(scraper.events),
+        total_duplicates=scraper.duplicates_count,
+        missing_venues=missing_venues
+    )
+    
+    # Log-Datei speichern
+    log_path = scraper.logger.save()
+    
+    # Zusätzlicher Terminal-Output für fehlende Venues
     if missing_venues:
+        print("\n" + "="*60)
+        print("📋 VENUE REPORT")
+        print("="*60)
         print(f"\n⚠️  Fehlende Venues ({len(missing_venues)}):")
         for venue in missing_venues:
             print(f"  • {venue}")
@@ -347,10 +511,7 @@ def main():
         print("   - Koordinaten (lat, lng)")
         print("   - Barrierefreiheit (true/false)")
         print("   - Website, Telefon, Kapazität, Notizen")
-    else:
-        print("\n✅ Alle Venues sind in venues.csv erfasst!")
-    
-    print("\n" + "="*60)
+        print("\n" + "="*60)
 
 
 if __name__ == "__main__":

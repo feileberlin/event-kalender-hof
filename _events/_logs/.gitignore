@@ -1,0 +1,3 @@
+# Scraping-Logs werden nicht in Git committet
+# (bleiben nur lokal für Debugging)
+*.log

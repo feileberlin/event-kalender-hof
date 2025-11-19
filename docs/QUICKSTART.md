@@ -113,13 +113,36 @@ python scripts/analyze_flyer.py https://example.com/programm.pdf
 - 📝 Extrahiert Titel, Datum, Ort, Zeit, Beschreibung
 - 🗺️ Geocodiert Adresse automatisch
 - 💾 Erstellt Event-Datei mit `status: "Entwurf"`
+- 📄 **Erstellt detailliertes Logfile in `_events/_logs/`**
 - ⚠️ Manuelle Prüfung erforderlich!
 
 **Benötigt:**
 - PIL/Pillow, PyPDF2 (automatisch installiert)
 - Optional: Tesseract für OCR-Fallback
 
-### 4. Admin-Bereich nutzen
+### 4. Scraping-Logs prüfen
+
+```bash
+# Neuestes Log ansehen
+cat _events/_logs/$(ls -t _events/_logs/*.log | head -1)
+
+# Nach Fehlern suchen
+grep ERROR _events/_logs/*.log
+
+# Duplikate finden
+grep "Duplikat" _events/_logs/*.log
+```
+
+**Log-Details:**
+- ✅ Alle gefundenen Events
+- ⚠️ Übersprungene Duplikate
+- 🏛️ Venue-Enrichment
+- 🏷️ Kategorie & Tag-Extraktion
+- ❌ Fehler & Warnungen
+
+Mehr Details: `_events/_logs/README.md`
+
+### 5. Admin-Bereich nutzen
 
 Öffne: `/admin/`
 
