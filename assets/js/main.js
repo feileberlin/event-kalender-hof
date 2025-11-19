@@ -3,6 +3,13 @@ let map;
 let markers = [];
 let userLocation = null;
 let filteredEvents = [];
+let lastSelectedLocation = 'rathaus'; // Track für Browser-Standort Refresh
+
+// Standort-Definitionen
+const LOCATIONS = {
+    rathaus: { lat: 50.3197, lng: 11.9168, name: 'Rathaus Hof' },
+    bahnhof: { lat: 50.3132, lng: 11.9196, name: 'Hauptbahnhof Hof' }
+};
 
 // Initialisierung
 document.addEventListener('DOMContentLoaded', function() {
@@ -407,31 +414,35 @@ function highlightEvent(index) {
 }
 
 // Benutzerstandort verwenden
-function useUserLocation() {
-    if (!navigator.geolocation) {
-        alert('Geolocation wird von Ihrem Browser nicht unterstützt.');
-        return;
-    }
+function setLocation(locationType) {
+    console.log('Setze Standort:', locationType);
+    
+    // Browser-Standort
+    if (locationType === 'browser') {
+        if (!navigator.geolocation) {
+            alert('Geolocation wird von Ihrem Browser nicht unterstützt.');
+            return;
+        }
+        
+        const locationSelect = document.getElementById('locationSelect');
+        locationSelect.disabled = true;
 
-    const locationButton = document.getElementById('useLocation');
-    locationButton.textContent = '📍 Lade Position...';
-    locationButton.disabled = true;
+        
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
 
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            userLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
+                console.log('Browser-Standort ermittelt:', userLocation);
 
-            console.log('Standort ermittelt:', userLocation);
-
-            // Entferne alten Standort-Marker
-            markers.forEach(marker => {
-                if (marker.options.className === 'user-location-marker') {
-                    map.removeLayer(marker);
-                }
-            });
+                // Entferne alten Standort-Marker
+                markers.forEach(marker => {
+                    if (marker.options.className === 'user-location-marker') {
+                        map.removeLayer(marker);
+                    }
+                });
 
             // Benutzerpunkt auf Karte
             const userIcon = L.divIcon({
@@ -445,50 +456,99 @@ function useUserLocation() {
                 .bindPopup('<strong>📍 Dein Standort</strong>')
                 .openPopup();
 
-            // Karte zentrieren
-            map.setView([userLocation.lat, userLocation.lng], 14);
+                // Karte zentrieren
+                map.setView([userLocation.lat, userLocation.lng], 14);
 
-            // Button-Status aktualisieren
-            locationButton.textContent = '✓ Standort aktiv';
-            locationButton.disabled = false;
-            locationButton.style.background = '#4CAF50';
-            locationButton.style.color = 'white';
+                // Select wieder aktivieren
+                locationSelect.disabled = false;
+                lastSelectedLocation = 'browser';
 
-            // Radius-Filter automatisch auf "10 min Rad" setzen, wenn noch auf "Bindlach-Süd" steht
-            const radiusFilterElement = document.getElementById('radiusFilter');
-            if (radiusFilterElement && radiusFilterElement.value === '999999') {
-                radiusFilterElement.value = '3'; // 3 km = Rad
-                console.log('Radius-Filter automatisch auf 3 km gesetzt');
+                // Radius-Filter automatisch auf 3 km setzen, wenn unbegrenzt
+                const radiusFilterElement = document.getElementById('radiusFilter');
+                if (radiusFilterElement && radiusFilterElement.value === '999999') {
+                    radiusFilterElement.value = '3';
+                    console.log('Radius-Filter automatisch auf 3 km gesetzt');
+                }
+
+                // Events neu filtern und anzeigen
+                filterAndDisplayEvents();
+
+                console.log('Browser-Standort aktiv');
+            },
+            (error) => {
+                let errorMessage = 'Standort konnte nicht ermittelt werden.';
+                switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = 'Standortzugriff wurde verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = 'Standortinformationen sind nicht verfügbar.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = 'Zeitüberschreitung bei der Standortabfrage.';
+                    break;
+                }
+                alert(errorMessage);
+                locationSelect.disabled = false;
+                // Fallback zu Rathaus
+                locationSelect.value = 'rathaus';
+                setLocation('rathaus');
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
             }
-
-            // Events neu filtern und anzeigen
-            filterAndDisplayEvents();
-
-            console.log('Standort-basierte Filterung aktiv');
-        },
-        (error) => {
-            let errorMessage = 'Standort konnte nicht ermittelt werden.';
-            switch(error.code) {
-            case error.PERMISSION_DENIED:
-                errorMessage = 'Standortzugriff wurde verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.';
-                break;
-            case error.POSITION_UNAVAILABLE:
-                errorMessage = 'Standortinformationen sind nicht verfügbar.';
-                break;
-            case error.TIMEOUT:
-                errorMessage = 'Zeitüberschreitung bei der Standortabfrage.';
-                break;
-            }
-            alert(errorMessage);
-            locationButton.textContent = '📍 Mein Standort';
-            locationButton.disabled = false;
-        },
-        {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
+        );
+        return;
+    }
+    
+    // Rathaus oder Bahnhof
+    const location = LOCATIONS[locationType];
+    if (!location) {
+        console.error('Unbekannter Standort:', locationType);
+        return;
+    }
+    
+    userLocation = {
+        lat: location.lat,
+        lng: location.lng
+    };
+    
+    console.log(`Standort gesetzt: ${location.name}`, userLocation);
+    
+    // Entferne alten Standort-Marker
+    markers.forEach(marker => {
+        if (marker.options.className === 'user-location-marker') {
+            map.removeLayer(marker);
         }
-    );
+    });
+    
+    // Marker für feste Standorte
+    const icon = locationType === 'rathaus' ? '🏛️' : '🚂';
+    const locationIcon = L.divIcon({
+        className: 'user-location-marker',
+        html: `<div class="marker-icon" style="background: #2c3e50;">${icon}</div>`,
+        iconSize: [30, 30]
+    });
+    
+    const locationMarker = L.marker([userLocation.lat, userLocation.lng], {icon: locationIcon})
+        .addTo(map)
+        .bindPopup(`<strong>${location.name}</strong>`)
+        .openPopup();
+    
+    // Karte zentrieren
+    map.setView([userLocation.lat, userLocation.lng], 14);
+    
+    // Radius-Filter automatisch auf 3 km setzen, wenn unbegrenzt
+    const radiusFilterElement = document.getElementById('radiusFilter');
+    if (radiusFilterElement && radiusFilterElement.value === '999999') {
+        radiusFilterElement.value = '3';
+    }
+    
+    // Events neu filtern
+    filterAndDisplayEvents();
+    lastSelectedLocation = locationType;
 }
 
 // Distanz berechnen (Haversine-Formel)
@@ -562,11 +622,22 @@ function setupEventListeners() {
         });
     }
 
-    if (useLocation) {
-        useLocation.addEventListener('click', (e) => {
-            e.preventDefault();
-            useUserLocation();
+    // Standort-Select
+    const locationSelect = document.getElementById('locationSelect');
+    if (locationSelect) {
+        locationSelect.addEventListener('change', (e) => {
+            const selectedLocation = e.target.value;
+            
+            // Wenn "Mein Standort" erneut gewählt wird, Standort neu abfragen
+            if (selectedLocation === 'browser' && lastSelectedLocation === 'browser') {
+                console.log('Standort wird neu abgefragt...');
+            }
+            
+            setLocation(selectedLocation);
         });
+        
+        // Initial Rathaus setzen
+        setLocation('rathaus');
     }
 
     // Such-Toggle
