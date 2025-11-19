@@ -1,22 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="24" height="24">
-  <!-- Offizielles deutsches Autobahn-Zeichen 330 -->
-  <!-- Weißer Hintergrund -->
-  <rect width="600" height="600" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="24" height="32">
+  <!-- Offizielles deutsches Autobahn-Zeichen 330 (Blau mit weißem Symbol) -->
   
-  <!-- Blauer Rahmen -->
-  <rect x="50" y="50" width="500" height="500" fill="none" stroke="#003399" stroke-width="40"/>
+  <!-- Blauer Hintergrund -->
+  <rect width="600" height="800" rx="30" fill="#003399"/>
   
-  <!-- Blaue Autobahn-Überführung -->
-  <g fill="#003399">
-    <!-- Linke Stütze -->
-    <path d="M 150 450 L 180 450 L 180 350 L 150 350 Z"/>
-    <!-- Rechte Stütze -->
-    <path d="M 420 450 L 450 450 L 450 350 L 420 350 Z"/>
-    <!-- Brücke/Überführung -->
-    <path d="M 100 350 L 100 280 Q 100 250 130 250 L 470 250 Q 500 250 500 280 L 500 350 L 450 350 L 450 300 Q 450 290 440 290 L 160 290 Q 150 290 150 300 L 150 350 Z"/>
+  <!-- Weiße Autobahnbrücke -->
+  <g fill="white">
+    <!-- Brückenpfeiler links -->
+    <rect x="80" y="500" width="80" height="220"/>
+    <!-- Brückenpfeiler rechts -->
+    <rect x="440" y="500" width="80" height="220"/>
+    
+    <!-- Brückenüberbau (oben) -->
+    <path d="M 60 500 L 60 400 Q 60 350 110 350 L 490 350 Q 540 350 540 400 L 540 500 
+             L 440 500 L 440 420 Q 440 400 420 400 L 180 400 Q 160 400 160 420 L 160 500 Z"/>
+    
+    <!-- Fahrbahn-Markierungen (gestrichelte Mittellinie) -->
+    <rect x="275" y="530" width="50" height="60" rx="5"/>
+    <rect x="275" y="610" width="50" height="60" rx="5"/>
   </g>
-  
-  <!-- Weiße Mittellinie (charakteristisch für Autobahn) -->
-  <rect x="285" y="360" width="30" height="40" fill="white"/>
-  <rect x="285" y="410" width="30" height="40" fill="white"/>
 </svg>
