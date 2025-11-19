@@ -1002,14 +1002,15 @@ textarea:focus {
 }
 
 /* Custom Festspielhaus Icon Integration */
-#radiusFilter option[value="999999"]::before {
-    content: '';
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-right: 4px;
-    background-image: url('/event-kalender-hof/assets/images/festspielhaus-icon.svg');
-    background-size: contain;
+#radiusFilter option[value="999999"] {
+    background-image: url('/event-kalender-hof/assets/images/autobahn-zeichen-330.svg');
+    background-size: 20px 20px;
     background-repeat: no-repeat;
-    vertical-align: middle;
+    background-position: 4px center;
+    padding-left: 28px;
+}
+
+/* Autobahn-Icon in Select sichtbar machen */
+#radiusFilter {
+    background-size: 20px 20px;
 }
