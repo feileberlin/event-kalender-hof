@@ -17,6 +17,7 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 - **🖼️ AI-Flyer-Analyse**: Extrahiert Events aus Bildern/PDFs (GitHub Models / DuckDuckGo AI)
 - **🎨 Minimalistisch**: Skeleton CSS, Mobile-First, Touch-optimiert
 - **🖨️ Druckfreundlich**: Optimierte Print-Styles
+- **🏛️ Venue-Management**: Verwaltet Veranstaltungsorte mit Barrierefreiheit & Metadaten
 
 ## 🚀 Quick Start
 
@@ -38,8 +39,10 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 - Entwürfe prüfen und publizieren
 - Events manuell erstellen
 - Scraping-Quellen verwalten
+- Veranstaltungsorte pflegen (Barrierefreiheit, Kontakt, etc.)
 
 📖 **Vollständige Anleitung**: [docs/ADMIN.md](docs/ADMIN.md)
+📍 **Venue-Management**: [docs/VENUES.md](docs/VENUES.md)
 
 ### Für Entwickler
 
@@ -51,6 +54,13 @@ cd event-kalender-hof
 # Dependencies installieren
 bundle install
 pip install -r requirements.txt
+
+# Scraping starten
+python scripts/scrape_events.py
+
+# Venue-Verwaltung
+python scripts/venue_admin.py      # Interaktives CLI-Tool
+python scripts/venue_examples.py   # Beispiel-Code
 
 # Server starten
 bundle exec jekyll serve --livereload

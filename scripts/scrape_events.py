@@ -15,6 +15,9 @@ import requests
 from bs4 import BeautifulSoup
 import yaml
 
+# Venue Manager importieren
+from venue_manager import VenueManager
+
 # Konfiguration
 EVENTS_DIR = Path("_events")
 SOURCES_CSV = Path("_data/sources.csv")
@@ -48,6 +51,8 @@ class EventScraper:
     def __init__(self):
         self.events = []
         self.existing_hashes = self.load_existing_hashes()
+        self.venue_manager = VenueManager()
+        print(f"📍 Venue Manager geladen: {len(self.venue_manager.venues)} Venues")
     
     def load_existing_hashes(self):
         """Lädt bereits vorhandene Event-Hashes um Duplikate zu vermeiden"""
@@ -94,17 +99,20 @@ class EventScraper:
                         event_hash = self.generate_event_hash(title, str(event_date), event_time, location)
                         
                         if event_hash not in self.existing_hashes:
-                            self.events.append({
-                                'title': title,
-                                'date': event_date,
-                                'start_time': event_time,
-                                'location': location,
-                                'description': description,
-                                'source': 'Stadt Hof',
-                                'source_url': url,
-                                'event_hash': event_hash,
-                                'status': 'Entwurf'
-                            })
+                            event_data = {
+                        'title': title,
+                        'date': event_date,
+                        'start_time': event_time,
+                        'location': location,
+                        'description': description,
+                        'source': 'Stadt Hof',
+                        'source_url': url,
+                        'event_hash': event_hash,
+                        'status': 'Entwurf'
+                    }
+                    # Venue-Daten anreichern
+                    event_data = self.venue_manager.enrich_event_data(event_data)
+                    self.events.append(event_data)
                 except Exception as e:
                     print(f"Fehler beim Parsen eines Events: {e}")
                     continue
@@ -173,7 +181,7 @@ class EventScraper:
                 'end_time': '',
                 'location': event['location'],
                 'address': event.get('address', ''),
-                'coordinates': self.geocode_location(event['location']),
+                'coordinates': event.get('coordinates', self.geocode_location(event['location'])),
                 'category': self.guess_category(event['title'], event.get('description', '')),
                 'tags': self.extract_tags(event['title'], event.get('description', '')),
                 'description': event.get('description', ''),
@@ -183,6 +191,10 @@ class EventScraper:
                 'source': event['source'],
                 'event_hash': event['event_hash']
             }
+            
+            # Venue-Metadaten hinzufügen (falls vorhanden)
+            if 'venue' in event:
+                event_data['venue'] = event['venue']
             
             # KI-gestützte Beschreibung (optional)
             # event_data['description'] = self.create_ai_enhanced_description(event_data)
@@ -312,6 +324,33 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
 def main():
     scraper = EventScraper()
     scraper.run()
+    
+    # Report: Fehlende Venues
+    print("\n" + "="*60)
+    print("📋 VENUE REPORT")
+    print("="*60)
+    
+    missing_venues = scraper.venue_manager.find_missing_venues(scraper.events)
+    
+    if missing_venues:
+        print(f"\n⚠️  Fehlende Venues ({len(missing_venues)}):")
+        for venue in missing_venues:
+            print(f"  • {venue}")
+        
+        print("\n📝 Template für _data/venues.csv:")
+        print("-" * 60)
+        print(scraper.venue_manager.suggest_venue_entries(missing_venues))
+        print("-" * 60)
+        print("\n💡 Kopiere die Zeilen oben in _data/venues.csv und fülle die Daten aus:")
+        print("   - Aliases (kommasepariert)")
+        print("   - Adresse")
+        print("   - Koordinaten (lat, lng)")
+        print("   - Barrierefreiheit (true/false)")
+        print("   - Website, Telefon, Kapazität, Notizen")
+    else:
+        print("\n✅ Alle Venues sind in venues.csv erfasst!")
+    
+    print("\n" + "="*60)
 
 
 if __name__ == "__main__":
