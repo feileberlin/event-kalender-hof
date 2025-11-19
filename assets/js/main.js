@@ -103,11 +103,6 @@ function updateTimeFilterDisplay() {
         }
         dawn.setHours(6, 30, 0, 0);
         displayText = `🌅 Bis Sonnenaufgang: ${dawn.toLocaleDateString('de-DE')} ${dawn.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
-    } else if (timeFilter === 'brunch') {
-        const brunchTime = new Date(now);
-        brunchTime.setDate(brunchTime.getDate() + 1);
-        brunchTime.setHours(12, 0, 0, 0);
-        displayText = `🍻 Bis zum Frühschoppen: ${brunchTime.toLocaleDateString('de-DE')} ${brunchTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
     } else if (timeFilter === 'tatort') {
         const tatortTime = new Date(now);
         const daysUntilSunday = (7 - tatortTime.getDay()) % 7;
@@ -176,15 +171,6 @@ function filterAndDisplayEvents() {
         events = events.filter(event => {
             const eventDate = new Date(`${event.date}T${event.startTime || '00:00'}`);
             return eventDate <= dawn;
-        });
-    } else if (timeFilter === 'brunch') {
-        // Bis zum Frühschoppen (12:00 Uhr Folgetag)
-        const brunchTime = new Date(now);
-        brunchTime.setDate(brunchTime.getDate() + 1);
-        brunchTime.setHours(12, 0, 0, 0);
-        events = events.filter(event => {
-            const eventDate = new Date(`${event.date}T${event.startTime || '00:00'}`);
-            return eventDate <= brunchTime;
         });
     } else if (timeFilter === 'tatort') {
         // Bis zum Tatort (Sonntag 20:15 Uhr)
