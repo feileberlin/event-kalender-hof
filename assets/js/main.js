@@ -208,9 +208,29 @@ function filterAndDisplayEvents() {
     displayEventList();
 }
 
-// Event-Anzahl aktualisieren
+// Event-Anzahl und Radius aktualisieren
 function updateEventCount() {
-    document.getElementById('eventCount').textContent = `${filteredEvents.length} ${filteredEvents.length === 1 ? 'Event' : 'Events'}`;
+    const eventCountText = `${filteredEvents.length} ${filteredEvents.length === 1 ? 'Event' : 'Events'}`;
+    document.getElementById('eventCount').textContent = eventCountText;
+    
+    // Radius-Info hinzufügen
+    const radiusFilter = document.getElementById('radiusFilter').value;
+    const radiusInfoElement = document.getElementById('radiusInfo');
+    
+    let radiusText = '';
+    if (radiusFilter === '1') {
+        radiusText = ' in 1 km Umkreis.';
+    } else if (radiusFilter === '3') {
+        radiusText = ' in 3 km Umkreis.';
+    } else if (radiusFilter === '10') {
+        radiusText = ' in 10 km Umkreis.';
+    } else {
+        radiusText = '.';
+    }
+    
+    if (radiusInfoElement) {
+        radiusInfoElement.textContent = radiusText;
+    }
 }
 
 // Events auf Karte anzeigen
