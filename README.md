@@ -14,6 +14,8 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 - **🔍 Intelligente Filter**: Textsuche, Kategorie, Zeitraum, Umkreis (Fuß, Rad, ÖPNV, Taxi)
 - **📱 Geolocation**: GPS-basierte Umkreissuche
 - **🤖 Automatisches Scraping**: Sammelt Events von lokalen Websites
+- **📝 Scraping-Logs**: Detaillierte Protokolle aller Scraping-Durchläufe
+- **✅ Datums-Validierung**: Erkennt fehlerhafte Event-Daten (Veröffentlichungsdatum vs. Event-Datum)
 - **🖼️ AI-Flyer-Analyse**: Extrahiert Events aus Bildern/PDFs (GitHub Models / DuckDuckGo AI)
 - **🎨 Minimalistisch**: Skeleton CSS, Mobile-First, Touch-optimiert
 - **🖨️ Druckfreundlich**: Optimierte Print-Styles
@@ -59,6 +61,9 @@ pip install -r requirements.txt
 # Scraping starten
 python scripts/scrape_events.py
 
+# Datums-Validierung ausführen
+python scripts/validate_event_dates.py
+
 # Venue-Verwaltung
 python scripts/venue_admin.py      # Interaktives CLI-Tool
 python scripts/venue_examples.py   # Beispiel-Code
@@ -87,6 +92,9 @@ bundle exec jekyll serve --livereload
 |-------|------------|--------|
 | **[docs/QUICKSTART.md](docs/QUICKSTART.md)** | Alle | Schnelleinstieg in 5 Minuten |
 | **[docs/ADMIN.md](docs/ADMIN.md)** | Admins | Event-Verwaltung, Scraping-Konfiguration |
+| **[docs/VENUES.md](docs/VENUES.md)** | Admins | Venue-Management, Barrierefreiheit |
+| **[docs/ARCHIVING.md](docs/ARCHIVING.md)** | Admins | Auto-Archivierung vergangener Events |
+| **[docs/DATE_VALIDATION.md](docs/DATE_VALIDATION.md)** | Admins/Devs | Datums-Validierung, Qualitätssicherung |
 | **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** | Entwickler | Tests, Code-Style, Pull Requests |
 | **[docs/PROJECT.md](docs/PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz |
 | **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | Alle | Versionshistorie |
