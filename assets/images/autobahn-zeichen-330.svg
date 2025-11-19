@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="24" height="24">
+  <!-- Offizielles deutsches Autobahn-Zeichen 330 -->
+  <!-- Weißer Hintergrund -->
+  <rect width="600" height="600" fill="white"/>
+  
+  <!-- Blauer Rahmen -->
+  <rect x="50" y="50" width="500" height="500" fill="none" stroke="#003399" stroke-width="40"/>
+  
+  <!-- Blaue Autobahn-Überführung -->
+  <g fill="#003399">
+    <!-- Linke Stütze -->
+    <path d="M 150 450 L 180 450 L 180 350 L 150 350 Z"/>
+    <!-- Rechte Stütze -->
+    <path d="M 420 450 L 450 450 L 450 350 L 420 350 Z"/>
+    <!-- Brücke/Überführung -->
+    <path d="M 100 350 L 100 280 Q 100 250 130 250 L 470 250 Q 500 250 500 280 L 500 350 L 450 350 L 450 300 Q 450 290 440 290 L 160 290 Q 150 290 150 300 L 150 350 Z"/>
+  </g>
+  
+  <!-- Weiße Mittellinie (charakteristisch für Autobahn) -->
+  <rect x="285" y="360" width="30" height="40" fill="white"/>
+  <rect x="285" y="410" width="30" height="40" fill="white"/>
+</svg>
