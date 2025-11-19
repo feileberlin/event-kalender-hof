@@ -11,11 +11,10 @@ const TEST_CONFIG = {
 
 // Erwartete Radius-Optionen aus HTML
 const EXPECTED_RADIUS_OPTIONS = [
-    { value: '999', label: 'Alle', shouldFilter: false },
-    { value: '1', label: '10 min zu Fuß', shouldFilter: true },
-    { value: '3', label: '10 min Rad', shouldFilter: true },
-    { value: '10', label: '30 min Bus & Bahn', shouldFilter: true },
-    { value: '999999', label: 'Taxi', shouldFilter: false }
+    { value: '1', label: '1 km Umkreis', shouldFilter: true },
+    { value: '3', label: '3 km Umkreis', shouldFilter: true },
+    { value: '10', label: '10 km Umkreis', shouldFilter: true },
+    { value: '999999', label: 'unbegrenzt', shouldFilter: false }
 ];
 
 // Test 1: HTML <select> Optionen parsen
