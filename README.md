@@ -18,6 +18,7 @@ Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events au
 - **🎨 Minimalistisch**: Skeleton CSS, Mobile-First, Touch-optimiert
 - **🖨️ Druckfreundlich**: Optimierte Print-Styles
 - **🏛️ Venue-Management**: Verwaltet Veranstaltungsorte mit Barrierefreiheit & Metadaten
+- **📦 Auto-Archivierung**: Events älter als 30 Tage werden automatisch archiviert
 
 ## 🚀 Quick Start
 

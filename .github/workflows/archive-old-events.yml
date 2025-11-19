@@ -1,0 +1,95 @@
+name: Archive Old Events
+
+on:
+  schedule:
+    # Jeden Montag um 3 Uhr morgens (UTC)
+    - cron: '0 3 * * 1'
+  
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Events älter als X Tage archivieren'
+        required: false
+        default: '30'
+      dry_run:
+        description: 'Dry-run (keine Änderungen)'
+        required: false
+        default: 'false'
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install Dependencies
+        run: |
+          pip install pyyaml
+      
+      - name: Archive Old Events
+        id: archive
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "🔍 Dry-run Modus aktiviert"
+            python scripts/archive_old_events.py --days ${{ github.event.inputs.days || 30 }} --dry-run
+            echo "archived=false" >> $GITHUB_OUTPUT
+          else
+            python scripts/archive_old_events.py --days ${{ github.event.inputs.days || 30 }} --force
+            
+            # Prüfen ob Änderungen vorhanden
+            if [ -n "$(git status --porcelain)" ]; then
+              echo "archived=true" >> $GITHUB_OUTPUT
+            else
+              echo "archived=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+      
+      - name: Commit Changes
+        if: steps.archive.outputs.archived == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add _events/
+          
+          # Anzahl archivierter Events ermitteln
+          ARCHIVED_COUNT=$(git diff --cached --name-only | grep "_history" | wc -l)
+          
+          git commit -m "Archive: $ARCHIVED_COUNT alte Events archiviert
+
+          - Events älter als ${{ github.event.inputs.days || 30 }} Tage
+          - Verschoben nach _events/_history/{YEAR}/
+          - Status auf 'Archiviert' gesetzt
+          
+          Auto-archivierung via GitHub Actions"
+          
+          git push
+      
+      - name: Summary
+        run: |
+          echo "## 📦 Event Archivierung" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.archive.outputs.archived }}" == "true" ]; then
+            echo "✅ Events wurden archiviert und committed" >> $GITHUB_STEP_SUMMARY
+            
+            # Anzahl zeigen
+            ARCHIVED_COUNT=$(git log -1 --pretty=%B | grep -oP '\d+(?= alte Events)')
+            echo "- **$ARCHIVED_COUNT Events** archiviert" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "ℹ️ Dry-run Modus - Keine Änderungen" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ Keine Events zum Archivieren" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Threshold:** ${{ github.event.inputs.days || 30 }} Tage" >> $GITHUB_STEP_SUMMARY

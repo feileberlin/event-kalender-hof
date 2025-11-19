@@ -128,6 +128,11 @@ title: Admin - Event-Verwaltung
     color: white;
 }
 
+.event-status-badge.archived {
+    background: #9e9e9e;
+    color: white;
+}
+
 .event-admin-meta {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -298,6 +303,10 @@ title: Admin - Event-Verwaltung
                 <span class="stat-label">Veröffentlicht</span>
             </div>
             <div class="stat-card">
+                <span class="stat-number" id="stat-archived">0</span>
+                <span class="stat-label">Archiviert</span>
+            </div>
+            <div class="stat-card">
                 <span class="stat-number" id="stat-upcoming">0</span>
                 <span class="stat-label">Kommende</span>
             </div>
@@ -313,6 +322,7 @@ title: Admin - Event-Verwaltung
     <div class="admin-tabs">
         <button class="tab-button active" onclick="switchTab('drafts')">📝 Entwürfe</button>
         <button class="tab-button" onclick="switchTab('published')">✓ Veröffentlicht</button>
+        <button class="tab-button" onclick="switchTab('archived')">📦 Archiviert</button>
         <button class="tab-button" onclick="switchTab('all')">📋 Alle Events</button>
     </div>
 
@@ -324,6 +334,15 @@ title: Admin - Event-Verwaltung
     <div id="tab-published" class="tab-content">
         <h2>Veröffentlichte Events</h2>
         <div id="published-list"></div>
+    </div>
+
+    <div id="tab-archived" class="tab-content">
+        <h2>Archivierte Events</h2>
+        <p style="color: #666; margin-bottom: 20px;">
+            📦 Archivierte Events werden nicht mehr auf der Hauptseite angezeigt.<br>
+            Sie befinden sich in <code>_events/_history/{JAHR}/</code>
+        </p>
+        <div id="archived-list"></div>
     </div>
 
     <div id="tab-all" class="tab-content">
@@ -376,6 +395,7 @@ function calculateStats() {
     const now = new Date();
     const drafts = allEvents.filter(e => e.status === 'Entwurf');
     const published = allEvents.filter(e => e.status === 'Öffentlich');
+    const archived = allEvents.filter(e => e.status === 'Archiviert');
     const upcoming = allEvents.filter(e => {
         const eventDate = new Date(e.date + 'T' + (e.startTime || '00:00'));
         return eventDate >= now;
@@ -384,6 +404,7 @@ function calculateStats() {
     document.getElementById('stat-total').textContent = allEvents.length;
     document.getElementById('stat-drafts').textContent = drafts.length;
     document.getElementById('stat-published').textContent = published.length;
+    document.getElementById('stat-archived').textContent = archived.length;
     document.getElementById('stat-upcoming').textContent = upcoming.length;
 }
 
@@ -395,13 +416,16 @@ function displayEvents(filter = 'all') {
         events = events.filter(e => e.status === 'Entwurf');
     } else if (filter === 'published') {
         events = events.filter(e => e.status === 'Öffentlich');
+    } else if (filter === 'archived') {
+        events = events.filter(e => e.status === 'Archiviert');
     }
     
     // Nach Datum sortieren
     events.sort((a, b) => new Date(a.date) - new Date(b.date));
     
     const listId = filter === 'all' ? 'all-list' : 
-                   filter === 'drafts' ? 'drafts-list' : 'published-list';
+                   filter === 'drafts' ? 'drafts-list' : 
+                   filter === 'published' ? 'published-list' : 'archived-list';
     const container = document.getElementById(listId);
     
     if (events.length === 0) {
@@ -413,7 +437,7 @@ function displayEvents(filter = 'all') {
         <div class="event-admin-card ${event.status === 'Öffentlich' ? 'published' : ''}">
             <div class="event-admin-header">
                 <h3 class="event-admin-title">${event.title}</h3>
-                <span class="event-status-badge ${event.status === 'Entwurf' ? 'draft' : 'published'}">
+                <span class="event-status-badge ${event.status === 'Entwurf' ? 'draft' : event.status === 'Archiviert' ? 'archived' : 'published'}">
                     ${event.status}
                 </span>
             </div>
