@@ -1,3 +1,8 @@
+---
+layout: base
+title: Datenschutzerklärung
+---
+
 # Datenschutzerklärung / Privacy Policy
 
 **Event-Kalender Hof an der Saale**  
