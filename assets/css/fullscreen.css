@@ -156,10 +156,20 @@ body.fullscreen-layout {
     flex-wrap: wrap;
 }
 
-#eventCount {
+/* Event-Count als klickbares Label für Category-Filter */
+.event-count-label {
     font-weight: bold;
     color: #2c3e50;
     margin-right: 5px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-bottom: 1px dashed transparent;
+    transition: all 0.2s;
+}
+
+.event-count-label:hover {
+    background: rgba(44, 62, 80, 0.05);
+    border-bottom: 1px dashed #2c3e50;
 }
 
 /* Inline Selects - sehen aus wie Text */

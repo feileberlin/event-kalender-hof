@@ -514,10 +514,7 @@ function setupEventListeners() {
     }
 
     if (radiusFilter) {
-        radiusFilter.addEventListener('change', () => {
-            syncZoomWithRadius();
-            filterAndDisplayEvents();
-        });
+        radiusFilter.addEventListener('change', filterAndDisplayEvents);
     }
 
     if (useLocation) {
