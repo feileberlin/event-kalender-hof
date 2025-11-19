@@ -218,6 +218,163 @@ textarea:focus {
     background: #1a252f;
 }
 
+/* ==========================================
+   BOOKMARKS TOOLBAR & SYSTEM
+   ========================================== */
+
+.bookmarks-toolbar {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.98);
+    border: 2px solid var(--accent-color);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    z-index: 1500;
+    transition: all 0.3s ease;
+}
+
+.bookmarks-toolbar:hover {
+    box-shadow: -6px 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.toolbar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.toolbar-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 2px solid var(--accent-color);
+    width: 100%;
+}
+
+.toolbar-label strong {
+    display: block;
+    font-size: 24px;
+    color: var(--accent-color);
+}
+
+.toolbar-btn {
+    padding: 10px 15px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+}
+
+.toolbar-btn:hover {
+    background: #6d3710;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.toolbar-btn-clear {
+    background: #f44336;
+}
+
+.toolbar-btn-clear:hover {
+    background: #d32f2f;
+}
+
+.btn-bookmark {
+    padding: 8px 12px;
+    background: var(--accent-color);
+    color: var(--primary-color);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-bookmark:hover {
+    background: #ffb74d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-bookmark.bookmarked {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+}
+
+.btn-bookmark.bookmarked:hover {
+    background: #388e3c;
+}
+
+.event-card.bookmarked {
+    border: 3px solid #4caf50 !important;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3) !important;
+    position: relative;
+}
+
+.event-card.bookmarked::before {
+    content: '⭐';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 28px;
+    z-index: 10;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.popup-bookmark-btn {
+    display: inline-block;
+    margin: 8px 0;
+    padding: 6px 12px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background: var(--accent-color);
+    color: var(--primary-color);
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.popup-bookmark-btn:hover {
+    background: #ffb74d;
+    transform: scale(1.05);
+}
+
+.popup-bookmark-btn.bookmarked {
+    background: #4caf50;
+    color: white;
+}
+
+@keyframes bookmarkPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.bookmark-btn.bookmarked {
+    animation: bookmarkPulse 0.5s ease;
+}
+
+/* ==========================================
+   END BOOKMARKS
+   ========================================== */
+
 .info-banner {
     margin-top: 15px;
     padding: 10px;
@@ -981,6 +1138,45 @@ textarea:focus {
         flex-direction: column;
         gap: 20px;
     }
+    
+    /* Mobile Bookmarks Toolbar */
+    .bookmarks-toolbar {
+        top: auto;
+        bottom: 80px;
+        right: 10px;
+        transform: none;
+        border-radius: 12px;
+        border: 2px solid var(--accent-color);
+        padding: 10px;
+    }
+    
+    .toolbar-content {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .toolbar-label {
+        width: 100%;
+        font-size: 12px;
+    }
+    
+    .toolbar-label strong {
+        font-size: 18px;
+    }
+    
+    .toolbar-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+    
+    .event-card.bookmarked::before {
+        font-size: 22px;
+        top: -8px;
+        right: -8px;
+    }
 }
 
 /* Print Styles */
@@ -990,6 +1186,7 @@ textarea:focus {
     .event-reminder,
     .event-attendance,
     .event-rating,
+    .bookmarks-toolbar,
     button,
     .button {
         display: none;

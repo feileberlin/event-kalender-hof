@@ -1,0 +1,104 @@
+name: 📚 Dokumentations-Regenerierung
+
+on:
+  schedule:
+    # Jeden Sonntag um 5:00 UTC (konfigurierbar in _config.yml)
+    - cron: '0 5 * * 0'
+  
+  workflow_dispatch:  # Manuell auslösbar
+    inputs:
+      reason:
+        description: 'Grund für manuelle Regenerierung'
+        required: false
+        default: 'Manuelle Aktualisierung'
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Für Git-History
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: 📦 Install Dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: 🔍 Lese Konfiguration
+        id: config
+        run: |
+          # Lese Schedule aus _config.yml
+          SCHEDULE=$(python3 -c "import yaml; config=yaml.safe_load(open('_config.yml')); print(config.get('automation', {}).get('documentation', {}).get('schedule', '0 5 * * 0'))")
+          echo "schedule=$SCHEDULE" >> $GITHUB_OUTPUT
+          echo "📅 Konfigurierter Schedule: $SCHEDULE"
+      
+      - name: 📚 Regeneriere Dokumentation
+        run: |
+          echo "🚀 Starte Dokumentations-Regenerierung..."
+          python scripts/regenerate_docs.py
+          echo "✅ Dokumentation erfolgreich regeneriert"
+      
+      - name: 📊 Zeige Änderungen
+        run: |
+          echo "📋 Geänderte Dateien:"
+          git diff --stat
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "✅ Es gibt Änderungen zum Committen"
+          else
+            echo "ℹ️  Keine Änderungen - Dokumentation ist aktuell"
+          fi
+      
+      - name: 💾 Commit & Push
+        if: success()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            git add docs/PROJECT.md README.md
+            
+            # Commit-Message
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              REASON="${{ github.event.inputs.reason }}"
+              git commit -m "📚 Docs: Regenerierung (manuell)" -m "$REASON"
+            else
+              git commit -m "📚 Docs: Automatische Regenerierung" -m "Scheduled update ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+            fi
+            
+            git push
+            echo "✅ Änderungen committed und gepusht"
+          else
+            echo "ℹ️  Keine Änderungen - Skip Commit"
+          fi
+      
+      - name: 📝 Summary
+        if: always()
+        run: |
+          echo "## 📚 Dokumentations-Regenerierung" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Zeitstempel:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "### ✅ Änderungen" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            git diff --stat >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ℹ️  Keine Änderungen" >> $GITHUB_STEP_SUMMARY
+            echo "Dokumentation ist bereits aktuell." >> $GITHUB_STEP_SUMMARY
+          fi

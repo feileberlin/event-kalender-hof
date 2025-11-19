@@ -6,6 +6,24 @@ title: "Event-Kalender Hof"
 <!-- Bildschirmfüllende Karte -->
 <div id="map" class="fullscreen-map"></div>
 
+<!-- Bookmarks Toolbar (nur sichtbar wenn Bookmarks vorhanden) -->
+<div id="bookmarks-toolbar" class="bookmarks-toolbar" style="display: none;">
+    <div class="toolbar-content">
+        <span class="toolbar-label">
+            <strong id="bookmark-count">0</strong> Events gemerkt
+        </span>
+        <button class="toolbar-btn" onclick="printBookmarks()" title="Als PDF drucken">
+            🖨️ Drucken
+        </button>
+        <button class="toolbar-btn" onclick="emailBookmarks()" title="Per E-Mail versenden">
+            📧 Mailen
+        </button>
+        <button class="toolbar-btn toolbar-btn-clear" onclick="clearAllBookmarks()" title="Alle Bookmarks löschen">
+            🗑️ Alle löschen
+        </button>
+    </div>
+</div>
+
 <!-- Transparenter Header mit Suche -->
 <header class="overlay-header">
     <div class="header-content">
@@ -43,6 +61,8 @@ title: "Event-Kalender Hof"
             <select id="locationSelect" class="inline-select">
                 <option value="rathaus" selected data-icon="🏛️">Rathaus</option>
                 <option value="bahnhof" data-icon="🚂">Hauptbahnhof</option>
+                <option value="kaserne" data-icon="🏰">Oberfranken-Kaserne</option>
+                <option value="hochschule" data-icon="🎓">Hochschule Hof</option>
                 <option value="browser" data-icon="🎯">Mein Standort</option>
             </select>
         </div>

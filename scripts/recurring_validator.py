@@ -153,22 +153,71 @@ class RecurringGenerator:
         if end_date:
             max_date = min(max_date, end_date)
         
-        # Exceptions
+        # Exceptions und Additions
         exceptions = set(recurring.get('exceptions', []))
+        additions = recurring.get('additions', [])
         
-        # Generiere Instanzen
+        # Generiere reguläre Instanzen
         frequency = recurring.get('frequency')
         interval = recurring.get('interval', 1)
         by_day = recurring.get('by_day')
+        by_set_pos = recurring.get('by_set_pos')  # NEU: Position im Monat
         
+        # Tägliches Durchlaufen aller Tage von start bis max_date
         current = start_date
         count = 0
         
         while current <= max_date and count < max_instances:
-            # Prüfe Wochentag (falls by_day definiert)
+            should_include = False
             weekday = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'][current.weekday()]
             
-            if not by_day or weekday in by_day:
+            # Frequenz-basierte Logik
+            if frequency == 'daily':
+                # Täglich: Jeder Tag ist gültig (mit interval)
+                days_diff = (current - start_date).days
+                should_include = (days_diff % interval == 0)
+                
+                # by_day Filter (optional bei daily)
+                if should_include and by_day:
+                    should_include = weekday in by_day
+            
+            elif frequency in ['weekly', 'biweekly']:
+                # Wöchentlich: Nur bestimmte Wochentage
+                if by_day and weekday in by_day:
+                    # Prüfe ob die Woche passt (interval)
+                    weeks_diff = (current - start_date).days // 7
+                    multiplier = 2 if frequency == 'biweekly' else 1
+                    should_include = (weeks_diff % (interval * multiplier) == 0)
+            
+            elif frequency == 'monthly':
+                # Monatlich: Verschiedene Modi
+                if by_set_pos is not None and by_day:
+                    # Position im Monat (z.B. "erster Freitag", "letzter Sonntag")
+                    should_include = self._is_nth_weekday_in_month(current, by_day, by_set_pos)
+                    
+                    # Prüfe Monats-Interval
+                    if should_include:
+                        months_diff = (current.year - start_date.year) * 12 + (current.month - start_date.month)
+                        should_include = (months_diff % interval == 0)
+                
+                else:
+                    # Fester Tag im Monat (z.B. "15. jeden Monats")
+                    if current.day == start_date.day:
+                        months_diff = (current.year - start_date.year) * 12 + (current.month - start_date.month)
+                        should_include = (months_diff % interval == 0)
+                        
+                        # by_day Filter (optional)
+                        if should_include and by_day:
+                            should_include = weekday in by_day
+            
+            elif frequency == 'yearly':
+                # Jährlich: Gleicher Tag und Monat
+                if current.month == start_date.month and current.day == start_date.day:
+                    years_diff = current.year - start_date.year
+                    should_include = (years_diff % interval == 0)
+            
+            # Instanz hinzufügen
+            if should_include:
                 date_str = current.strftime('%Y-%m-%d')
                 
                 # Prüfe Ausnahmen
@@ -180,8 +229,75 @@ class RecurringGenerator:
                     instances.append(instance)
                     count += 1
             
-            # Nächster Termin
-            current = self._next_occurrence(current, frequency, interval)
+            # Nächster Tag
+            current = current + timedelta(days=1)
+        
+        # Additions hinzufügen (außerordentliche Termine)
+        for addition_date in additions:
+            if isinstance(addition_date, str):
+                try:
+                    add_date = datetime.strptime(addition_date, '%Y-%m-%d').date()
+                    
+                    # Nur wenn im gültigen Zeitraum
+                    if start_date <= add_date <= max_date:
+                        # Prüfe ob schon vorhanden
+                        if not any(inst['date'] == addition_date for inst in instances):
+                            instance = event_data.copy()
+                            instance['date'] = addition_date
+                            instance['is_recurring_instance'] = True
+                            instance['is_addition'] = True  # Markierung als Zusatztermin
+                            instance['recurring_parent'] = event_data.get('title')
+                            instances.append(instance)
+                except ValueError:
+                    pass  # Ungültiges Datum ignorieren
+        
+        # Sortiere nach Datum
+        instances.sort(key=lambda x: x['date'] if isinstance(x['date'], str) else str(x['date']))
+        
+        return instances[:max_instances]
+    
+    def _is_nth_weekday_in_month(self, date, by_day, by_set_pos):
+        """
+        Prüft ob ein Datum der N-te Wochentag im Monat ist
+        
+        Args:
+            date: Zu prüfendes Datum
+            by_day: Liste der erlaubten Wochentage (z.B. ["FR"])
+            by_set_pos: Position (1=erster, 2=zweiter, -1=letzter)
+        
+        Returns:
+            bool: True wenn Datum passt
+        """
+        weekday = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'][date.weekday()]
+        
+        # Prüfe ob richtiger Wochentag
+        if weekday not in by_day:
+            return False
+        
+        # Finde alle Vorkommen dieses Wochentags im Monat
+        import calendar
+        month_start = date.replace(day=1)
+        month_days = calendar.monthrange(date.year, date.month)[1]
+        
+        occurrences = []
+        for day in range(1, month_days + 1):
+            check_date = date.replace(day=day)
+            check_weekday = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'][check_date.weekday()]
+            if check_weekday == weekday:
+                occurrences.append(day)
+        
+        # Prüfe Position
+        if by_set_pos > 0:
+            # Positiv: 1=erster, 2=zweiter, etc.
+            if by_set_pos <= len(occurrences):
+                return date.day == occurrences[by_set_pos - 1]
+        else:
+            # Negativ: -1=letzter, -2=vorletzter, etc.
+            pos = by_set_pos
+            if abs(pos) <= len(occurrences):
+                return date.day == occurrences[pos]
+        
+        return False
         
         return instances
     

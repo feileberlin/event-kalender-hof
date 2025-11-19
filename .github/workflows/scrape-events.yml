@@ -1,8 +1,9 @@
-name: Event Scraper
+name: ⚡ Event Scraper
 
 on:
   schedule:
-    # Täglich um 6:00 und 18:00 Uhr (UTC)
+    # Schedule konfiguriert in _config.yml: automation.scraping.schedule
+    # Default: Täglich um 6:00 und 18:00 UTC
     - cron: '0 6,18 * * *'
   workflow_dispatch: # Manuelle Ausführung ermöglichen
 

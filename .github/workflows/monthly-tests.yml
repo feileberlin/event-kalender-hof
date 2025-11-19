@@ -1,8 +1,11 @@
-name: Monthly Test Suite
+name: 🧪 Monthly Test Suite
+
+# Schedule konfiguriert in _config.yml: automation.monthly_tests.schedule
+# Läuft: Monatlich am 1. um 2:00 UTC (komplette Testbatterie)
 
 on:
   schedule:
-    # Monatlich am 1. um 2:00 UTC (komplette Testbatterie)
+    # Schedule konfiguriert in _config.yml: automation.monthly_tests.schedule
     - cron: '0 2 1 * *'
   workflow_dispatch: # Manueller Trigger
 

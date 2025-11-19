@@ -19,6 +19,17 @@ url: "https://www.hof.de/"
 image: ""
 status: "Öffentlich"
 source: "Stadt Hof"
+recurring:
+  enabled: true
+  frequency: "weekly"
+  interval: 1
+  by_day: ["WE", "SA"]
+  start_date: "2025-11-19"
+  end_date: null
+  exceptions:
+    - "2025-12-25"
+    - "2025-12-26"
+    - "2026-01-01"
 ---
 
 Frische Produkte und geselliges Markttreiben am Morgen.

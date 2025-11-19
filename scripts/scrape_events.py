@@ -119,6 +119,24 @@ class ScrapingLogger:
         if tags:
             self.log(f"🏷️  Tags extrahiert: {', '.join(tags)}")
     
+    def log_recurring_detected(self, title, recurring_info):
+        """Loggt erkannte wiederkehrende Events"""
+        self.log(f"🔄 Wiederkehrendes Event erkannt: '{title}'")
+        if recurring_info.get('pattern'):
+            pattern = recurring_info['pattern']
+            self.log(f"   ✓ Muster: {pattern}")
+        if recurring_info.get('frequency'):
+            self.log(f"   ✓ Frequenz: {recurring_info['frequency']}")
+        if recurring_info.get('by_day'):
+            days_map = {'MO': 'Montag', 'TU': 'Dienstag', 'WE': 'Mittwoch', 
+                       'TH': 'Donnerstag', 'FR': 'Freitag', 'SA': 'Samstag', 'SU': 'Sonntag'}
+            days = [days_map.get(d, d) for d in recurring_info['by_day']]
+            self.log(f"   ✓ Wochentage: {', '.join(days)}")
+        if recurring_info.get('confidence'):
+            self.log(f"   ✓ Konfidenz: {recurring_info['confidence']:.0%}")
+        if recurring_info.get('source'):
+            self.log(f"   ✓ Quelle: {recurring_info['source']}")
+    
     def log_error(self, error_message, context=""):
         """Loggt einen Fehler"""
         self.log(f"❌ FEHLER: {error_message}", "ERROR")
@@ -232,6 +250,38 @@ class EventScraper:
                                 'event_hash': event_hash,
                                 'status': 'Entwurf'
                             }
+                            
+                            # Prüfe auf wiederkehrende Events
+                            try:
+                                from date_enhancer import DateEnhancer
+                                enhancer = DateEnhancer()
+                                recurring_result = enhancer.detect_recurring_pattern(title, description)
+                                
+                                if recurring_result.get('is_recurring'):
+                                    recurring_info = {
+                                        'pattern': recurring_result.get('keyword', ''),
+                                        'frequency': recurring_result.get('pattern', ''),
+                                        'by_day': recurring_result.get('by_day', []),
+                                        'confidence': recurring_result.get('confidence', 0),
+                                        'source': 'Automatische Erkennung (Titel/Beschreibung)'
+                                    }
+                                    self.logger.log_recurring_detected(title, recurring_info)
+                                    
+                                    # Füge recurring-Config hinzu
+                                    event_data['recurring'] = {
+                                        'enabled': True,
+                                        'frequency': recurring_result.get('pattern', 'weekly'),
+                                        'interval': 1,
+                                        'by_day': recurring_result.get('by_day', []),
+                                        'start_date': str(event_date),
+                                        'end_date': None,
+                                        'exceptions': []
+                                    }
+                            except ImportError:
+                                pass  # date_enhancer nicht verfügbar
+                            except Exception as e:
+                                self.logger.log_error(f"Recurring-Detection fehlgeschlagen: {e}", title)
+                            
                             # Venue-Daten anreichern
                             enriched_data = self.venue_manager.enrich_event_data(event_data)
                             if enriched_data.get('venue_name'):
@@ -468,6 +518,38 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
             if event_hash not in self.existing_hashes:
                 event['event_hash'] = event_hash
                 event['status'] = 'Entwurf'
+                
+                # Prüfe auf wiederkehrende Events
+                try:
+                    from date_enhancer import DateEnhancer
+                    enhancer = DateEnhancer()
+                    recurring_result = enhancer.detect_recurring_pattern(event['title'], event['description'])
+                    
+                    if recurring_result.get('is_recurring'):
+                        recurring_info = {
+                            'pattern': recurring_result.get('keyword', ''),
+                            'frequency': recurring_result.get('pattern', ''),
+                            'by_day': recurring_result.get('by_day', []),
+                            'confidence': recurring_result.get('confidence', 0),
+                            'source': 'Automatische Erkennung (Titel/Beschreibung)'
+                        }
+                        self.logger.log_recurring_detected(event['title'], recurring_info)
+                        
+                        # Füge recurring-Config hinzu
+                        event['recurring'] = {
+                            'enabled': True,
+                            'frequency': recurring_result.get('pattern', 'weekly'),
+                            'interval': 1,
+                            'by_day': recurring_result.get('by_day', []),
+                            'start_date': str(event['date']),
+                            'end_date': None,
+                            'exceptions': []
+                        }
+                except ImportError:
+                    pass  # date_enhancer nicht verfügbar
+                except Exception as e:
+                    self.logger.log_error(f"Recurring-Detection fehlgeschlagen: {e}", event['title'])
+                
                 self.events.append(event)
             else:
                 self.logger.log_event_duplicate(event['title'], event_hash)

@@ -1,14 +1,15 @@
-name: Archive Old Events
+name: 📦 Archive Old Events
 
 on:
   schedule:
-    # Jeden Montag um 3 Uhr morgens (UTC)
-    - cron: '0 3 * * 1'
+    # Schedule konfiguriert in _config.yml: automation.archiving.schedule
+    # Default: Täglich um 3:00 UTC
+    - cron: '0 3 * * *'
   
   workflow_dispatch:
     inputs:
       days:
-        description: 'Events älter als X Tage archivieren'
+        description: 'Events älter als X Tage archivieren (siehe _config.yml: archiving.days_threshold)'
         required: false
         default: '30'
       dry_run:

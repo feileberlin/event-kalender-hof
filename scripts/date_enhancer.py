@@ -113,15 +113,42 @@ class DateEnhancer:
         Erkennt wiederkehrende Events
         
         Returns:
-            dict: {'is_recurring': bool, 'pattern': str, 'confidence': float}
+            dict: {'is_recurring': bool, 'pattern': str, 'by_day': list, 'confidence': float}
         """
         text = f"{title} {description}".lower()
         
+        # Wochentags-Mapping
+        weekday_patterns = {
+            'MO': ['montag', 'monday'],
+            'TU': ['dienstag', 'tuesday'],
+            'WE': ['mittwoch', 'wednesday'],
+            'TH': ['donnerstag', 'thursday'],
+            'FR': ['freitag', 'friday'],
+            'SA': ['samstag', 'saturday'],
+            'SU': ['sonntag', 'sunday']
+        }
+        
+        # Erkenne einzelne Wochentage
+        detected_days = []
+        for day_code, keywords in weekday_patterns.items():
+            for keyword in keywords:
+                if f"jeden {keyword}" in text or f"jede {keyword}" in text or f"every {keyword}" in text:
+                    detected_days.append(day_code)
+                    break
+        
+        # Mehrere Wochentage (z.B. "mittwoch und samstag")
+        if " und " in text or " und " in text:
+            for day_code, keywords in weekday_patterns.items():
+                for keyword in keywords:
+                    if keyword in text:
+                        if day_code not in detected_days:
+                            detected_days.append(day_code)
+        
+        # Pattern-Typen
         patterns = {
             'daily': ['täglich', 'jeden tag', 'daily'],
-            'weekly': ['wöchentlich', 'jede woche', 'jeden montag', 'jeden dienstag', 
-                      'jeden mittwoch', 'jeden donnerstag', 'jeden freitag', 
-                      'jeden samstag', 'jeden sonntag', 'weekly'],
+            'weekly': ['wöchentlich', 'jede woche', 'weekly'] + 
+                     [f"jeden {kw}" for kws in weekday_patterns.values() for kw in kws],
             'monthly': ['monatlich', 'jeden monat', 'monthly'],
             'yearly': ['jährlich', 'jedes jahr', 'annually'],
         }
@@ -129,12 +156,19 @@ class DateEnhancer:
         for pattern_type, keywords in patterns.items():
             for keyword in keywords:
                 if keyword in text:
-                    return {
+                    result = {
                         'is_recurring': True,
                         'pattern': pattern_type,
                         'confidence': 0.8,
                         'keyword': keyword
                     }
+                    
+                    # Füge erkannte Wochentage hinzu
+                    if detected_days:
+                        result['by_day'] = detected_days
+                        result['confidence'] = 0.9  # Höhere Konfidenz bei konkreten Tagen
+                    
+                    return result
         
         return {'is_recurring': False, 'pattern': None, 'confidence': 0.0}
     

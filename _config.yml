@@ -31,6 +31,62 @@ default_center:
   lat: 50.3197
   lng: 11.9168
 
+# Standorte
+locations:
+  rathaus:
+    lat: 50.3197
+    lng: 11.9168
+    name: "Rathaus Hof"
+  bahnhof:
+    lat: 50.3132
+    lng: 11.9196
+    name: "Hauptbahnhof Hof"
+  kaserne:
+    lat: 50.3092
+    lng: 11.9053
+    name: "Oberfranken-Kaserne"
+  hochschule:
+    lat: 50.3295
+    lng: 11.9021
+    name: "Hochschule Hof"
+
+# Automatisierungs-Intervalle (Cron-Format)
+automation:
+  scraping:
+    schedule: "0 6,18 * * *"  # Täglich um 6:00 und 18:00 UTC
+    description: "Event-Scraping von konfigurierten Quellen"
+  
+  archiving:
+    schedule: "0 3 * * *"  # Täglich um 3:00 UTC
+    description: "Archivierung vergangener Events (älter als 30 Tage)"
+  
+  date_validation:
+    schedule: "0 4 * * *"  # Täglich um 4:00 UTC
+    description: "Validierung von Event-Datumsangaben"
+  
+  documentation:
+    schedule: "0 5 * * 0"  # Jeden Sonntag um 5:00 UTC
+    description: "Regenerierung der Projekt-Dokumentation"
+  
+  code_validation:
+    schedule: "0 3 1 * *"  # Monatlich am 1. um 3:00 UTC
+    description: "HTML/CSS/JS Lint & Validierung"
+  
+  monthly_tests:
+    schedule: "0 2 1 * *"  # Monatlich am 1. um 2:00 UTC
+    description: "Komplette Testbatterie (Filter, Python, etc.)"
+
+# Archivierungs-Konfiguration
+archiving:
+  days_threshold: 30  # Events älter als X Tage archivieren
+  target_directory: "_events/_history"
+  
+# Scraping-Konfiguration
+scraping:
+  max_retries: 3
+  timeout_seconds: 30
+  user_agent: "Mozilla/5.0 (Event-Kalender-Hof-Bot)"
+
 # Plugins (GitHub Pages kompatibel)
 plugins:
   - jekyll-feed

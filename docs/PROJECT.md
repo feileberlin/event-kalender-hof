@@ -1,8 +1,66 @@
 # 📊 Projekt-Übersicht: Event-Kalender Hof
 
-**Letzte Aktualisierung:** 18. November 2025
+**Letzte Aktualisierung:** 19. November 2025  
+**Version:** v1.7.0  
+**Status:** 🟢 Production Ready
+
+## 📅 Projekt-Timeline
+
+**🎬 Projektstart:** 17. November 2025, 21:46 Uhr (Initial Commit)
+
+### Entwicklungsgeschichte
+
+| Datum | Version | Milestone | Entwicklungszeit |
+|-------|---------|-----------|------------------|
+| **17.11.2025** | **v0.1.0** | 🚀 Pre-Release | 0 Tage (21:46 Uhr) |
+| **17.11.2025** | **v1.0.0** | 🎉 First Release | < 1 Tag |
+| **18.11.2025** | **v1.1.0** | 🎨 Design-Refactoring | +1 Tag |
+| **18.11.2025** | **v1.2.0** | 🖼️ AI-Flyer-Analyse | +1 Tag |
+| **19.11.2025** | **v1.3.0** | 🏛️ Venue-Management | +2 Tage |
+| **19.11.2025** | **v1.4.0** | ✅ Datums-Validierung | +2 Tage |
+| **19.11.2025** | **v1.5.0** | 🔄 Recurring Events | +2 Tage |
+| **19.11.2025** | **v1.6.0** | ⚡ Auto-Scraping | +2 Tage |
+| **19.11.2025** | **v1.7.0** | 📌 Bookmark-System | +2 Tage |
+
+**Gesamt:** 8 Versionen in 3 Tagen | **25+ Major Features** | **3-4 Features/Tag**
+
+### Feature-Entwicklung
+
+- **Tag 0 (17.11.):** MVP → Production (Core Features)
+- **Tag 1 (18.11.):** Design + AI (4 Features)
+- **Tag 2 (19.11.):** Quality + Automation + UX (12 Features)
+
+> 📖 **Details:** Siehe [CHANGELOG.md](CHANGELOG.md) für vollständige Entwicklungs-Timeline
 
 ## Zusammenfassung
+
+## 📊 Projekt-Statistiken
+
+**Stand:** 19. November 2025, 20:27 Uhr
+
+### Events
+- **Gesamt:** 17 Events
+- **Veröffentlicht:** 15
+- **Entwürfe:** 2
+- **Archiviert:** 0
+- **Wiederkehrend:** 4
+
+### Datenquellen
+- **Scraping-Quellen:** 8
+- **Veranstaltungsorte:** 5
+- **Standorte:** 4
+
+### Code-Metriken
+- **Python:** 3,409 Zeilen
+- **JavaScript:** 882 Zeilen
+- **CSS:** 992 Zeilen
+- **HTML:** 556 Zeilen
+- **Markdown (Docs):** 4,153 Zeilen
+- **Gesamt:** 9,992 Zeilen
+
+### Repository
+- **Commits:** 123
+- **Letzter Commit:** `77046a2`
 
 Der Event-Kalender Hof ist eine Jekyll-basierte Website für GitHub Pages, die automatisch Events aus verschiedenen Quellen sammelt und auf einer interaktiven Karte darstellt. Das Besondere: Es werden nur Events bis zur Morgendämmerung angezeigt - perfekt für spontane Abendplanungen!
 
@@ -41,9 +99,27 @@ Der Event-Kalender Hof ist eine Jekyll-basierte Website für GitHub Pages, die a
 ### 4. Admin-Interface (admin.html)
 - Übersicht aller Events (inkl. Entwürfe)
 - Status-Verwaltung (Entwurf ↔ Öffentlich)
+- **Neues Event erstellen** mit vollständigem Formular
+- **Recurring Events Support**: 
+  - by_set_pos Dropdown (Erster/Zweiter/.../Letzter Wochentag)
+  - additions/exceptions Editor mit visuellen Pills
+  - Wochentags-Checkboxen (mehrere gleichzeitig)
+  - Live-Vorschau der nächsten 10 Termine
+  - Markdown-Generator für YAML-Frontmatter
 - Direktlink zu GitHub Editor
 
-### 5. Automatische Tests
+### 5. Bookmark-System (v1.7.0)
+- **Event-Markierung**: ☆/⭐ Button in Cards und Karten-Popups
+- **Cookie-Speicherung**: Nur URLs (DSGVO-konform, 365 Tage)
+- **Visuelle Hervorhebung**: Grüner Rahmen + ⭐-Symbol
+- **Toolbar am Bildrand**: Erscheint nur bei vorhandenen Bookmarks
+- **🖨️ Druck-Funktion**: Formatierte PDF-druckbare Liste
+- **📧 E-Mail-Funktion**: Mailto-Link mit vorausgefülltem Body
+- **🗑️ Löschen-Funktion**: Alle Bookmarks auf einmal entfernen
+- **Automatische Validierung**: Nur veröffentlichte + zukünftige Events
+- **Responsive Design**: Desktop (rechts) / Mobile (unten rechts)
+
+### 6. Automatische Tests
 - **Filter-Tests**: Validiert HTML ↔ JavaScript Konsistenz
 - **CI/CD Integration**: Tests laufen bei jedem relevanten Push
 - **Test Suite**: `tests/test_filters.js` mit 4 Test-Kategorien:
@@ -106,7 +182,7 @@ event-kalender-hof/
 │   └── LICENSE               # MIT-Lizenz
 │
 └── 🛠️ Tools
-    ├── setup.sh              # Setup-Skript
+    ├── scripts/setup.sh      # Setup-Skript
     └── dev.sh                # Dev-Server-Skript
 ```
 
@@ -296,20 +372,26 @@ E --> F[Event-Details öffnen]
 
 ## 🔮 Roadmap
 
-### v1.1 (Q1 2026)
-- [ ] RSS-Feed
-- [ ] iCal-Export
-- [ ] Mehr Event-Quellen
+### v1.8.0 (geplant)
+- [ ] LocalStorage statt Cookies (größere Kapazität)
+- [ ] Bookmark-Kategorien/Tags
+- [ ] Bookmark-Sortierung (Datum, Kategorie, Alphabet)
+- [ ] iCal/Calendar-Export (.ics-Dateien)
 
-### v1.2 (Q2 2026)
-- [ ] PWA-Support
+### v1.9.0 (geplant)
+- [ ] RSS-Feed für Events
+- [ ] PWA-Support (Service Worker, Offline-Modus)
+- [ ] Sync mit Google Calendar / Outlook
+- [ ] Teilen-Funktion (Link zu Bookmark-Liste)
+
+### v2.0.0 (geplant)
 - [ ] Dark Mode
-- [ ] Mehrsprachigkeit
-
-### v2.0 (Q3 2026)
+- [ ] Account-System (optional, für Cross-Device Sync)
+- [ ] Bookmark-Statistiken & Analytics
+- [ ] Event-Empfehlungen basierend auf Bookmarks
 - [ ] KI-gestützte Event-Beschreibungen
 - [ ] Social Media Integration
-- [ ] Event-Empfehlungen
+- [ ] Mehrsprachigkeit (EN/DE)
 
 ## 📞 Support
 
@@ -319,10 +401,10 @@ E --> F[Event-Details öffnen]
 
 ## 📜 Lizenz
 
-MIT License - Siehe [LICENSE](LICENSE)
+MIT License - Siehe [LICENSE](../LICENSE)
 
 ---
 
-**Stand**: 17. November 2025  
-**Version**: 1.0.0  
+**Stand**: 19. November 2025  
+**Version**: v1.7.0  
 **Maintainer**: feileberlin

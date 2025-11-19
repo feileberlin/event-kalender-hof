@@ -25,12 +25,12 @@ recurring:
   enabled: true
   frequency: "weekly"
   interval: 1
-  by_day: ["SU"]
-  start_date: "2025-11-24"
+  by_day: ["WE"]
+  start_date: "2025-11-20"
   end_date: null
   exceptions:
     - "2025-12-24"
-    - "2025-12-31"
+    - "2025-12-25"
 ---
 
 Uriges Pub mit vielfältigem Getränkeangebot und Speisen, heute mit Karaoke.

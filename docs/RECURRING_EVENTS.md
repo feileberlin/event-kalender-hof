@@ -19,11 +19,14 @@ recurring:
   interval: 1                      # Alle N Wochen/Monate (z.B. 2 = alle 2 Wochen)
   by_day: ["SU"]                   # Wochentage: MO, TU, WE, TH, FR, SA, SU
   by_month_day: null               # Tag im Monat (1-31) für monthly
+  by_set_pos: null                 # Position im Monat: 1=erster, 2=zweiter, -1=letzter
   start_date: "2025-11-17"         # Ab wann wiederkehrend (Default: date)
   end_date: null                   # Bis wann (null = unendlich)
   exceptions:                      # Ausnahmen (keine Events an diesen Tagen)
     - "2025-12-24"                 # Weihnachten
     - "2025-12-31"                 # Silvester
+  additions:                       # Zusätzliche Termine (außerhalb des Rhythmus)
+    - "2025-12-28"                 # Extra-Event zwischen den Jahren
   
 # Alternative: RRULE-Format (iCalendar Standard)
 rrule: "FREQ=WEEKLY;BYDAY=SU;UNTIL=20261231T235959Z"
@@ -115,7 +118,34 @@ recurring:
     - "2025-12-26"
 ```
 
-### 5. Jährliches Event (Stadtfest)
+### 5. Mehrere Wochentage (Wochenmarkt)
+
+**Use Case**: Wochenmarkt jeden Mittwoch UND Samstag
+
+```yaml
+recurring:
+  enabled: true
+  frequency: "weekly"
+  interval: 1
+  by_day: ["WE", "SA"]  # Mittwoch UND Samstag!
+  start_date: "2025-11-19"
+  end_date: null
+  exceptions:
+    - "2025-12-25"  # 1. Weihnachtstag
+    - "2025-12-26"  # 2. Weihnachtstag
+    - "2026-01-01"  # Neujahr
+```
+
+**Generierte Instanzen** (nächste 14 Tage):
+- Mi 20.11.2025 - 08:00
+- Sa 23.11.2025 - 08:00
+- Mi 27.11.2025 - 08:00
+- Sa 30.11.2025 - 08:00
+- Mi 04.12.2025 - 08:00
+
+💡 **Hinweis**: Das System generiert automatisch Events für ALLE angegebenen Wochentage!
+
+### 6. Jährliches Event (Stadtfest)
 
 ```yaml
 recurring:
@@ -128,6 +158,72 @@ recurring:
   exceptions: []
 ```
 
+### 7. Erster Freitag im Monat (Museumsabend)
+
+**Use Case**: Jeden ersten Freitag im Monat
+
+```yaml
+recurring:
+  enabled: true
+  frequency: "monthly"
+  interval: 1
+  by_day: ["FR"]
+  by_set_pos: 1  # 1=erster, 2=zweiter, 3=dritter, 4=vierter, -1=letzter
+  start_date: "2025-12-05"
+  end_date: null
+  exceptions: []
+```
+
+**Generierte Instanzen**:
+- Fr 05.12.2025 (erster Freitag im Dezember)
+- Fr 02.01.2026 (erster Freitag im Januar)
+- Fr 06.02.2026 (erster Freitag im Februar)
+- Fr 06.03.2026 (erster Freitag im März)
+
+### 8. Letzter Sonntag im Monat (Brunch)
+
+**Use Case**: Jeden letzten Sonntag im Monat
+
+```yaml
+recurring:
+  enabled: true
+  frequency: "monthly"
+  interval: 1
+  by_day: ["SU"]
+  by_set_pos: -1  # -1 = letzter im Monat
+  start_date: "2025-11-30"
+  end_date: null
+  exceptions: []
+```
+
+### 9. Komplex: Jeden 2. Dienstag mit Ausnahmen + Zusatzterminen
+
+**Use Case**: Event jeden zweiten Dienstag, außer Feiertage, plus Sondertermine
+
+```yaml
+recurring:
+  enabled: true
+  frequency: "monthly"
+  interval: 1
+  by_day: ["TU"]
+  by_set_pos: 2  # Zweiter Dienstag im Monat
+  start_date: "2025-12-09"
+  end_date: null
+  exceptions:
+    - "2025-12-24"  # Weihnachten (fällt aus)
+    - "2026-04-14"  # Ostern (fällt aus)
+  additions:
+    - "2025-12-30"  # Extra-Termin (Jahresabschluss)
+    - "2026-01-05"  # Extra-Termin (Neujahrsspecial)
+```
+
+**Ergebnis**:
+- ✅ 09.12.2025 (2. Dienstag im Dezember)
+- ❌ 24.12.2025 (Exception: Weihnachten)
+- ✅ 30.12.2025 (Addition: Extra-Termin!)
+- ✅ 05.01.2026 (Addition: Extra-Termin!)
+- ✅ 13.01.2026 (2. Dienstag im Januar)
+
 ## RRULE-Format (Alternative)
 
 iCalendar RRULE ist ein Standard für wiederkehrende Events:
@@ -139,6 +235,9 @@ rrule: "FREQ=WEEKLY;BYDAY=SU;UNTIL=20261231T235959Z"
 # Jeden ersten Freitag im Monat
 rrule: "FREQ=MONTHLY;BYDAY=1FR"
 
+# Jeden letzten Sonntag im Monat
+rrule: "FREQ=MONTHLY;BYDAY=-1SU"
+
 # Alle 2 Wochen am Dienstag
 rrule: "FREQ=WEEKLY;INTERVAL=2;BYDAY=TU"
 
@@ -147,7 +246,7 @@ rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
 ```
 
 **Vorteil**: Standard-Format, kompatibel mit iCalendar/ICS  
-**Nachteil**: Komplexere Syntax
+**Nachteil**: Komplexere Syntax, keine `additions`-Unterstützung
 
 ## Default-Werte
 

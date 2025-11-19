@@ -8,11 +8,14 @@ let lastSelectedLocation = 'rathaus'; // Track für Browser-Standort Refresh
 // Standort-Definitionen
 const LOCATIONS = {
     rathaus: { lat: 50.3197, lng: 11.9168, name: 'Rathaus Hof' },
-    bahnhof: { lat: 50.3132, lng: 11.9196, name: 'Hauptbahnhof Hof' }
+    bahnhof: { lat: 50.3132, lng: 11.9196, name: 'Hauptbahnhof Hof' },
+    kaserne: { lat: 50.3092, lng: 11.9053, name: 'Oberfranken-Kaserne' },
+    hochschule: { lat: 50.3295, lng: 11.9021, name: 'Hochschule Hof' }
 };
 
 // Cookie-Verwaltung
 const COOKIE_NAME = 'eventKalenderPrefs';
+const BOOKMARKS_COOKIE_NAME = 'eventKalenderBookmarks';
 const COOKIE_DAYS = 365;
 
 function savePrefsToCookie() {
@@ -46,6 +49,284 @@ function loadPrefsFromCookie() {
     return null;
 }
 
+// ==========================================
+// BOOKMARK-SYSTEM
+// ==========================================
+
+let bookmarkedEvents = new Set();
+
+function saveBookmarksToCookie() {
+    const bookmarks = Array.from(bookmarkedEvents);
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (COOKIE_DAYS * 24 * 60 * 60 * 1000));
+    document.cookie = `${BOOKMARKS_COOKIE_NAME}=${JSON.stringify(bookmarks)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+    console.log('Bookmarks gespeichert:', bookmarks);
+    updateBookmarkUI();
+}
+
+function loadBookmarksFromCookie() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === BOOKMARKS_COOKIE_NAME) {
+            try {
+                const bookmarks = JSON.parse(decodeURIComponent(value));
+                bookmarkedEvents = new Set(bookmarks);
+                console.log('Bookmarks geladen:', bookmarks);
+                return bookmarks;
+            } catch (e) {
+                console.error('Fehler beim Laden der Bookmarks:', e);
+            }
+        }
+    }
+    return [];
+}
+
+function toggleBookmark(eventUrl) {
+    if (bookmarkedEvents.has(eventUrl)) {
+        bookmarkedEvents.delete(eventUrl);
+    } else {
+        bookmarkedEvents.add(eventUrl);
+    }
+    saveBookmarksToCookie();
+    
+    // UI aktualisieren
+    const allBookmarkButtons = document.querySelectorAll(`[data-event-url="${eventUrl}"]`);
+    allBookmarkButtons.forEach(btn => {
+        updateBookmarkButton(btn, bookmarkedEvents.has(eventUrl));
+    });
+    
+    // Event-Card markieren
+    const eventCard = document.querySelector(`[data-event-url-card="${eventUrl}"]`);
+    if (eventCard) {
+        if (bookmarkedEvents.has(eventUrl)) {
+            eventCard.classList.add('bookmarked');
+        } else {
+            eventCard.classList.remove('bookmarked');
+        }
+    }
+}
+
+function updateBookmarkButton(button, isBookmarked) {
+    if (isBookmarked) {
+        button.innerHTML = '⭐ Gemerkt';
+        button.classList.add('bookmarked');
+        button.setAttribute('title', 'Aus Merkliste entfernen');
+    } else {
+        button.innerHTML = '☆ Merken';
+        button.classList.remove('bookmarked');
+        button.setAttribute('title', 'Zur Merkliste hinzufügen');
+    }
+}
+
+function updateBookmarkUI() {
+    const count = bookmarkedEvents.size;
+    const toolbar = document.getElementById('bookmarks-toolbar');
+    
+    if (count > 0) {
+        toolbar.style.display = 'flex';
+        document.getElementById('bookmark-count').textContent = count;
+    } else {
+        toolbar.style.display = 'none';
+    }
+}
+
+function getBookmarkedEventData() {
+    const now = new Date();
+    const bookmarkedData = [];
+    
+    bookmarkedEvents.forEach(url => {
+        const event = allEvents.find(e => e.url === url);
+        if (event) {
+            // Prüfen ob Event noch gültig ist (veröffentlicht + in Zukunft)
+            if (event.status !== 'Öffentlich') return;
+            
+            const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
+            if (eventDate < now) return;
+            
+            bookmarkedData.push(event);
+        }
+    });
+    
+    // Nach Datum sortieren
+    bookmarkedData.sort((a, b) => {
+        const dateA = new Date(a.date + 'T' + (a.start_time || '00:00'));
+        const dateB = new Date(b.date + 'T' + (b.start_time || '00:00'));
+        return dateA - dateB;
+    });
+    
+    return bookmarkedData;
+}
+
+function printBookmarks() {
+    const events = getBookmarkedEventData();
+    
+    if (events.length === 0) {
+        alert('Keine gültigen Termine in der Merkliste.\n\nStellen Sie sicher, dass die Events:\n- Veröffentlicht sind\n- In der Zukunft liegen');
+        return;
+    }
+    
+    // HTML für Druck generieren
+    const printWindow = window.open('', '_blank');
+    let html = `
+        <!DOCTYPE html>
+        <html lang="de">
+        <head>
+            <meta charset="UTF-8">
+            <title>Meine gemerkten Events - Event-Kalender Hof</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    max-width: 800px;
+                    margin: 20px auto;
+                    padding: 20px;
+                    color: #333;
+                }
+                h1 {
+                    color: #2c3e50;
+                    border-bottom: 3px solid #8b4513;
+                    padding-bottom: 10px;
+                }
+                .meta {
+                    color: #666;
+                    font-size: 14px;
+                    margin-bottom: 30px;
+                }
+                .event {
+                    margin-bottom: 25px;
+                    padding: 15px;
+                    border-left: 4px solid #fa3;
+                    background: #f9f9f9;
+                    page-break-inside: avoid;
+                }
+                .event-title {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #2c3e50;
+                    margin-bottom: 8px;
+                }
+                .event-date {
+                    font-weight: bold;
+                    color: #8b4513;
+                    margin-bottom: 5px;
+                }
+                .event-location {
+                    color: #666;
+                    margin-bottom: 5px;
+                }
+                .event-description {
+                    margin-top: 10px;
+                    line-height: 1.5;
+                }
+                @media print {
+                    body { margin: 0; padding: 15mm; }
+                    .no-print { display: none; }
+                }
+            </style>
+        </head>
+        <body>
+            <h1>📌 Meine gemerkten Events</h1>
+            <div class="meta">
+                Generiert am: ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}<br>
+                Anzahl Events: ${events.length}
+            </div>
+    `;
+    
+    events.forEach((event, idx) => {
+        const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
+        const dateStr = eventDate.toLocaleDateString('de-DE', { 
+            weekday: 'long', 
+            day: '2-digit', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+        const timeStr = event.start_time ? ` um ${event.start_time} Uhr` : '';
+        
+        html += `
+            <div class="event">
+                <div class="event-title">${idx + 1}. ${event.title}</div>
+                <div class="event-date">📅 ${dateStr}${timeStr}</div>
+                <div class="event-location">📍 ${event.location}</div>
+                ${event.category ? `<div class="event-location">🏷️ ${event.category}</div>` : ''}
+                ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
+            </div>
+        `;
+    });
+    
+    html += `
+            <div class="no-print" style="margin-top: 30px; text-align: center;">
+                <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                    🖨️ Drucken / Als PDF speichern
+                </button>
+            </div>
+        </body>
+        </html>
+    `;
+    
+    printWindow.document.write(html);
+    printWindow.document.close();
+}
+
+function emailBookmarks() {
+    const events = getBookmarkedEventData();
+    
+    if (events.length === 0) {
+        alert('Keine gültigen Termine in der Merkliste.\n\nStellen Sie sicher, dass die Events:\n- Veröffentlicht sind\n- In der Zukunft liegen');
+        return;
+    }
+    
+    // E-Mail Body generieren
+    let body = `Meine gemerkten Events - Event-Kalender Hof\n`;
+    body += `Generiert am: ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n`;
+    body += `\n${'='.repeat(60)}\n\n`;
+    
+    events.forEach((event, idx) => {
+        const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
+        const dateStr = eventDate.toLocaleDateString('de-DE', { 
+            weekday: 'long', 
+            day: '2-digit', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+        const timeStr = event.start_time ? ` um ${event.start_time} Uhr` : '';
+        
+        body += `${idx + 1}. ${event.title}\n`;
+        body += `📅 ${dateStr}${timeStr}\n`;
+        body += `📍 ${event.location}\n`;
+        if (event.category) body += `🏷️ ${event.category}\n`;
+        if (event.description) body += `\n${event.description}\n`;
+        body += `\n${'-'.repeat(60)}\n\n`;
+    });
+    
+    // mailto: Link erstellen
+    const subject = encodeURIComponent(`Meine gemerkten Events (${events.length} Termine)`);
+    const mailBody = encodeURIComponent(body);
+    const mailtoLink = `mailto:?subject=${subject}&body=${mailBody}`;
+    
+    // Prüfen ob Body zu lang ist (Browser-Limit ~2000 Zeichen)
+    if (mailtoLink.length > 2000) {
+        alert('Die Merkliste ist zu lang für eine E-Mail.\n\nBitte nutzen Sie stattdessen:\n- 🖨️ Drucken / Als PDF speichern\n- Oder merken Sie weniger Events vor');
+        return;
+    }
+    
+    window.location.href = mailtoLink;
+}
+
+function clearAllBookmarks() {
+    if (confirm(`Wirklich alle ${bookmarkedEvents.size} gemerkten Events löschen?`)) {
+        bookmarkedEvents.clear();
+        saveBookmarksToCookie();
+        
+        // UI aktualisieren
+        document.querySelectorAll('.bookmark-btn').forEach(btn => {
+            updateBookmarkButton(btn, false);
+        });
+        document.querySelectorAll('.event-card').forEach(card => {
+            card.classList.remove('bookmarked');
+        });
+    }
+}
+
 function applyPrefs(prefs) {
     if (!prefs) return;
     
@@ -76,8 +357,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Anzahl aller Events:', allEvents.length);
     console.log('Events:', allEvents);
 
-    // Präferenzen aus Cookie laden
+    // Präferenzen und Bookmarks aus Cookies laden
     const savedPrefs = loadPrefsFromCookie();
+    loadBookmarksFromCookie();
+    updateBookmarkUI();
 
     initMap();
     calculateDawnTime();
@@ -429,6 +712,12 @@ function displayEventsOnMap() {
                     📅 ${new Date(event.date).toLocaleDateString('de-DE')}<br>
                     🕐 ${event.startTime} Uhr<br>
                     📍 ${event.location}<br>
+                    <button class="popup-bookmark-btn bookmark-btn ${bookmarkedEvents.has(event.url) ? 'bookmarked' : ''}" 
+                            data-event-url="${event.url}" 
+                            onclick="toggleBookmark('${event.url}')"
+                            style="margin: 8px 0; padding: 5px 10px; cursor: pointer; border: none; border-radius: 4px; background: #ff9800; color: white; font-size: 12px; font-weight: 600;">
+                        ${bookmarkedEvents.has(event.url) ? '⭐ Gemerkt' : '☆ Merken'}
+                    </button><br>
                     <a href="${event.url}" class="popup-link">Details →</a>
                 </div>
             `);
@@ -476,8 +765,10 @@ function displayEventList() {
         return;
     }
 
-    eventList.innerHTML = filteredEvents.map((event, index) => `
-        <div class="event-card" data-index="${index}" onclick="focusEvent(${index})">
+    eventList.innerHTML = filteredEvents.map((event, index) => {
+        const isBookmarked = bookmarkedEvents.has(event.url);
+        return `
+        <div class="event-card ${isBookmarked ? 'bookmarked' : ''}" data-index="${index}" data-event-url-card="${event.url}" onclick="handleEventCardClick(event, ${index})">
             <div class="event-card-header" style="border-left: 4px solid ${getCategoryColor(event.category)}">
                 <h3>${getCategoryEmoji(event.category)} ${event.title}</h3>
                 <span class="event-category">${event.category || 'Event'}</span>
@@ -495,10 +786,26 @@ function displayEventList() {
         : ''}
             </div>
             <div class="event-card-footer">
-                <a href="${event.url}" class="btn-small">Details ansehen →</a>
+                <button class="btn-bookmark bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
+                        data-event-url="${event.url}" 
+                        onclick="event.stopPropagation(); toggleBookmark('${event.url}')"
+                        title="${isBookmarked ? 'Aus Merkliste entfernen' : 'Zur Merkliste hinzufügen'}">
+                    ${isBookmarked ? '⭐ Gemerkt' : '☆ Merken'}
+                </button>
+                <a href="${event.url}" class="btn-small" onclick="event.stopPropagation()">Details ansehen →</a>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
+}
+
+// Event-Card Click Handler (stoppt bei Bookmark/Link-Clicks)
+function handleEventCardClick(e, index) {
+    // Nur fokussieren wenn nicht auf Button/Link geklickt wurde
+    if (e.target.closest('button, a')) {
+        return;
+    }
+    focusEvent(index);
 }
 
 // Event auf Karte fokussieren
