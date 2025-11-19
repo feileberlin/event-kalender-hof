@@ -58,7 +58,16 @@ body.fullscreen-layout {
     gap: 10px;
     max-width: 1400px;
     margin: 0 auto;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+
+.event-info {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
+    margin: 0 10px;
 }
 
 /* Such-Toggle Button */
@@ -143,17 +152,10 @@ body.fullscreen-layout {
 .footer-content {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     max-width: 1400px;
     margin: 0 auto;
     font-size: 14px;
-}
-
-.event-info {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
 }
 
 #eventCount {

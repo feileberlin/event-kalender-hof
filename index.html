@@ -15,13 +15,6 @@ title: "Event-Kalender Hof"
             <input type="text" id="searchInput" placeholder="Events durchsuchen..." class="search-input">
         </div>
         
-        <button type="button" id="useLocation" class="button-icon" title="Mein Standort">📍</button>
-    </div>
-</header>
-
-<!-- Interaktiver Footer -->
-<footer class="overlay-footer">
-    <div class="footer-content">
         <div class="event-info">
             <select id="categoryFilter" class="inline-select">
                 <option value="" data-icon="📁">alle Kategorien</option>
@@ -47,6 +40,14 @@ title: "Event-Kalender Hof"
                 <option value="all">🎸 alle Events</option>
             </select>
         </div>
+        
+        <button type="button" id="useLocation" class="button-icon" title="Mein Standort">📍</button>
+    </div>
+</header>
+
+<!-- Footer mit Logo -->
+<footer class="overlay-footer">
+    <div class="footer-content">
         <div class="footer-logo-area">
             <a href="https://github.com/feileberlin/event-kalender-hof/discussions" class="logo-link" target="_blank" rel="noopener" title="Diskussionen">
                 <img src="{{ '/favicon.svg' | relative_url }}" alt="Logo" class="footer-logo">
