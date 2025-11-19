@@ -6,7 +6,7 @@
     --primary-color: #2c3e50;
     --secondary-color: #8b4513;
     --accent-color: #fa3;
-    --background: #f8f9fa;
+    --background: #fff;
     --card-background: #fff;
     --text-color: #333;
     --border-color: #dee2e6;
@@ -16,7 +16,7 @@
 /* Skeleton overrides and enhancements */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--background);
+    background: #fff;
     color: var(--text-color);
 }
 
@@ -70,10 +70,11 @@ textarea:focus {
     border-color: var(--primary-color);
 }
 
-/* Header mit Scherenschnitt */
+/* Header - minimalistisch */
 .site-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    background: #fff;
+    box-shadow: none;
+    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -98,9 +99,9 @@ textarea:focus {
 
 /* Calendar-spezifischer Container */
 .calendar-container {
-    background: rgb(255 255 255 / 85%);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
+    background: #fff;
+    border-radius: 0;
+    box-shadow: none;
     padding: 30px 20px;
     position: relative;
 }
@@ -115,9 +116,9 @@ textarea:focus {
 
 /* Suchmaske und Filter */
 .search-filter-section {
-    background: var(--card-background);
+    background: #fff;
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 0;
     box-shadow: var(--shadow);
 }
 
@@ -238,13 +239,14 @@ textarea:focus {
 /* Karte */
 .map-container {
     height: 500px;
-    border-radius: 12px;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: var(--shadow);
+    box-shadow: none;
+    border: 1px solid var(--border-color);
     margin-bottom: 30px;
     position: relative;
     z-index: 999;
-    background: rgb(255 255 255 / 95%);
+    background: #fff;
 }
 
 #map {
@@ -343,28 +345,30 @@ textarea:focus {
 }
 
 .event-card {
-    background: rgb(255 255 255 / 95%);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    background: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
     transition: all 0.3s;
     cursor: pointer;
     overflow: hidden;
-    backdrop-filter: blur(10px);
 }
 
 .event-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgb(0 0 0 / 15%);
+    transform: none;
+    box-shadow: none;
+    border-color: var(--primary-color);
 }
 
 .event-card.highlighted {
-    outline: 3px solid var(--accent-color);
-    transform: translateY(-4px);
+    outline: 2px solid var(--primary-color);
+    transform: none;
 }
 
 .event-card-header {
     padding: 15px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
     overflow: hidden;
 }
 
@@ -458,11 +462,12 @@ textarea:focus {
     grid-column: 1 / -1;
 }
 
-/* Footer mit Scherenschnitt */
+/* Footer - minimalistisch */
 .site-footer {
-    background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
-    color: white;
+    background: #fff;
+    color: var(--text-color);
     margin-top: 40px;
+    border-top: 1px solid var(--border-color);
 }
 
 .footer-silhouette {
@@ -489,10 +494,11 @@ textarea:focus {
 
 /* Event-Detail-Seite */
 .event-detail {
-    background: var(--card-background);
+    background: #fff;
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    border-radius: 0;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
     max-width: 900px;
     margin: 0 auto;
 }
@@ -626,9 +632,9 @@ textarea:focus {
     display: none;
     margin: 25px 0;
     padding: 20px;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border-radius: 12px;
-    border: 2px solid #2196f3;
+    background: #fff;
+    border-radius: 0;
+    border: 1px solid var(--border-color);
 }
 
 .btn-reminder {
@@ -738,9 +744,9 @@ textarea:focus {
     gap: 15px;
     margin: 25px 0;
     padding: 20px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 12px;
-    border: 2px solid #dee2e6;
+    background: #fff;
+    border-radius: 0;
+    border: 1px solid var(--border-color);
 }
 
 .btn-attendance {
@@ -999,18 +1005,4 @@ textarea:focus {
         background: white;
         color: black;
     }
-}
-
-/* Custom Festspielhaus Icon Integration */
-#radiusFilter option[value="999999"] {
-    background-image: url('/event-kalender-hof/assets/images/autobahn-zeichen-330.svg');
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    background-position: 4px center;
-    padding-left: 28px;
-}
-
-/* Autobahn-Icon in Select sichtbar machen */
-#radiusFilter {
-    background-size: 20px 20px;
 }
