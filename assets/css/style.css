@@ -1000,3 +1000,16 @@ textarea:focus {
         color: black;
     }
 }
+
+/* Custom Festspielhaus Icon Integration */
+#radiusFilter option[value="999999"]::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    background-image: url('/event-kalender-hof/assets/images/festspielhaus-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
