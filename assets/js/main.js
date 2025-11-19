@@ -287,6 +287,7 @@ function filterAndDisplayEvents() {
     displayEventsOnMap();
     displayEventList();
     updateCategoryFilterDisplay();
+    updateLocationSelectDisplay();
 }
 
 // Kategorie-Filter mit Event-Counts aktualisieren
@@ -369,6 +370,29 @@ function updateCategoryFilterDisplay() {
             } else {
                 option.textContent = `${count} ${icon} ${category}`;
             }
+        }
+    });
+}
+
+// Location-Select Display aktualisieren (analog zu Category-Filter)
+function updateLocationSelectDisplay() {
+    const locationSelect = document.getElementById('locationSelect');
+    if (!locationSelect) return;
+    
+    const selectedLocation = locationSelect.value;
+    
+    // Options aktualisieren
+    Array.from(locationSelect.options).forEach(option => {
+        const locValue = option.value;
+        const icon = option.getAttribute('data-icon') || '';
+        const baseName = option.textContent.replace(icon, '').trim();
+        
+        if (locValue === selectedLocation) {
+            // Aktuell ausgewählter Standort - zeige im Header
+            option.textContent = `${icon} ${baseName}`;
+        } else {
+            // Andere Standorte - zeige im Dropdown
+            option.textContent = `${icon} ${baseName}`;
         }
     });
 }
