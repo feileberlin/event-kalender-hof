@@ -1,3 +1,3 @@
-commit_message: "Fix: Korrektes Autobahn-Zeichen 330 - blau mit weißem Symbol"
-commit_hash: "c49f99c"
-commit_date: "2025-11-19 10:43:59"
+commit_message: "Fix: Verwende offizielles Autobahn-Zeichen 330 von Wikipedia"
+commit_hash: "9245f6f"
+commit_date: "2025-11-19 10:47:23"
