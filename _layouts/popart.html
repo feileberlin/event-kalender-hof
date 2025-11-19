@@ -7,35 +7,14 @@
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
     <link rel="icon" type="image/svg+xml" href="{{ '/favicon.svg' | relative_url }}">
-    <!-- Skeleton CSS Framework -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <!-- Normalize CSS for Skeleton -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/popart.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/fullscreen.css' | relative_url }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
-<body>
-    <header class="site-header">
-        <h1>{{ site.title }}</h1>
-        <p>{{ site.description }}</p>
-    </header>
-
-    <main class="site-content">
-        {{ content }}
-    </main>
-
-    <footer class="site-footer">
-        <div class="footer-content">
-            <p>2025 mit ♡ gemacht fürs Hofer Land</p>
-            <p><a href="{{ '/admin/' | relative_url }}">Admin-Bereich</a> | <a href="https://github.com/feileberlin/event-kalender-hof">GitHub</a></p>
-            <p style="font-size: 0.8em; color: rgba(255,255,255,0.6); margin-top: 10px;">
-                🏗️ Build: {{ site.time | date: "%Y-%m-%d %H:%M:%S UTC" }}{% if site.data.build_info.commit_message %}<br>
-                📝 {{ site.data.build_info.commit_message }} <span style="opacity: 0.7;">({{ site.data.build_info.commit_hash }})</span>{% endif %}
-            </p>
-        </div>
-    </footer>
+<body class="fullscreen-layout">
+    {{ content }}
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="{{ '/assets/js/main.js' | relative_url }}"></script>

@@ -3,86 +3,68 @@ layout: popart
 title: "Event-Kalender Hof"
 ---
 
-<div class="container">
-    <div class="calendar-container">
-        <!-- Suchmaske und Filter -->
-        <div class="search-filter-section">
-            <div class="row">
-                <div class="twelve columns">
-                    <input type="text" id="searchInput" class="u-full-width" placeholder="🔍 Events durchsuchen...">
-                </div>
-            </div>
+<!-- Bildschirmfüllende Karte -->
+<div id="map" class="fullscreen-map"></div>
 
-            <div class="filters">
-                <div class="row">
-                    <div class="three columns">
-                        <label for="categoryFilter">Kategorie</label>
-                        <select id="categoryFilter" class="u-full-width">
-                            <option value="">Alle Kategorien</option>
-                            <option value="Musik">Musik</option>
-                            <option value="Theater">Theater</option>
-                            <option value="Sport">Sport</option>
-                            <option value="Kultur">Kultur</option>
-                            <option value="Markt">Markt</option>
-                            <option value="Fest">Fest</option>
-                            <option value="Sonstiges">Sonstiges</option>
-                        </select>
-                    </div>
-
-                    <div class="three columns">
-                        <label for="timeFilter">Zeitraum</label>
-                        <select id="timeFilter" class="u-full-width">
-                            <option value="sunrise">Nur bis Sonnenaufgang</option>
-                            <option value="tatort">Bis zum Tatort</option>
-                            <option value="all">Unfiltriert, volle Breitseite RockCity</option>
-                        </select>
-                    </div>
-
-                    <div class="two columns">
-                        <label for="radiusFilter">Umkreis</label>
-                        <select id="radiusFilter" class="u-full-width">
-                            <option value="1">🚶 10 min zu Fuß (ca. 1 km)</option>
-                            <option value="3" selected>🚴 10 min Rad (ca. 3 km)</option>
-                            <option value="10">� 30 min Bus &amp; Bahn (bis 10 km)</option>
-                            <option value="999999">🚕 The sky is the limit!</option>
-                        </select>
-                    </div>
-
-                    <div class="four columns">
-                        <label>&nbsp;</label>
-                        <button type="button" id="resetFilters" class="button">Filter zurücksetzen</button>
-                        <button type="button" id="useLocation" class="button button-primary">📍 Mein Standort</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="twelve columns info-banner">
-                    <span id="eventCount">0 Events</span> gefunden<span id="radiusInfo"></span>
-                    <span id="dawnTime" class="dawn-time"></span>
-                </div>
-            </div>
+<!-- Transparenter Header mit Filtern -->
+<header class="overlay-header">
+    <div class="header-content">
+        <button type="button" id="searchToggle" class="search-toggle" aria-label="Suche öffnen">🔍</button>
+        
+        <div id="searchPanel" class="search-panel collapsed">
+            <input type="text" id="searchInput" placeholder="Events durchsuchen..." class="search-input">
         </div>
-
-        <!-- Karte -->
-        <div class="row">
-            <div class="twelve columns">
-                <div class="map-container">
-                    <div id="map"></div>
-                </div>
-            </div>
+        
+        <div class="filters-compact">
+            <select id="categoryFilter" class="filter-select">
+                <option value="">📁 Alle Kategorien</option>
+                <option value="Musik">🎵 Musik</option>
+                <option value="Theater">🎭 Theater</option>
+                <option value="Sport">⚽ Sport</option>
+                <option value="Kultur">🎨 Kultur</option>
+                <option value="Markt">🛒 Markt</option>
+                <option value="Fest">🎉 Fest</option>
+                <option value="Sonstiges">📌 Sonstiges</option>
+            </select>
+            
+            <select id="timeFilter" class="filter-select">
+                <option value="sunrise">🌅 Bis Sonnenaufgang</option>
+                <option value="tatort">📺 Bis Tatort (So 20:15)</option>
+                <option value="all">🎸 Alle Events (RockCity!)</option>
+            </select>
+            
+            <select id="radiusFilter" class="filter-select">
+                <option value="1">🚶 1 km Umkreis</option>
+                <option value="3" selected>🚴 3 km Umkreis</option>
+                <option value="10">🚌 10 km Umkreis</option>
+                <option value="999999">🚕 Unbegrenzt</option>
+            </select>
+            
+            <button type="button" id="useLocation" class="button-icon" title="Mein Standort">📍</button>
         </div>
+    </div>
+</header>
 
-        <!-- Event-Liste (wird dynamisch gefüllt) -->
-        <div class="row">
-            <div class="twelve columns">
-                <div class="event-list" id="eventList">
-                    <div class="loading" id="loadingSpinner">
-                        <div class="spinner"></div>
-                        <span>Lade Events...</span>
-                    </div>
-                </div>
-            </div>
+<!-- Transparenter Footer -->
+<footer class="overlay-footer">
+    <div class="footer-content">
+        <div class="event-info">
+            <span id="eventCount">0 Events</span><span id="radiusInfo"></span>
+            <span id="dawnTime"></span>
+        </div>
+        <a href="https://github.com/feileberlin/event-kalender-hof/discussions" class="logo-link" target="_blank" rel="noopener" title="Diskussionen">
+            <img src="{{ '/favicon.svg' | relative_url }}" alt="Logo" class="footer-logo">
+        </a>
+    </div>
+</footer>
+
+<!-- Event-Liste Sidebar (ausklappbar) -->
+<div id="eventSidebar" class="event-sidebar collapsed">
+    <button type="button" id="sidebarToggle" class="sidebar-toggle">📋</button>
+    <div class="event-list" id="eventList">
+        <div class="loading" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Events werden geladen...</p>
         </div>
     </div>
 </div>

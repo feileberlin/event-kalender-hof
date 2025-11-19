@@ -478,8 +478,11 @@ function setupEventListeners() {
     const categoryFilter = document.getElementById('categoryFilter');
     const timeFilter = document.getElementById('timeFilter');
     const radiusFilter = document.getElementById('radiusFilter');
-    const resetFilters = document.getElementById('resetFilters');
     const useLocation = document.getElementById('useLocation');
+    const searchToggle = document.getElementById('searchToggle');
+    const searchPanel = document.getElementById('searchPanel');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const eventSidebar = document.getElementById('eventSidebar');
 
     if (searchInput) {
         searchInput.addEventListener('input', filterAndDisplayEvents);
@@ -500,20 +503,28 @@ function setupEventListeners() {
         radiusFilter.addEventListener('change', filterAndDisplayEvents);
     }
 
-    if (resetFilters) {
-        resetFilters.addEventListener('click', () => {
-            if (searchInput) searchInput.value = '';
-            if (categoryFilter) categoryFilter.value = '';
-            if (timeFilter) timeFilter.value = 'sunrise';
-            if (radiusFilter) radiusFilter.value = '3';
-            filterAndDisplayEvents();
-        });
-    }
-
     if (useLocation) {
         useLocation.addEventListener('click', (e) => {
             e.preventDefault();
             useUserLocation();
+        });
+    }
+
+    // Such-Toggle
+    if (searchToggle && searchPanel) {
+        searchToggle.addEventListener('click', () => {
+            searchPanel.classList.toggle('collapsed');
+            searchPanel.classList.toggle('expanded');
+            if (searchPanel.classList.contains('expanded')) {
+                searchInput.focus();
+            }
+        });
+    }
+
+    // Sidebar-Toggle
+    if (sidebarToggle && eventSidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            eventSidebar.classList.toggle('collapsed');
         });
     }
 
