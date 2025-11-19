@@ -501,6 +501,13 @@ function highlightEvent(index) {
 function setLocation(locationType) {
     console.log('Setze Standort:', locationType);
     
+    // Prüfe ob Karte existiert
+    if (!map) {
+        console.warn('Karte noch nicht initialisiert, warte...');
+        setTimeout(() => setLocation(locationType), 100);
+        return;
+    }
+    
     // Browser-Standort
     if (locationType === 'browser') {
         if (!navigator.geolocation) {
@@ -535,10 +542,12 @@ function setLocation(locationType) {
                 iconSize: [30, 30]
             });
 
-            const userMarker = L.marker([userLocation.lat, userLocation.lng], {icon: userIcon})
+            const userMarker = L.marker([userLocation.lat, userLocation.lng], {icon: userIcon, className: 'user-location-marker'})
                 .addTo(map)
                 .bindPopup('<strong>📍 Dein Standort</strong>')
                 .openPopup();
+            
+            markers.push(userMarker);
 
                 // Karte zentrieren
                 map.setView([userLocation.lat, userLocation.lng], 14);
@@ -616,10 +625,12 @@ function setLocation(locationType) {
         iconSize: [30, 30]
     });
     
-    const locationMarker = L.marker([userLocation.lat, userLocation.lng], {icon: locationIcon})
+    const locationMarker = L.marker([userLocation.lat, userLocation.lng], {icon: locationIcon, className: 'user-location-marker'})
         .addTo(map)
         .bindPopup(`<strong>${location.name}</strong>`)
         .openPopup();
+    
+    markers.push(locationMarker);
     
     // Karte zentrieren
     map.setView([userLocation.lat, userLocation.lng], 14);
