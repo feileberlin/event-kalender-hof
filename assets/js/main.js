@@ -61,6 +61,9 @@ function initMap() {
 
         console.log('Karte erfolgreich initialisiert');
 
+        // Zoom-Event-Listener für Radius-Synchronisation
+        map.on('zoomend', syncRadiusWithZoom);
+
         // Karte nach kurzer Verzögerung neu laden (für korrekte Tile-Darstellung)
         setTimeout(() => {
             map.invalidateSize();
@@ -68,6 +71,72 @@ function initMap() {
         }, 100);
     } catch (error) {
         console.error('Fehler beim Initialisieren der Karte:', error);
+    }
+}
+
+// Zoom-Level mit Umkreis-Filter synchronisieren
+function syncRadiusWithZoom() {
+    if (!map) return;
+    
+    const zoom = map.getZoom();
+    const radiusFilter = document.getElementById('radiusFilter');
+    
+    if (!radiusFilter) return;
+    
+    // Zoom-Level zu Radius-Mapping:
+    // Zoom 16+: 1 km (Fuß)
+    // Zoom 14-15: 3 km (Rad) - DEFAULT
+    // Zoom 12-13: 10 km (Bus)
+    // Zoom <12: Unbegrenzt
+    
+    let newRadius;
+    if (zoom >= 16) {
+        newRadius = '1';
+    } else if (zoom >= 14) {
+        newRadius = '3';
+    } else if (zoom >= 12) {
+        newRadius = '10';
+    } else {
+        newRadius = '999999';
+    }
+    
+    if (radiusFilter.value !== newRadius) {
+        radiusFilter.value = newRadius;
+        console.log(`Zoom ${zoom} → Radius ${newRadius} km`);
+        filterAndDisplayEvents();
+    }
+}
+
+// Umkreis-Änderung mit Zoom synchronisieren
+function syncZoomWithRadius() {
+    if (!map) return;
+    
+    const radiusFilter = document.getElementById('radiusFilter');
+    if (!radiusFilter) return;
+    
+    const radius = radiusFilter.value;
+    const currentZoom = map.getZoom();
+    
+    // Radius zu Zoom-Level Mapping:
+    let targetZoom;
+    if (radius === '1') {
+        targetZoom = 16;
+    } else if (radius === '3') {
+        targetZoom = 14; // DEFAULT
+    } else if (radius === '10') {
+        targetZoom = 12;
+    } else {
+        targetZoom = 12; // Unbegrenzt: Zeige trotzdem 10 km Zoom
+    }
+    
+    // Nur zoomen wenn deutlicher Unterschied
+    if (Math.abs(currentZoom - targetZoom) >= 1) {
+        const center = userLocation || config.defaultCenter;
+        map.setView([center.lat, center.lng], targetZoom, {
+            animate: true,
+            duration: 0.5
+        });
+        console.log(`Radius ${radius} km → Zoom ${targetZoom}`);
     }
 }
 
@@ -503,7 +572,10 @@ function setupEventListeners() {
     }
 
     if (radiusFilter) {
-        radiusFilter.addEventListener('change', filterAndDisplayEvents);
+        radiusFilter.addEventListener('change', () => {
+            syncZoomWithRadius();
+            filterAndDisplayEvents();
+        });
     }
 
     if (useLocation) {
