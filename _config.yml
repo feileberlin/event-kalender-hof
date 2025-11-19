@@ -17,6 +17,9 @@ collections:
     output: true 
     permalink: /events/:name/
 
+# Future dates erlauben
+future: true
+
 # Defaults
 defaults:
   - scope:

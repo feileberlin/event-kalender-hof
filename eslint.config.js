@@ -19,7 +19,9 @@ export default [
             }
         },
         rules: {
-            'no-unused-vars': 'warn',
+            'no-unused-vars': ['warn', {
+                'varsIgnorePattern': '^(toggleBookmark|printBookmarks|emailBookmarks|clearAllBookmarks|handleEventCardClick|useLocation)$'
+            }],
             'no-console': 'off',
             'semi': ['error', 'always'],
             'indent': ['error', 4],

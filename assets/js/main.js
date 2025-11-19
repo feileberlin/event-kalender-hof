@@ -25,7 +25,7 @@ function savePrefsToCookie() {
         radius: document.getElementById('radiusFilter')?.value || '3',
         location: document.getElementById('locationSelect')?.value || 'rathaus'
     };
-    
+
     const expires = new Date();
     expires.setTime(expires.getTime() + (COOKIE_DAYS * 24 * 60 * 60 * 1000));
     document.cookie = `${COOKIE_NAME}=${JSON.stringify(prefs)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
@@ -89,13 +89,13 @@ function toggleBookmark(eventUrl) {
         bookmarkedEvents.add(eventUrl);
     }
     saveBookmarksToCookie();
-    
+
     // UI aktualisieren
     const allBookmarkButtons = document.querySelectorAll(`[data-event-url="${eventUrl}"]`);
     allBookmarkButtons.forEach(btn => {
         updateBookmarkButton(btn, bookmarkedEvents.has(eventUrl));
     });
-    
+
     // Event-Card markieren
     const eventCard = document.querySelector(`[data-event-url-card="${eventUrl}"]`);
     if (eventCard) {
@@ -122,7 +122,7 @@ function updateBookmarkButton(button, isBookmarked) {
 function updateBookmarkUI() {
     const count = bookmarkedEvents.size;
     const toolbar = document.getElementById('bookmarks-toolbar');
-    
+
     if (count > 0) {
         toolbar.style.display = 'flex';
         document.getElementById('bookmark-count').textContent = count;
@@ -134,38 +134,38 @@ function updateBookmarkUI() {
 function getBookmarkedEventData() {
     const now = new Date();
     const bookmarkedData = [];
-    
+
     bookmarkedEvents.forEach(url => {
         const event = allEvents.find(e => e.url === url);
         if (event) {
             // Prüfen ob Event noch gültig ist (veröffentlicht + in Zukunft)
             if (event.status !== 'Öffentlich') return;
-            
+
             const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
             if (eventDate < now) return;
-            
+
             bookmarkedData.push(event);
         }
     });
-    
+
     // Nach Datum sortieren
     bookmarkedData.sort((a, b) => {
         const dateA = new Date(a.date + 'T' + (a.start_time || '00:00'));
         const dateB = new Date(b.date + 'T' + (b.start_time || '00:00'));
         return dateA - dateB;
     });
-    
+
     return bookmarkedData;
 }
 
 function printBookmarks() {
     const events = getBookmarkedEventData();
-    
+
     if (events.length === 0) {
         alert('Keine gültigen Termine in der Merkliste.\n\nStellen Sie sicher, dass die Events:\n- Veröffentlicht sind\n- In der Zukunft liegen');
         return;
     }
-    
+
     // HTML für Druck generieren
     const printWindow = window.open('', '_blank');
     let html = `
@@ -231,17 +231,17 @@ function printBookmarks() {
                 Anzahl Events: ${events.length}
             </div>
     `;
-    
+
     events.forEach((event, idx) => {
         const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
-        const dateStr = eventDate.toLocaleDateString('de-DE', { 
-            weekday: 'long', 
-            day: '2-digit', 
-            month: 'long', 
-            year: 'numeric' 
+        const dateStr = eventDate.toLocaleDateString('de-DE', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
         });
         const timeStr = event.start_time ? ` um ${event.start_time} Uhr` : '';
-        
+
         html += `
             <div class="event">
                 <div class="event-title">${idx + 1}. ${event.title}</div>
@@ -252,7 +252,7 @@ function printBookmarks() {
             </div>
         `;
     });
-    
+
     html += `
             <div class="no-print" style="margin-top: 30px; text-align: center;">
                 <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
@@ -262,34 +262,34 @@ function printBookmarks() {
         </body>
         </html>
     `;
-    
+
     printWindow.document.write(html);
     printWindow.document.close();
 }
 
 function emailBookmarks() {
     const events = getBookmarkedEventData();
-    
+
     if (events.length === 0) {
         alert('Keine gültigen Termine in der Merkliste.\n\nStellen Sie sicher, dass die Events:\n- Veröffentlicht sind\n- In der Zukunft liegen');
         return;
     }
-    
+
     // E-Mail Body generieren
     let body = `Meine gemerkten Events - Event-Kalender Hof\n`;
     body += `Generiert am: ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n`;
     body += `\n${'='.repeat(60)}\n\n`;
-    
+
     events.forEach((event, idx) => {
         const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
-        const dateStr = eventDate.toLocaleDateString('de-DE', { 
-            weekday: 'long', 
-            day: '2-digit', 
-            month: 'long', 
-            year: 'numeric' 
+        const dateStr = eventDate.toLocaleDateString('de-DE', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
         });
         const timeStr = event.start_time ? ` um ${event.start_time} Uhr` : '';
-        
+
         body += `${idx + 1}. ${event.title}\n`;
         body += `📅 ${dateStr}${timeStr}\n`;
         body += `📍 ${event.location}\n`;
@@ -297,18 +297,18 @@ function emailBookmarks() {
         if (event.description) body += `\n${event.description}\n`;
         body += `\n${'-'.repeat(60)}\n\n`;
     });
-    
+
     // mailto: Link erstellen
     const subject = encodeURIComponent(`Meine gemerkten Events (${events.length} Termine)`);
     const mailBody = encodeURIComponent(body);
     const mailtoLink = `mailto:?subject=${subject}&body=${mailBody}`;
-    
+
     // Prüfen ob Body zu lang ist (Browser-Limit ~2000 Zeichen)
     if (mailtoLink.length > 2000) {
         alert('Die Merkliste ist zu lang für eine E-Mail.\n\nBitte nutzen Sie stattdessen:\n- 🖨️ Drucken / Als PDF speichern\n- Oder merken Sie weniger Events vor');
         return;
     }
-    
+
     window.location.href = mailtoLink;
 }
 
@@ -316,7 +316,7 @@ function clearAllBookmarks() {
     if (confirm(`Wirklich alle ${bookmarkedEvents.size} gemerkten Events löschen?`)) {
         bookmarkedEvents.clear();
         saveBookmarksToCookie();
-        
+
         // UI aktualisieren
         document.querySelectorAll('.bookmark-btn').forEach(btn => {
             updateBookmarkButton(btn, false);
@@ -329,12 +329,12 @@ function clearAllBookmarks() {
 
 function applyPrefs(prefs) {
     if (!prefs) return;
-    
+
     const categoryFilter = document.getElementById('categoryFilter');
     const timeFilter = document.getElementById('timeFilter');
     const radiusFilter = document.getElementById('radiusFilter');
     const locationSelect = document.getElementById('locationSelect');
-    
+
     if (categoryFilter && prefs.category !== undefined) {
         categoryFilter.value = prefs.category;
     }
@@ -347,7 +347,7 @@ function applyPrefs(prefs) {
     if (locationSelect && prefs.location) {
         locationSelect.value = prefs.location;
     }
-    
+
     console.log('Präferenzen angewendet');
 }
 
@@ -371,15 +371,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedPrefs) {
             applyPrefs(savedPrefs);
         }
-        
+
         setupEventListeners();
-        
+
         // Standort setzen (nach Event Listeners!)
         const locationSelect = document.getElementById('locationSelect');
         if (locationSelect) {
             setLocation(locationSelect.value);
         }
-        
+
         filterAndDisplayEvents();
     }, 200);
 });
@@ -438,13 +438,13 @@ function initMap() {
 // Umkreis-Änderung mit Zoom synchronisieren (Einweg: Radius → Zoom)
 function syncZoomWithRadius() {
     if (!map) return;
-    
+
     const radiusFilter = document.getElementById('radiusFilter');
     if (!radiusFilter) return;
-    
+
     const radius = radiusFilter.value;
     const currentZoom = map.getZoom();
-    
+
     // Radius zu Zoom-Level Mapping:
     let targetZoom;
     if (radius === '1') {
@@ -456,7 +456,7 @@ function syncZoomWithRadius() {
     } else {
         targetZoom = 9; // Unbegrenzt: Zeige ~60 km Zoom
     }
-    
+
     // Nur zoomen wenn deutlicher Unterschied
     if (Math.abs(currentZoom - targetZoom) >= 1) {
         const center = userLocation || config.defaultCenter;
@@ -577,10 +577,10 @@ function filterAndDisplayEvents() {
 function updateCategoryFilterDisplay() {
     const categoryFilter = document.getElementById('categoryFilter');
     if (!categoryFilter) return;
-    
+
     const selectedCategory = categoryFilter.value;
     const upcomingEvents = getUpcomingEvents();
-    
+
     // Counts pro Kategorie berechnen
     const categoryCounts = {
         '': upcomingEvents.length,
@@ -592,13 +592,13 @@ function updateCategoryFilterDisplay() {
         'Fest': 0,
         'Sonstiges': 0
     };
-    
+
     // Aktuell gefilterte Events nach Radius/Zeit zählen
     const radiusFilter = document.getElementById('radiusFilter');
     const timeFilter = document.getElementById('timeFilter');
     const radius = radiusFilter ? radiusFilter.value : '3';
     const timeValue = timeFilter ? timeFilter.value : 'sunrise';
-    
+
     upcomingEvents.forEach(event => {
         // Radius-Filter anwenden
         if (userLocation && radius !== '999999') {
@@ -608,7 +608,7 @@ function updateCategoryFilterDisplay() {
             );
             if (distance > parseFloat(radius)) return;
         }
-        
+
         // Zeit-Filter anwenden
         const eventDateTime = new Date(`${event.date}T${event.startTime || '00:00'}`);
         if (timeValue === 'sunrise') {
@@ -619,25 +619,25 @@ function updateCategoryFilterDisplay() {
             tatortTime.setHours(20, 15, 0, 0);
             if (eventDateTime > tatortTime) return;
         }
-        
+
         // Count für spezifische Kategorie erhöhen
         if (event.category && categoryCounts.hasOwnProperty(event.category)) {
             categoryCounts[event.category]++;
         }
     });
-    
+
     // "Alle Kategorien" Count = Summe aller gefilterten Events
     categoryCounts[''] = Object.values(categoryCounts).reduce((sum, count, index) => {
         // Ersten Wert (alte '') überspringen
         return index === 0 ? 0 : sum + count;
     }, 0);
-    
+
     // Options aktualisieren
     Array.from(categoryFilter.options).forEach(option => {
         const category = option.value;
         const icon = option.getAttribute('data-icon') || '';
         const count = categoryCounts[category] || 0;
-        
+
         if (category === selectedCategory) {
             // Aktuell ausgewählte Kategorie - zeige im Footer
             if (category === '') {
@@ -661,15 +661,15 @@ function updateCategoryFilterDisplay() {
 function updateLocationSelectDisplay() {
     const locationSelect = document.getElementById('locationSelect');
     if (!locationSelect) return;
-    
+
     const selectedLocation = locationSelect.value;
-    
+
     // Options aktualisieren
     Array.from(locationSelect.options).forEach(option => {
         const locValue = option.value;
         const icon = option.getAttribute('data-icon') || '';
         const baseName = option.textContent.replace(icon, '').trim();
-        
+
         if (locValue === selectedLocation) {
             // Aktuell ausgewählter Standort - zeige im Header
             option.textContent = `${icon} ${baseName}`;
@@ -831,25 +831,25 @@ function highlightEvent(index) {
 // Benutzerstandort verwenden
 function setLocation(locationType) {
     console.log('Setze Standort:', locationType);
-    
+
     // Prüfe ob Karte existiert
     if (!map) {
         console.warn('Karte noch nicht initialisiert, warte...');
         setTimeout(() => setLocation(locationType), 100);
         return;
     }
-    
+
     // Browser-Standort
     if (locationType === 'browser') {
         if (!navigator.geolocation) {
             alert('Geolocation wird von Ihrem Browser nicht unterstützt.');
             return;
         }
-        
+
         const locationSelect = document.getElementById('locationSelect');
         locationSelect.disabled = true;
 
-        
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 userLocation = {
@@ -866,19 +866,19 @@ function setLocation(locationType) {
                     }
                 });
 
-            // Benutzerpunkt auf Karte
-            const userIcon = L.divIcon({
-                className: 'user-location-marker',
-                html: '<div class="marker-icon" style="background: #4CAF50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);">👤</div>',
-                iconSize: [30, 30]
-            });
+                // Benutzerpunkt auf Karte
+                const userIcon = L.divIcon({
+                    className: 'user-location-marker',
+                    html: '<div class="marker-icon" style="background: #4CAF50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);">👤</div>',
+                    iconSize: [30, 30]
+                });
 
-            const userMarker = L.marker([userLocation.lat, userLocation.lng], {icon: userIcon, className: 'user-location-marker'})
-                .addTo(map)
-                .bindPopup('<strong>📍 Dein Standort</strong>')
-                .openPopup();
-            
-            markers.push(userMarker);
+                const userMarker = L.marker([userLocation.lat, userLocation.lng], {icon: userIcon, className: 'user-location-marker'})
+                    .addTo(map)
+                    .bindPopup('<strong>📍 Dein Standort</strong>')
+                    .openPopup();
+
+                markers.push(userMarker);
 
                 // Karte zentrieren
                 map.setView([userLocation.lat, userLocation.lng], 14);
@@ -926,28 +926,28 @@ function setLocation(locationType) {
         );
         return;
     }
-    
+
     // Rathaus oder Bahnhof
     const location = LOCATIONS[locationType];
     if (!location) {
         console.error('Unbekannter Standort:', locationType);
         return;
     }
-    
+
     userLocation = {
         lat: location.lat,
         lng: location.lng
     };
-    
+
     console.log(`Standort gesetzt: ${location.name}`, userLocation);
-    
+
     // Entferne alten Standort-Marker
     markers.forEach(marker => {
         if (marker.options.className === 'user-location-marker') {
             map.removeLayer(marker);
         }
     });
-    
+
     // Marker für feste Standorte
     const icon = locationType === 'rathaus' ? '🏛️' : '🚂';
     const locationIcon = L.divIcon({
@@ -955,23 +955,23 @@ function setLocation(locationType) {
         html: `<div class="marker-icon" style="background: #2c3e50;">${icon}</div>`,
         iconSize: [30, 30]
     });
-    
+
     const locationMarker = L.marker([userLocation.lat, userLocation.lng], {icon: locationIcon, className: 'user-location-marker'})
         .addTo(map)
         .bindPopup(`<strong>${location.name}</strong>`)
         .openPopup();
-    
+
     markers.push(locationMarker);
-    
+
     // Karte zentrieren
     map.setView([userLocation.lat, userLocation.lng], 14);
-    
+
     // Radius-Filter automatisch auf 3 km setzen, wenn unbegrenzt
     const radiusFilterElement = document.getElementById('radiusFilter');
     if (radiusFilterElement && radiusFilterElement.value === '999999') {
         radiusFilterElement.value = '3';
     }
-    
+
     // Events neu filtern
     filterAndDisplayEvents();
     lastSelectedLocation = locationType;
@@ -1087,12 +1087,12 @@ function setupEventListeners() {
     if (locationSelect) {
         locationSelect.addEventListener('change', (e) => {
             const selectedLocation = e.target.value;
-            
+
             // Wenn "Mein Standort" erneut gewählt wird, Standort neu abfragen
             if (selectedLocation === 'browser' && lastSelectedLocation === 'browser') {
                 console.log('Standort wird neu abgefragt...');
             }
-            
+
             setLocation(selectedLocation);
             savePrefsToCookie();
             // GoatCounter: Track Standort-Wechsel
@@ -1104,7 +1104,7 @@ function setupEventListeners() {
                 });
             }
         });
-        
+
         // Initial: NICHT setzen, wird in DOMContentLoaded gemacht
     }
 
