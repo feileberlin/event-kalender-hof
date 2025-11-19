@@ -68,7 +68,7 @@ function initMap() {
     }
 }
 
-// Morgendämmerung berechnen
+// Morgendämmerung berechnen und anzeigen
 function calculateDawnTime() {
     const now = new Date();
     let dawnDate = new Date(now);
@@ -81,26 +81,60 @@ function calculateDawnTime() {
 
     dawnDate.setHours(6, 30, 0, 0);
 
-    const dawnElement = document.getElementById('dawnTime');
-    if (dawnElement) {
-        dawnElement.textContent = `⏰ Events bis: ${dawnDate.toLocaleDateString('de-DE')} ${dawnDate.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
-    }
+    updateTimeFilterDisplay();
 
     return dawnDate;
 }
 
-// Events filtern (nur kommende bis Morgendämmerung)
+// Zeitfilter-Anzeige aktualisieren
+function updateTimeFilterDisplay() {
+    const dawnElement = document.getElementById('dawnTime');
+    if (!dawnElement) return;
+
+    const timeFilter = document.getElementById('timeFilter').value;
+    const now = new Date();
+
+    let displayText = '';
+
+    if (timeFilter === 'sunrise') {
+        const dawn = new Date(now);
+        if (now.getHours() >= 6 && now.getMinutes() >= 30) {
+            dawn.setDate(dawn.getDate() + 1);
+        }
+        dawn.setHours(6, 30, 0, 0);
+        displayText = `🌅 Bis Sonnenaufgang: ${dawn.toLocaleDateString('de-DE')} ${dawn.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
+    } else if (timeFilter === 'brunch') {
+        const brunchTime = new Date(now);
+        brunchTime.setDate(brunchTime.getDate() + 1);
+        brunchTime.setHours(12, 0, 0, 0);
+        displayText = `🍻 Bis zum Frühschoppen: ${brunchTime.toLocaleDateString('de-DE')} ${brunchTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
+    } else if (timeFilter === 'tatort') {
+        const tatortTime = new Date(now);
+        const daysUntilSunday = (7 - tatortTime.getDay()) % 7;
+        if (daysUntilSunday === 0 && (tatortTime.getHours() > 20 || (tatortTime.getHours() === 20 && tatortTime.getMinutes() >= 15))) {
+            tatortTime.setDate(tatortTime.getDate() + 7);
+        } else if (daysUntilSunday > 0) {
+            tatortTime.setDate(tatortTime.getDate() + daysUntilSunday);
+        }
+        tatortTime.setHours(20, 15, 0, 0);
+        displayText = `📺 Bis zum Tatort: ${tatortTime.toLocaleDateString('de-DE')} ${tatortTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})} Uhr`;
+    } else if (timeFilter === 'all') {
+        displayText = `🎸 Volle Breitseite RockCity - alle kommenden Events`;
+    }
+
+    dawnElement.textContent = displayText;
+}
+
+// Events filtern (nur kommende, Zeitfilter wird in filterAndDisplayEvents angewendet)
 function getUpcomingEvents() {
     const now = new Date();
-    const dawn = calculateDawnTime();
 
     console.log('Jetzt:', now);
-    console.log('Morgendämmerung:', dawn);
 
     const upcomingEvents = allEvents.filter(event => {
         const eventDateTime = new Date(`${event.date}T${event.startTime || '00:00'}`);
-        console.log(`Event: ${event.title}, Zeit: ${eventDateTime}, Kommend: ${eventDateTime >= now}, Vor Dämmerung: ${eventDateTime <= dawn}`);
-        return eventDateTime >= now && eventDateTime <= dawn;
+        console.log(`Event: ${event.title}, Zeit: ${eventDateTime}, Kommend: ${eventDateTime >= now}`);
+        return eventDateTime >= now;
     }).sort((a, b) => {
         const dateA = new Date(`${a.date}T${a.startTime || '00:00'}`);
         const dateB = new Date(`${b.date}T${b.startTime || '00:00'}`);
@@ -136,29 +170,40 @@ function filterAndDisplayEvents() {
 
     // Zeit-Filter
     const now = new Date();
-    if (timeFilter === 'today') {
-        const endOfDay = new Date(now);
-        endOfDay.setHours(23, 59, 59);
+    if (timeFilter === 'sunrise') {
+        // Bis Sonnenaufgang (6:30 Uhr nächster Tag oder heute wenn vor 6:30)
+        const dawn = calculateDawnTime();
         events = events.filter(event => {
             const eventDate = new Date(`${event.date}T${event.startTime || '00:00'}`);
-            return eventDate <= endOfDay;
+            return eventDate <= dawn;
         });
-    } else if (timeFilter === 'tomorrow') {
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const startOfTomorrow = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 0, 0, 0);
-        const endOfTomorrow = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 23, 59, 59);
+    } else if (timeFilter === 'brunch') {
+        // Bis zum Frühschoppen (12:00 Uhr Folgetag)
+        const brunchTime = new Date(now);
+        brunchTime.setDate(brunchTime.getDate() + 1);
+        brunchTime.setHours(12, 0, 0, 0);
         events = events.filter(event => {
             const eventDate = new Date(`${event.date}T${event.startTime || '00:00'}`);
-            return eventDate >= startOfTomorrow && eventDate <= endOfTomorrow;
+            return eventDate <= brunchTime;
         });
-    } else if (timeFilter === 'next-hours') {
-        const sixHoursLater = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+    } else if (timeFilter === 'tatort') {
+        // Bis zum Tatort (Sonntag 20:15 Uhr)
+        const tatortTime = new Date(now);
+        // Finde nächsten Sonntag
+        const daysUntilSunday = (7 - tatortTime.getDay()) % 7;
+        if (daysUntilSunday === 0 && (tatortTime.getHours() > 20 || (tatortTime.getHours() === 20 && tatortTime.getMinutes() >= 15))) {
+            // Wenn heute Sonntag nach 20:15, nimm nächsten Sonntag
+            tatortTime.setDate(tatortTime.getDate() + 7);
+        } else if (daysUntilSunday > 0) {
+            tatortTime.setDate(tatortTime.getDate() + daysUntilSunday);
+        }
+        tatortTime.setHours(20, 15, 0, 0);
         events = events.filter(event => {
             const eventDate = new Date(`${event.date}T${event.startTime || '00:00'}`);
-            return eventDate <= sixHoursLater;
+            return eventDate <= tatortTime;
         });
     }
+    // 'all' = kein Zeitfilter
 
     // Radius-Filter (nur wenn Benutzerstandort vorhanden UND Filter nicht "Alle" oder "Taxi")
     if (userLocation && radiusFilter < 999) {
@@ -439,7 +484,10 @@ function setupEventListeners() {
     }
 
     if (timeFilter) {
-        timeFilter.addEventListener('change', filterAndDisplayEvents);
+        timeFilter.addEventListener('change', () => {
+            updateTimeFilterDisplay();
+            filterAndDisplayEvents();
+        });
     }
 
     if (radiusFilter) {
@@ -450,7 +498,7 @@ function setupEventListeners() {
         resetFilters.addEventListener('click', () => {
             if (searchInput) searchInput.value = '';
             if (categoryFilter) categoryFilter.value = '';
-            if (timeFilter) timeFilter.value = 'all';
+            if (timeFilter) timeFilter.value = 'sunrise';
             if (radiusFilter) radiusFilter.value = '999';
             filterAndDisplayEvents();
         });
