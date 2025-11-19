@@ -203,15 +203,93 @@ function filterAndDisplayEvents() {
     }
 
     filteredEvents = events;
-    updateEventCount();
     displayEventsOnMap();
     displayEventList();
+    updateCategoryFilterDisplay();
 }
 
-// Event-Anzahl aktualisieren
-function updateEventCount() {
-    const eventCountText = `${filteredEvents.length} ${filteredEvents.length === 1 ? 'Event' : 'Events'}`;
-    document.getElementById('eventCount').textContent = eventCountText;
+// Kategorie-Filter mit Event-Counts aktualisieren
+function updateCategoryFilterDisplay() {
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (!categoryFilter) return;
+    
+    const selectedCategory = categoryFilter.value;
+    const upcomingEvents = getUpcomingEvents();
+    
+    // Counts pro Kategorie berechnen
+    const categoryCounts = {
+        '': upcomingEvents.length,
+        'Musik': 0,
+        'Theater': 0,
+        'Sport': 0,
+        'Kultur': 0,
+        'Markt': 0,
+        'Fest': 0,
+        'Sonstiges': 0
+    };
+    
+    // Aktuell gefilterte Events nach Radius/Zeit zählen
+    const radiusFilter = document.getElementById('radiusFilter');
+    const timeFilter = document.getElementById('timeFilter');
+    const radius = radiusFilter ? radiusFilter.value : '3';
+    const timeValue = timeFilter ? timeFilter.value : 'sunrise';
+    
+    upcomingEvents.forEach(event => {
+        // Radius-Filter anwenden
+        if (userLocation && radius !== '999999') {
+            const distance = calculateDistance(
+                userLocation.lat, userLocation.lng,
+                event.coordinates.lat, event.coordinates.lng
+            );
+            if (distance > parseFloat(radius)) return;
+        }
+        
+        // Zeit-Filter anwenden
+        const eventDateTime = new Date(`${event.date}T${event.startTime || '00:00'}`);
+        if (timeValue === 'sunrise') {
+            const dawnTime = calculateDawnTime();
+            if (eventDateTime > dawnTime) return;
+        } else if (timeValue === 'tatort') {
+            const tatortTime = new Date();
+            tatortTime.setHours(20, 15, 0, 0);
+            if (eventDateTime > tatortTime) return;
+        }
+        
+        // Count für spezifische Kategorie erhöhen
+        if (event.category && categoryCounts.hasOwnProperty(event.category)) {
+            categoryCounts[event.category]++;
+        }
+    });
+    
+    // "Alle Kategorien" Count = Summe aller gefilterten Events
+    categoryCounts[''] = Object.values(categoryCounts).reduce((sum, count, index) => {
+        // Ersten Wert (alte '') überspringen
+        return index === 0 ? 0 : sum + count;
+    }, 0);
+    
+    // Options aktualisieren
+    Array.from(categoryFilter.options).forEach(option => {
+        const category = option.value;
+        const icon = option.getAttribute('data-icon') || '';
+        const count = categoryCounts[category] || 0;
+        
+        if (category === selectedCategory) {
+            // Aktuell ausgewählte Kategorie - zeige im Footer
+            if (category === '') {
+                option.textContent = `${count} Events in allen Kategorien`;
+            } else {
+                const eventWord = count === 1 ? 'Event' : 'Events';
+                option.textContent = `${count} ${icon}${category}-${eventWord}`;
+            }
+        } else {
+            // Andere Kategorien - zeige im Dropdown mit Count
+            if (category === '') {
+                option.textContent = `${count} Events in allen Kategorien`;
+            } else {
+                option.textContent = `${count} ${icon} ${category}`;
+            }
+        }
+    });
 }
 
 // Events auf Karte anzeigen

@@ -1,3 +1,3 @@
-commit_message: "Fix: Unabhängige Filter ohne Cross-Synchronisation"
-commit_hash: "f8c3071"
-commit_date: "2025-11-19 13:33:35"
+commit_message: "Fix: Entkopplung der Filter-Synchronisation"
+commit_hash: "8dafd9a"
+commit_date: "2025-11-19 13:39:11"
