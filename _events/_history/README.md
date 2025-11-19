@@ -4,16 +4,20 @@ Dieses Verzeichnis enthält archivierte Events, organisiert nach Jahr.
 
 ## 📁 Struktur
 
+Events werden **nach Jahr organisiert**:
+
 ```
 _events/_history/
-├── 2024/
+├── 2024/                         ← Events aus 2024
 │   ├── 2024-01-15-konzert.md
 │   └── 2024-12-31-silvester.md
-├── 2025/
+├── 2025/                         ← Events aus 2025
 │   ├── 2025-01-01-neujahr.md
 │   └── ...
 └── README.md (diese Datei)
 ```
+
+**Wichtig**: Die Jahreszahl wird automatisch aus dem Event-Datum extrahiert!
 
 ## 🔄 Automatische Archivierung
 
@@ -22,7 +26,7 @@ Events werden **automatisch archiviert**:
 - **Regel**: Events älter als 30 Tage
 - **Aktion**: 
   1. Status → `"Archiviert"`
-  2. Verschoben nach `_history/{JAHR}/`
+  2. Verschoben nach `_history/YYYY/` (Jahr aus Event-Datum)
   3. Commit via GitHub Actions
 
 **GitHub Workflow**: `.github/workflows/archive-old-events.yml`
@@ -65,7 +69,7 @@ mv _events/2025-01-15-event.md _events/_history/2025/
 |--------|--------------|----------|
 | **Entwurf** | ❌ Nicht auf Website | `_events/` |
 | **Öffentlich** | ✅ Auf Website | `_events/` |
-| **Archiviert** | ❌ Nicht auf Website | `_events/_history/{JAHR}/` |
+| **Archiviert** | ❌ Nicht auf Website | `_events/_history/YYYY/` (Jahr automatisch) |
 
 ## 🔍 Archivierte Events anzeigen
 

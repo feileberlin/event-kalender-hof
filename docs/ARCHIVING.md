@@ -2,7 +2,7 @@
 
 ## Übersicht
 
-Automatische Archivierung alter Events nach `_events/_history/{JAHR}/`.
+Automatische Archivierung alter Events nach `_events/_history/YYYY/` (organisiert nach Jahr).
 
 ## 🎯 Funktionsweise
 
@@ -49,7 +49,7 @@ options:
    ↓
 3. Status wird auf "Archiviert" gesetzt
    ↓
-4. Datei wird verschoben nach _events/_history/{JAHR}/
+4. Datei wird verschoben nach _events/_history/YYYY/ (Jahr aus Event-Datum)
    ↓
 5. Original-Datei in _events/ wird gelöscht
    ↓
@@ -141,7 +141,7 @@ _events/
 |--------|----------|-------|----------|
 | **Entwurf** | ❌ | ✅ Tab "Entwürfe" | `_events/` |
 | **Öffentlich** | ✅ | ✅ Tab "Veröffentlicht" | `_events/` |
-| **Archiviert** | ❌ | ✅ Tab "Archiviert" | `_events/_history/{JAHR}/` |
+| **Archiviert** | ❌ | ✅ Tab "Archiviert" | `_events/_history/YYYY/` (automatisch) |
 
 ## 🔧 Integration
 

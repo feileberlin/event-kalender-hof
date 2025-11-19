@@ -6,7 +6,7 @@
 |--------|----------|-------|----------|-------|
 | **Entwurf** | ❌ Nicht sichtbar | ✅ Tab "Entwürfe" | `_events/` | 🟡 Gelb |
 | **Öffentlich** | ✅ Sichtbar | ✅ Tab "Veröffentlicht" | `_events/` | 🟢 Grün |
-| **Archiviert** | ❌ Nicht sichtbar | ✅ Tab "Archiviert" | `_events/_history/{JAHR}/` | ⚪ Grau |
+| **Archiviert** | ❌ Nicht sichtbar | ✅ Tab "Archiviert" | `_events/_history/YYYY/` | ⚪ Grau |
 
 ## 🔄 Status-Workflow
 
@@ -31,7 +31,7 @@
        ↓ Auto-Archivierung (> 30 Tage)
 ┌─────────────┐
 │ Archiviert  │ ← Nicht mehr sichtbar
-│  (Hidden)   │    Location: _events/_history/{JAHR}/
+│  (Hidden)   │    Location: _events/_history/YYYY/ (Jahr automatisch)
 └─────────────┘
 ```
 
