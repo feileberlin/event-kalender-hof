@@ -5,13 +5,8 @@ let userLocation = null;
 let filteredEvents = [];
 let lastSelectedLocation = 'rathaus'; // Track für Browser-Standort Refresh
 
-// Standort-Definitionen
-const LOCATIONS = {
-    rathaus: { lat: 50.3197, lng: 11.9168, name: 'Rathaus Hof' },
-    bahnhof: { lat: 50.3132, lng: 11.9196, name: 'Hauptbahnhof Hof' },
-    kaserne: { lat: 50.3092, lng: 11.9053, name: 'Oberfranken-Kaserne' },
-    hochschule: { lat: 50.3295, lng: 11.9021, name: 'Hochschule Hof' }
-};
+// LOCATIONS wird jetzt dynamisch aus index.html geladen (locations.csv)
+// Siehe: <script> Block in index.html
 
 // Cookie-Verwaltung
 const COOKIE_NAME = 'eventKalenderPrefs';
@@ -949,10 +944,12 @@ function setLocation(locationType) {
     });
 
     // Marker für feste Standorte
-    const icon = locationType === 'rathaus' ? '🏛️' : '🚂';
+    const locationData = LOCATIONS[locationType];
+    const icon = locationData?.icon || '📍';
+    const color = locationData?.color || '#2c3e50';
     const locationIcon = L.divIcon({
         className: 'user-location-marker',
-        html: `<div class="marker-icon" style="background: #2c3e50;">${icon}</div>`,
+        html: `<div class="marker-icon" style="background: ${color};">${icon}</div>`,
         iconSize: [30, 30]
     });
 

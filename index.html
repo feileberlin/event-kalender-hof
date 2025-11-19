@@ -59,10 +59,9 @@ title: "Event-Kalender Hof"
             </select>
             
             <select id="locationSelect" class="inline-select">
-                <option value="rathaus" selected data-icon="🏛️">Rathaus</option>
-                <option value="bahnhof" data-icon="🚂">Hauptbahnhof</option>
-                <option value="kaserne" data-icon="🏰">Oberfranken-Kaserne</option>
-                <option value="hochschule" data-icon="🎓">Hochschule Hof</option>
+                {% for location in site.data.locations %}
+                <option value="{{ location.id }}" {% if location.id == 'rathaus' %}selected{% endif %} data-icon="{{ location.icon }}">{{ location.name }}</option>
+                {% endfor %}
                 <option value="browser" data-icon="🎯">Mein Standort</option>
             </select>
         </div>
@@ -123,6 +122,19 @@ const allEvents = [
     {% endfor %}
 ];
 
+// Standorte-Konfiguration (aus locations.csv)
+const LOCATIONS = {
+    {% for location in site.data.locations %}
+    {{ location.id }}: {
+        lat: {{ location.lat }},
+        lng: {{ location.lng }},
+        name: {{ location.name | jsonify }},
+        icon: {{ location.icon | jsonify }},
+        color: {{ location.color | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+};
+
 // Konfiguration
 const config = {
     defaultCenter: {
@@ -133,5 +145,6 @@ const config = {
 };
 
 console.log('Event-Daten geladen:', allEvents.length, 'Events');
+console.log('Standorte geladen:', Object.keys(LOCATIONS).length, 'Locations');
 console.log('Config:', config);
 </script>

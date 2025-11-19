@@ -34,24 +34,7 @@ default_center:
   lat: 50.3197
   lng: 11.9168
 
-# Standorte
-locations:
-  rathaus:
-    lat: 50.3197
-    lng: 11.9168
-    name: "Rathaus Hof"
-  bahnhof:
-    lat: 50.3132
-    lng: 11.9196
-    name: "Hauptbahnhof Hof"
-  kaserne:
-    lat: 50.3092
-    lng: 11.9053
-    name: "Oberfranken-Kaserne"
-  hochschule:
-    lat: 50.3295
-    lng: 11.9021
-    name: "Hochschule Hof"
+# Standorte werden aus _data/locations.csv geladen
 
 # Automatisierungs-Intervalle (Cron-Format)
 automation:
