@@ -375,9 +375,9 @@ function useUserLocation() {
             locationButton.style.background = '#4CAF50';
             locationButton.style.color = 'white';
 
-            // Radius-Filter automatisch auf "10 min Rad" setzen, wenn noch auf "Alle" steht
+            // Radius-Filter automatisch auf "10 min Rad" setzen, wenn noch auf "Bindlach-Süd" steht
             const radiusFilterElement = document.getElementById('radiusFilter');
-            if (radiusFilterElement && radiusFilterElement.value === '999') {
+            if (radiusFilterElement && radiusFilterElement.value === '999999') {
                 radiusFilterElement.value = '3'; // 3 km = Rad
                 console.log('Radius-Filter automatisch auf 3 km gesetzt');
             }
@@ -485,7 +485,7 @@ function setupEventListeners() {
             if (searchInput) searchInput.value = '';
             if (categoryFilter) categoryFilter.value = '';
             if (timeFilter) timeFilter.value = 'sunrise';
-            if (radiusFilter) radiusFilter.value = '999';
+            if (radiusFilter) radiusFilter.value = '3';
             filterAndDisplayEvents();
         });
     }
