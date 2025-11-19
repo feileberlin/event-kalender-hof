@@ -3,7 +3,7 @@ title: "hof.ist/jetzt"
 description: "Events bis Sonnenaufgang in Hof an der Saale"
 baseurl: "/event-kalender-hof"
 url: "https://feileberlin.github.io"
-# Cache invalidation: 2025-11-19T00:00:00Z
+# Cache invalidation: 2025-11-19T00:05:00Z
 
 # Jekyll Einstellungen
 markdown: kramdown

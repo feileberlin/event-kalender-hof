@@ -35,7 +35,7 @@ SOURCES = [
       {
         "name": "Vanishing Walls (Fb)",
         "url": "https://www.facebook.com/people/Vanishing-Walls/100093518893300/#",
-        "type": "html"
+        "type": "html"funktioni
     },
     {
         "name": "Punkrock in Hof (Fb)",
