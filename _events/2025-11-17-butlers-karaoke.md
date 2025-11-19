@@ -19,6 +19,18 @@ url: "http://www.butlers-hof.de/"
 image: ""
 status: "Öffentlich"
 source: "Hof Programm"
+
+# Wiederkehrendes Event
+recurring:
+  enabled: true
+  frequency: "weekly"
+  interval: 1
+  by_day: ["SU"]
+  start_date: "2025-11-24"
+  end_date: null
+  exceptions:
+    - "2025-12-24"
+    - "2025-12-31"
 ---
 
 Uriges Pub mit vielfältigem Getränkeangebot und Speisen, heute mit Karaoke.
