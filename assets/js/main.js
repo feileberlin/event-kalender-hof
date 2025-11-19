@@ -32,7 +32,10 @@ function initMap() {
     }
 
     try {
-        map = L.map('map').setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
+        map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',

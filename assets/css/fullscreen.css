@@ -28,6 +28,17 @@ body.fullscreen-layout {
     z-index: 1;
 }
 
+/* Leaflet-Controls verstecken */
+.leaflet-control-container .leaflet-top,
+.leaflet-control-container .leaflet-bottom {
+    display: none !important;
+}
+
+.leaflet-control-zoom,
+.leaflet-control-attribution {
+    display: none !important;
+}
+
 /* Transparenter Header Overlay */
 .overlay-header {
     position: fixed;
