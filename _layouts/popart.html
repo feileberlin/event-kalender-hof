@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title | default: site.title }}</title>
     <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | absolute_url }}">
-    <link rel="icon" type="image/svg+xml" href="{{ '/favicon.svg' | absolute_url }}">
+    <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
+    <link rel="icon" type="image/svg+xml" href="{{ '/favicon.svg' | relative_url }}">
     <!-- Skeleton CSS Framework -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
     <!-- Normalize CSS for Skeleton -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | absolute_url }}">
-    <link rel="stylesheet" href="{{ '/assets/css/popart.css' | absolute_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/popart.css' | relative_url }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
@@ -29,11 +29,11 @@
     <footer class="site-footer">
         <div class="footer-content">
             <p>2025 mit ♡ gemacht fürs Hofer Land</p>
-            <p><a href="{{ '/admin/' | absolute_url }}">Admin-Bereich</a> | <a href="https://github.com/feileberlin/event-kalender-hof">GitHub</a></p>
+            <p><a href="{{ '/admin/' | relative_url }}">Admin-Bereich</a> | <a href="https://github.com/feileberlin/event-kalender-hof">GitHub</a></p>
         </div>
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="{{ '/assets/js/main.js' | absolute_url }}"></script>
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
 </body>
 </html>
