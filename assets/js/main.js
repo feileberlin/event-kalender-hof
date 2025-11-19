@@ -358,7 +358,7 @@ function updateCategoryFilterDisplay() {
         if (category === selectedCategory) {
             // Aktuell ausgewählte Kategorie - zeige im Footer
             if (category === '') {
-                option.textContent = `${count} Events aller Art`;
+                option.textContent = `${count} ${icon}Events aller Art`;
             } else {
                 const eventWord = count === 1 ? 'Event' : 'Events';
                 option.textContent = `${count} ${icon}${category}-${eventWord}`;
@@ -366,7 +366,7 @@ function updateCategoryFilterDisplay() {
         } else {
             // Andere Kategorien - zeige im Dropdown mit Count
             if (category === '') {
-                option.textContent = `${count} Events aller Art`;
+                option.textContent = `${count} ${icon} Events aller Art`;
             } else {
                 option.textContent = `${count} ${icon} ${category}`;
             }
