@@ -37,41 +37,24 @@ Wenn Sie die Option **"🎯 Mein Standort"** wählen:
 
 **Alternative Standorte:** Sie können stattdessen "🏛️ Rathaus" oder "🚂 Hauptbahnhof" als feste Bezugspunkte wählen.
 
-### 2.3 Webanalyse (GoatCounter)
+### 2.3 Externe Inhalte
 
-Diese Website nutzt **GoatCounter**, einen privacy-first Webanalyse-Dienst.
+#### GoatCounter Analytics (Privacy-First)
+- **Anbieter:** GoatCounter (Open Source)
+- **Zweck:** Anonyme Nutzungsstatistiken (Seitenaufrufe, beliebte Events, Peak-Zeiten)
+- **Daten:** Keine personenbezogenen Daten, keine Cookies, keine IP-Speicherung
+- **DSGVO:** Vollständig konform, kein Consent-Banner nötig
+- **Tracking:** Aggregierte Daten (welche Events beliebt, Uhrzeiten, Gerätetypen)
+- **Dashboard:** Öffentlich einsehbar unter [event-kalender-hof.goatcounter.com](https://event-kalender-hof.goatcounter.com)
+- **Datenschutz:** [GoatCounter Privacy Policy](https://www.goatcounter.com/help/privacy)
 
-**Was wird erfasst:**
-- Seitenaufrufe (welche Seiten werden besucht)
-- Referrer (woher kommen Besucher)
-- Browser-Typ und Betriebssystem (z.B. "Firefox auf Linux")
-- Bildschirmauflösung (z.B. "1920x1080")
-- Land (basierend auf IP, aber IP wird nicht gespeichert)
-- Custom Events (Event-Klicks, Filter-Nutzung)
-
-**Was wird NICHT erfasst:**
-- ❌ Keine IP-Adressen (werden nicht gespeichert)
-- ❌ Keine Cookies für Tracking
-- ❌ Kein Fingerprinting
-- ❌ Keine personenbezogenen Daten
-- ❌ Keine Cross-Site-Tracking
-
-**Zweck:**
-- Verbesserung der Website
-- Verständnis der Nutzungsmuster (Peak-Zeiten, beliebte Events)
-- Technische Optimierung
-
-**Rechtsgrundlage:** Berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO)
-
-**Anbieter:** GoatCounter (https://www.goatcounter.com)  
-**Datenschutz:** [GoatCounter Privacy Policy](https://www.goatcounter.com/help/privacy)
-
-**Dashboard:** Unsere Statistiken sind öffentlich einsehbar unter:  
-https://event-kalender-hof.goatcounter.com
-
-**Widerspruch:** Sie können GoatCounter mit einem Browser-Add-on wie uBlock Origin blockieren.
-
-### 2.4 Externe Inhalte
+**Was wird getrackt:**
+- Seitenaufrufe (keine User-Identifikation)
+- Event-Klicks (nur Event-Titel, nicht wer klickt)
+- Filter-Nutzung (welche Kategorien/Zeiten gewählt werden)
+- Standort-Präferenzen (Rathaus/Bahnhof/Browser-Standort)
+- Gerätetyp (Desktop/Mobile), Browser-Typ
+- Keine IP-Adressen, keine Fingerprinting
 
 #### OpenStreetMap (Kartenmaterial)
 - **Anbieter:** OpenStreetMap Foundation
@@ -139,11 +122,11 @@ Bei Fragen zum Datenschutz:
 ## Zusammenfassung (TL;DR)
 
 ✅ **Was wir speichern:** Nur Ihre Filter-Einstellungen in einem Cookie  
-✅ **Analytics:** GoatCounter (privacy-first, keine IPs, keine Cookies für Tracking)  
-✅ **Was wir NICHT tun:** Fingerprinting, Datenverkauf, personalisierte Werbung  
+✅ **Analytics:** GoatCounter (Privacy-First, keine Cookies, DSGVO-konform)  
+✅ **Was wir NICHT tun:** Tracking, Fingerprinting, Datenverkauf  
 ✅ **Standort:** Nur lokal in Ihrem Browser, nicht auf unseren Servern  
-✅ **Ihre Kontrolle:** Alles jederzeit löschbar, Analytics blockierbar  
-✅ **Transparenz:** Statistiken sind öffentlich einsehbar  
+✅ **Ihre Kontrolle:** Alles jederzeit löschbar in Browser-Einstellungen  
 ✅ **Open Source:** Code ist öffentlich einsehbar  
+✅ **Transparenz:** Analytics-Dashboard ist öffentlich zugänglich  
 
 **Privacy-First Design** 🔒

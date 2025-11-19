@@ -411,10 +411,10 @@ function displayEventsOnMap() {
 
         marker.on('click', () => {
             highlightEvent(index);
-            // GoatCounter Event-Tracking
+            // GoatCounter: Track Event-Clicks
             if (window.goatcounter) {
                 goatcounter.count({
-                    path: `/event/${event.category}/${event.title.toLowerCase().replace(/\s+/g, '-')}`,
+                    path: `/event/${event.title.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`,
                     title: `Event: ${event.title}`,
                     event: true
                 });
@@ -693,13 +693,14 @@ function setupEventListeners() {
 
     if (categoryFilter) {
         categoryFilter.addEventListener('change', () => {
+            const category = categoryFilter.value || 'alle';
             filterAndDisplayEvents();
             savePrefsToCookie();
-            // Track Filter-Nutzung
+            // GoatCounter: Track Filter-Nutzung
             if (window.goatcounter) {
                 goatcounter.count({
-                    path: `/filter/category/${categoryFilter.value || 'all'}`,
-                    title: `Filter: Kategorie ${categoryFilter.value || 'alle'}`,
+                    path: `/filter/category/${category}`,
+                    title: `Filter: ${category}`,
                     event: true
                 });
             }
@@ -708,13 +709,14 @@ function setupEventListeners() {
 
     if (timeFilter) {
         timeFilter.addEventListener('change', () => {
+            const time = timeFilter.value;
             filterAndDisplayEvents();
             savePrefsToCookie();
-            // Track Filter-Nutzung
+            // GoatCounter: Track Zeit-Filter
             if (window.goatcounter) {
                 goatcounter.count({
-                    path: `/filter/time/${timeFilter.value}`,
-                    title: `Filter: Zeit ${timeFilter.value}`,
+                    path: `/filter/time/${time}`,
+                    title: `Zeit: ${time}`,
                     event: true
                 });
             }
@@ -723,14 +725,15 @@ function setupEventListeners() {
 
     if (radiusFilter) {
         radiusFilter.addEventListener('change', () => {
+            const radius = radiusFilter.value;
             syncZoomWithRadius();
             filterAndDisplayEvents();
             savePrefsToCookie();
-            // Track Filter-Nutzung
+            // GoatCounter: Track Radius-Filter
             if (window.goatcounter) {
                 goatcounter.count({
-                    path: `/filter/radius/${radiusFilter.value}km`,
-                    title: `Filter: Radius ${radiusFilter.value}km`,
+                    path: `/filter/radius/${radius}km`,
+                    title: `Radius: ${radius}km`,
                     event: true
                 });
             }
@@ -750,6 +753,14 @@ function setupEventListeners() {
             
             setLocation(selectedLocation);
             savePrefsToCookie();
+            // GoatCounter: Track Standort-Wechsel
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/location/${selectedLocation}`,
+                    title: `Standort: ${selectedLocation}`,
+                    event: true
+                });
+            }
         });
         
         // Initial: NICHT setzen, wird in DOMContentLoaded gemacht
