@@ -11,19 +11,93 @@ const LOCATIONS = {
     bahnhof: { lat: 50.3132, lng: 11.9196, name: 'Hauptbahnhof Hof' }
 };
 
+// Cookie-Verwaltung
+const COOKIE_NAME = 'eventKalenderPrefs';
+const COOKIE_DAYS = 365;
+
+function savePrefsToCookie() {
+    const prefs = {
+        category: document.getElementById('categoryFilter')?.value || '',
+        time: document.getElementById('timeFilter')?.value || 'sunrise',
+        radius: document.getElementById('radiusFilter')?.value || '3',
+        location: document.getElementById('locationSelect')?.value || 'rathaus'
+    };
+    
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (COOKIE_DAYS * 24 * 60 * 60 * 1000));
+    document.cookie = `${COOKIE_NAME}=${JSON.stringify(prefs)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+    console.log('Präferenzen gespeichert:', prefs);
+}
+
+function loadPrefsFromCookie() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === COOKIE_NAME) {
+            try {
+                const prefs = JSON.parse(decodeURIComponent(value));
+                console.log('Präferenzen geladen:', prefs);
+                return prefs;
+            } catch (e) {
+                console.error('Fehler beim Laden der Präferenzen:', e);
+            }
+        }
+    }
+    return null;
+}
+
+function applyPrefs(prefs) {
+    if (!prefs) return;
+    
+    const categoryFilter = document.getElementById('categoryFilter');
+    const timeFilter = document.getElementById('timeFilter');
+    const radiusFilter = document.getElementById('radiusFilter');
+    const locationSelect = document.getElementById('locationSelect');
+    
+    if (categoryFilter && prefs.category !== undefined) {
+        categoryFilter.value = prefs.category;
+    }
+    if (timeFilter && prefs.time) {
+        timeFilter.value = prefs.time;
+    }
+    if (radiusFilter && prefs.radius) {
+        radiusFilter.value = prefs.radius;
+    }
+    if (locationSelect && prefs.location) {
+        locationSelect.value = prefs.location;
+    }
+    
+    console.log('Präferenzen angewendet');
+}
+
 // Initialisierung
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Event-Kalender initialisiert');
     console.log('Anzahl aller Events:', allEvents.length);
     console.log('Events:', allEvents);
 
+    // Präferenzen aus Cookie laden
+    const savedPrefs = loadPrefsFromCookie();
+
     initMap();
     calculateDawnTime();
 
     // Warten bis Karte geladen ist, dann Events anzeigen
     setTimeout(() => {
-        filterAndDisplayEvents();
+        // Präferenzen anwenden BEVOR Filter setup
+        if (savedPrefs) {
+            applyPrefs(savedPrefs);
+        }
+        
         setupEventListeners();
+        
+        // Standort setzen (nach Event Listeners!)
+        const locationSelect = document.getElementById('locationSelect');
+        if (locationSelect) {
+            setLocation(locationSelect.value);
+        }
+        
+        filterAndDisplayEvents();
     }, 200);
 });
 
@@ -608,17 +682,24 @@ function setupEventListeners() {
     }
 
     if (categoryFilter) {
-        categoryFilter.addEventListener('change', filterAndDisplayEvents);
+        categoryFilter.addEventListener('change', () => {
+            filterAndDisplayEvents();
+            savePrefsToCookie();
+        });
     }
 
     if (timeFilter) {
-        timeFilter.addEventListener('change', filterAndDisplayEvents);
+        timeFilter.addEventListener('change', () => {
+            filterAndDisplayEvents();
+            savePrefsToCookie();
+        });
     }
 
     if (radiusFilter) {
         radiusFilter.addEventListener('change', () => {
             syncZoomWithRadius();
             filterAndDisplayEvents();
+            savePrefsToCookie();
         });
     }
 
@@ -634,10 +715,10 @@ function setupEventListeners() {
             }
             
             setLocation(selectedLocation);
+            savePrefsToCookie();
         });
         
-        // Initial Rathaus setzen
-        setLocation('rathaus');
+        // Initial: NICHT setzen, wird in DOMContentLoaded gemacht
     }
 
     // Such-Toggle
