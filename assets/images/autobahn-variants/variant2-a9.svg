@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+  <!-- Variante 2: A9 nach Bayreuth -->
+  <rect x="2" y="4" width="20" height="16" rx="2" fill="#003399" stroke="white" stroke-width="0.5"/>
+  <text x="12" y="14" font-size="8" fill="white" text-anchor="middle" font-weight="bold" font-family="Arial, sans-serif">A9</text>
+</svg>

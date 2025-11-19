@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+  <!-- Variante 4: Auto-Symbol -->
+  <rect x="2" y="4" width="20" height="16" rx="2" fill="#003399"/>
+  <path d="M 6 14 L 8 10 L 16 10 L 18 14 M 7 14 a 1 1 0 1 1 2 0 M 15 14 a 1 1 0 1 1 2 0" 
+        stroke="white" stroke-width="1" fill="none"/>
+</svg>

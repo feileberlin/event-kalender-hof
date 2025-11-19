@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 24" width="64" height="48">
+  <!-- Variante 6 BONUS: A9 mit Pfeil (breiter) -->
+  <rect x="2" y="4" width="28" height="16" rx="2" fill="#003399" stroke="white" stroke-width="0.5"/>
+  <text x="10" y="14" font-size="8" fill="white" text-anchor="middle" font-weight="bold" font-family="Arial, sans-serif">A9</text>
+  <path d="M 16 12 L 25 12 M 22 9.5 L 25 12 L 22 14.5" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
