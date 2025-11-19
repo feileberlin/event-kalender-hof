@@ -7,6 +7,7 @@ Sammelt Events von verschiedenen Quellen und erstellt YAML-Dateien
 import os
 import re
 import json
+import csv
 import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -16,34 +17,25 @@ import yaml
 
 # Konfiguration
 EVENTS_DIR = Path("_events")
-SOURCES = [
-    {
-        "name": "Stadt Hof",
-        "url": "https://www.hof.de/hof/hof_deu/leben/veranstaltungen.html",
-        "type": "html"
-    },
-    {
-        "name": "Freiheitshalle Hof",
-        "url": "https://www.freiheitshalle-hof.de/veranstaltungen/",
-        "type": "html"
-    },
-    {
-        "name": "Galeriehaus Hof (Fb)",
-        "url": "https://www.facebook.com/GaleriehausHof/",
-        "type": "html"
-    },
-      {
-        "name": "Vanishing Walls (Fb)",
-        "url": "https://www.facebook.com/people/Vanishing-Walls/100093518893300/#",
-        "type": "html"funktioni
-    },
-    {
-        "name": "Punkrock in Hof (Fb)",
-        "url": "https://www.facebook.com/people/Punk-in-Hof/100090512583516/",
-        "type": "html"
-    },
-    # Weitere Quellen können hier hinzugefügt werden
-]
+SOURCES_CSV = Path("_data/sources.csv")
+
+def load_sources():
+    """Lädt Event-Quellen aus CSV-Datei"""
+    sources = []
+    if SOURCES_CSV.exists():
+        with open(SOURCES_CSV, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row['active'].lower() == 'true':
+                    sources.append({
+                        'name': row['name'],
+                        'url': row['url'],
+                        'type': row['type'],
+                        'notes': row.get('notes', '')
+                    })
+    return sources
+
+SOURCES = load_sources()
 
 # Zentrum Hof (Rathaus)
 DEFAULT_COORDINATES = {
