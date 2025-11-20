@@ -723,6 +723,79 @@ title: Admin - Event-Verwaltung
     background: #1976d2;
 }
 
+.recurring-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #9c27b0;
+}
+
+.recurring-pattern {
+    background: #f3e5f5;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.recurring-instances {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.instance-badge {
+    background: #e1bee7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.btn-action {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #9c27b0;
+    color: white;
+}
+
+.btn-action:hover {
+    background: #7b1fa2;
+}
+
+.recurring-stats-box {
+    background: #f3e5f5;
+    padding: 15px;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.recurring-stat-item {
+    text-align: center;
+}
+
+.recurring-stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #9c27b0;
+    display: block;
+}
+
+.recurring-stat-label {
+    font-size: 12px;
+    color: #666;
+}
+
 </style>
 
 <div class="admin-container">
@@ -751,6 +824,10 @@ title: Admin - Event-Verwaltung
                 <span class="stat-number" id="stat-upcoming">0</span>
                 <span class="stat-label">Kommende</span>
             </div>
+            <div class="stat-card">
+                <span class="stat-number" id="stat-recurring">0</span>
+                <span class="stat-label">Wiederkehrend</span>
+            </div>
         </div>
     </div>
 
@@ -765,6 +842,7 @@ title: Admin - Event-Verwaltung
         <button class="tab-button" onclick="switchTab('duplicates')">🔄 Duplikate</button>
         <button class="tab-button" onclick="switchTab('published')">✓ Veröffentlicht</button>
         <button class="tab-button" onclick="switchTab('archived')">📦 Archiviert</button>
+        <button class="tab-button" onclick="switchTab('recurring')">🔄 Wiederkehrend</button>
         <button class="tab-button" onclick="switchTab('all')">📋 Alle Events</button>
         <button class="tab-button" onclick="switchTab('create')">➕ Neues Event</button>
     </div>
@@ -795,6 +873,29 @@ title: Admin - Event-Verwaltung
             Sie befinden sich in <code>_events/_history/JAHR/</code> (z.B. <code>_history/2025/</code>)
         </p>
         <div id="archived-list"></div>
+    </div>
+
+    <div id="tab-recurring" class="tab-content">
+        <h2>🔄 Wiederkehrende Events</h2>
+        <p style="color: #666; margin-bottom: 20px;">
+            ♻️ Verwaltung aller Events mit <code>recurring</code>-Konfiguration.<br>
+            Diese Events generieren automatisch zukünftige Instanzen basierend auf ihrem Wiederholungsmuster.
+        </p>
+
+        <div class="recurring-actions" style="margin-bottom: 20px; display: flex; gap: 10px;">
+            <button class="btn-action" onclick="expandAllRecurring()">
+                🔄 Alle expandieren (3 Monate)
+            </button>
+            <button class="btn-action" onclick="rebuildRecurringIndex()">
+                🔨 Index neu aufbauen
+            </button>
+            <button class="btn-action" onclick="loadRecurringIndex()">
+                📋 Index anzeigen
+            </button>
+        </div>
+
+        <div id="recurring-stats" style="margin-bottom: 20px;"></div>
+        <div id="recurring-list"></div>
     </div>
 
     <div id="tab-all" class="tab-content">
@@ -1872,4 +1973,219 @@ function resetForm() {
     document.getElementById('markdown-output').style.display = 'none';
     document.getElementById('preview-container').style.display = 'none';
 }
+
+// ========================================
+// RECURRING EVENTS MANAGEMENT
+// ========================================
+
+function displayRecurringEvents() {
+    const recurringEvents = allEvents.filter(e => e.recurring && e.recurring.enabled);
+    const container = document.getElementById('recurring-list');
+    
+    // Update stats
+    updateRecurringStats(recurringEvents);
+    
+    if (recurringEvents.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">Keine wiederkehrenden Events gefunden.</p>';
+        return;
+    }
+    
+    container.innerHTML = recurringEvents.map(event => {
+        const r = event.recurring;
+        const upcomingInstances = generateRecurringInstances(event, 5);
+        const existingInstances = allEvents.filter(e => e.recurringParent === event.eventHash);
+        
+        return `
+            <div class="recurring-card">
+                <div class="event-admin-header">
+                    <h3 class="event-admin-title">🔄 ${event.title}</h3>
+                    <span class="event-status-badge ${event.status === 'Entwurf' ? 'draft' : 'published'}">
+                        ${event.status}
+                    </span>
+                </div>
+                
+                <div class="recurring-pattern">
+                    <strong>Muster:</strong> ${formatRecurringPattern(r)}<br>
+                    <strong>Start:</strong> ${r.start_date || event.date}<br>
+                    ${r.end_date ? `<strong>Ende:</strong> ${r.end_date}<br>` : ''}
+                    ${r.by_day && r.by_day.length > 0 ? `<strong>Wochentage:</strong> ${formatWeekdays(r.by_day)}<br>` : ''}
+                    ${r.exceptions && r.exceptions.length > 0 ? `<strong>Ausnahmen:</strong> ${r.exceptions.length}<br>` : ''}
+                </div>
+                
+                <div class="event-admin-meta">
+                    <div><strong>📍 Ort:</strong> ${event.location}</div>
+                    <div><strong>🕐 Zeit:</strong> ${event.startTime || 'N/A'}</div>
+                    <div><strong>🏷️ Kategorie:</strong> ${event.category || 'N/A'}</div>
+                    <div><strong>📦 Instanzen:</strong> ${existingInstances.length} angelegt</div>
+                </div>
+                
+                <div style="margin: 15px 0;">
+                    <strong>Nächste 5 Termine:</strong>
+                    <div class="recurring-instances">
+                        ${upcomingInstances.slice(0, 5).map(inst => `
+                            <span class="instance-badge" title="${inst.type}">
+                                ${inst.type === 'exception' ? '❌' : inst.type === 'addition' ? '⭐' : '📌'} 
+                                ${new Date(inst.date).toLocaleDateString('de-DE')}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="event-admin-actions">
+                    <button class="btn-edit" onclick="expandSingleRecurring('${event.eventHash}')">
+                        🔄 Instanzen generieren
+                    </button>
+                    <button class="btn-preview" onclick="previewRecurringInstances('${event.eventHash}')">
+                        👁️ Vorschau (20 Termine)
+                    </button>
+                    <button class="btn-publish" onclick="editRecurring('${event.eventHash}')">
+                        ✏️ Bearbeiten
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateRecurringStats(recurringEvents) {
+    const statsContainer = document.getElementById('recurring-stats');
+    const totalInstances = allEvents.filter(e => e.recurringParent).length;
+    const activeRecurring = recurringEvents.filter(e => e.status === 'Öffentlich').length;
+    
+    statsContainer.innerHTML = `
+        <div class="recurring-stats-box">
+            <div class="recurring-stat-item">
+                <span class="recurring-stat-number">${recurringEvents.length}</span>
+                <span class="recurring-stat-label">Wiederkehrende Events</span>
+            </div>
+            <div class="recurring-stat-item">
+                <span class="recurring-stat-number">${activeRecurring}</span>
+                <span class="recurring-stat-label">Aktiv</span>
+            </div>
+            <div class="recurring-stat-item">
+                <span class="recurring-stat-number">${totalInstances}</span>
+                <span class="recurring-stat-label">Generierte Instanzen</span>
+            </div>
+            <div class="recurring-stat-item">
+                <span class="recurring-stat-number">${Math.round(totalInstances / recurringEvents.length)}</span>
+                <span class="recurring-stat-label">Ø Instanzen/Event</span>
+            </div>
+        </div>
+    `;
+}
+
+function formatRecurringPattern(recurring) {
+    const freq = recurring.frequency || 'weekly';
+    const interval = recurring.interval || 1;
+    
+    const freqMap = {
+        'daily': 'Täglich',
+        'weekly': 'Wöchentlich',
+        'monthly': 'Monatlich',
+        'yearly': 'Jährlich'
+    };
+    
+    let pattern = freqMap[freq] || freq;
+    if (interval > 1) {
+        pattern += ` (alle ${interval} ${freq === 'weekly' ? 'Wochen' : freq === 'daily' ? 'Tage' : 'Monate'})`;
+    }
+    
+    return pattern;
+}
+
+function formatWeekdays(byDay) {
+    const dayMap = {
+        'MO': 'Mo', 'TU': 'Di', 'WE': 'Mi', 'TH': 'Do',
+        'FR': 'Fr', 'SA': 'Sa', 'SU': 'So'
+    };
+    return byDay.map(d => dayMap[d] || d).join(', ');
+}
+
+function expandSingleRecurring(eventHash) {
+    alert('⚠️ Diese Funktion erfordert Backend-Integration.\n\nBitte führe folgendes Kommando im Terminal aus:\n\npython3 scripts/recurring_expander.py --months 3');
+}
+
+function expandAllRecurring() {
+    alert('⚠️ Diese Funktion erfordert Backend-Integration.\n\nBitte führe folgendes Kommando im Terminal aus:\n\npython3 scripts/recurring_expander.py --months 3');
+}
+
+function rebuildRecurringIndex() {
+    alert('⚠️ Diese Funktion erfordert Backend-Integration.\n\nBitte führe folgendes Kommando im Terminal aus:\n\npython3 scripts/recurring_expander.py --rebuild-index');
+}
+
+function loadRecurringIndex() {
+    fetch('_data/recurring_index.json')
+        .then(response => response.json())
+        .then(data => {
+            const modal = document.createElement('div');
+            modal.className = 'edit-modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 900px;">
+                    <div class="modal-header">
+                        <h2>📋 Recurring Events Index</h2>
+                        <span class="close-modal" onclick="this.closest('.edit-modal').remove()">×</span>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <strong>Letztes Update:</strong> ${new Date(data.last_update).toLocaleString('de-DE')}<br>
+                        <strong>Total:</strong> ${data.stats.total_recurring} wiederkehrende Events
+                    </div>
+                    <pre style="background: #2d2d2d; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow: auto; max-height: 500px;">${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        })
+        .catch(error => {
+            alert('Fehler beim Laden des Index: ' + error.message);
+        });
+}
+
+function previewRecurringInstances(eventHash) {
+    const event = allEvents.find(e => e.eventHash === eventHash);
+    if (!event) return;
+    
+    const instances = generateRecurringInstances(event, 20);
+    
+    const modal = document.createElement('div');
+    modal.className = 'edit-modal active';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>👁️ Vorschau: ${event.title}</h2>
+                <span class="close-modal" onclick="this.closest('.edit-modal').remove()">×</span>
+            </div>
+            <p><strong>Nächste 20 Termine:</strong></p>
+            <div class="preview-dates">
+                ${instances.map((inst, idx) => `
+                    <div class="preview-date-item ${inst.type}">
+                        <span style="font-weight: bold; min-width: 30px;">#${idx + 1}</span>
+                        ${inst.type === 'exception' ? '❌' : inst.type === 'addition' ? '⭐' : '📌'}
+                        ${new Date(inst.date).toLocaleDateString('de-DE', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' })}
+                        ${inst.type === 'exception' ? '(Ausnahme)' : inst.type === 'addition' ? '(Zusatz)' : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function editRecurring(eventHash) {
+    alert('⚠️ Vollständige Bearbeitung erfordert direkten Zugriff auf die Markdown-Datei.\n\nÖffne die Event-Datei in _events/ und bearbeite das recurring-Feld im YAML Front Matter.');
+}
+
+// Update stats when tab changes
+const originalSwitchTab = switchTab;
+switchTab = function(tab) {
+    originalSwitchTab(tab);
+    
+    if (tab === 'recurring') {
+        displayRecurringEvents();
+    }
+    
+    // Update recurring stat in header
+    const recurringCount = allEvents.filter(e => e.recurring && e.recurring.enabled).length;
+    document.getElementById('stat-recurring').textContent = recurringCount;
+};
+
 </script>
+
