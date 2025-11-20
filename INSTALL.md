@@ -1,6 +1,13 @@
-# 🚀 Installation für deine Stadt
+# 🚀 Installation für deine Community
 
-Diese Anleitung hilft dir, den Event-Kalender für **deine Stadt** anzupassen.
+Diese Anleitung hilft dir, den Event-Kalender für **deine Community** anzupassen.
+
+**Gilt für:**
+- 🏙️ **Städte & Kommunen** (Hof, Bamberg, Berlin-Kreuzberg...)
+- 🎸 **Subkulturen** (Punk-Szene, Metal-Community, Indie-Kultur...)
+- 🛠️ **Maker & Hacker** (Hackerspaces, FabLabs, Repair-Cafés...)
+- 🌱 **Themen-Netzwerke** (Permakultur, Transition Towns, Degrowth...)
+- 🎮 **Hobby-Communities** (Retro-Gaming, Brettspiele, Cosplay...)
 
 **Zeitaufwand:** ~30 Minuten (Setup) + kontinuierliche Datenpflege
 
@@ -21,7 +28,7 @@ Diese Anleitung hilft dir, den Event-Kalender für **deine Stadt** anzupassen.
 
 1. Öffne: https://github.com/feileberlin/event-kalender-hof
 2. Klicke **Fork** (oben rechts)
-3. Benenne das Repo um: `event-kalender-[deine-stadt]`
+3. Benenne das Repo um: `event-kalender-[deine-community]` (z.B. `event-kalender-punk-berlin` oder `event-kalender-bamberg`)
 4. Klicke **Create fork**
 
 ### Via GitHub CLI (empfohlen)
@@ -33,46 +40,86 @@ cd event-kalender-hof
 
 ---
 
-## Schritt 2: Stadt-Konfiguration
+## Schritt 2: Community-Konfiguration
 
 ### 2.1 Basis-Einstellungen (`_config.yml`)
 
 ```yaml
 # Repository-Einstellungen
-title: "meinstadt.events"  # Dein Titel
-description: "Events in Meinstadt"
-baseurl: "/event-kalender-meinstadt"  # Dein Repo-Name
+title: "meine-community.events"  # Dein Titel
+description: "Events in/von/für Meine Community"
+baseurl: "/event-kalender-meine-community"  # Dein Repo-Name
 url: "https://dein-username.github.io"
-repository: "dein-username/event-kalender-meinstadt"
+repository: "dein-username/event-kalender-meine-community"
 
-# Stadt-spezifische Konfiguration
+# Community-Konfiguration
+# (Feld heißt 'city' aus historischen Gründen, gilt aber für alle Communities)
 city:
-  name: "Meinstadt"
-  name_short: "Meinstadt"
-  state: "Dein Bundesland"
-  country: "Deutschland"
+  name: "Meine Community"  # z.B. "Punk Szene Berlin", "Hof an der Saale", "CCC Erfurt"
+  name_short: "MeineCommunity"  # Kurzform
+  state: "Dein Bundesland"  # Optional (für geografische Communities)
+  country: "Deutschland"  # Optional
   timezone: "Europe/Berlin"
-  population: 50000  # Einwohnerzahl (optional)
-  tagline: "Events in Meinstadt"  # Dein Slogan
-  website: "https://www.meinstadt.de"
+  population: 50000  # Optional (für Städte), kann auch Mitgliederzahl sein
+  tagline: "Events in/von Meine Community"  # Dein Slogan
+  website: "https://www.meine-community.de"  # Optional
   
-  # Geo-Koordinaten (Stadtzentrum)
+  # Geo-Koordinaten (Zentrum, Haupttreffpunkt, Szene-Hotspot)
   center:
     lat: 52.5200  # Breitengrad
     lng: 13.4050  # Längengrad
-    name: "Rathaus Meinstadt"
+    name: "Haupttreffpunkt"  # z.B. "Rathaus", "Club XY", "Hackerspace"
   
   # Kontakt
-  admin_email: "redaktion@meinstadt.events"
+  admin_email: "redaktion@meine-community.events"
   social_media:
-    facebook: "https://facebook.com/stadtmeinstadt"
-    instagram: "@meinstadt_official"
-    twitter: "@meinstadt"
+    facebook: "https://facebook.com/meine-community"
+    instagram: "@meine_community"
+    twitter: "@meinecommunity"
+```
+
+**Beispiele:**
+
+**Städtischer Event-Kalender:**
+```yaml
+city:
+  name: "Bamberg"
+  name_short: "Bamberg"
+  tagline: "Events in Bamberg"
+  center:
+    lat: 49.8988
+    lng: 10.9027
+    name: "Rathaus Bamberg"
+```
+
+**Subkultur-Event-Kalender:**
+```yaml
+city:
+  name: "Punk Szene Berlin"
+  name_short: "Punk Berlin"
+  tagline: "No Future, aber Events"
+  center:
+    lat: 52.5200
+    lng: 13.4050
+    name: "SO36 Club"
+```
+
+**Themen-Netzwerk:**
+```yaml
+city:
+  name: "Permakultur Deutschland"
+  name_short: "Permakultur DE"
+  tagline: "Workshops, Treffen, Aktionen"
+  center:
+    lat: 51.1657
+    lng: 10.4515  # Geografisches Zentrum Deutschlands
+    name: "Deutschland"
 ```
 
 **💡 Koordinaten finden:**
-- Google Maps: Rechtsklick → "Was ist hier?" → Koordinaten kopieren
-- OpenStreetMap: https://www.openstreetmap.org/ → Suchen → Koordinaten in URL
+- **Google Maps**: Rechtsklick → "Was ist hier?" → Koordinaten kopieren
+- **OpenStreetMap**: https://www.openstreetmap.org/ → Suchen → Koordinaten in URL
+- **Für Subkulturen/Netzwerke**: Wähle einen zentralen Treffpunkt oder geografisches Zentrum der Szene
 
 ### 2.2 Automation-Intervalle (optional)
 
@@ -97,12 +144,29 @@ automation:
 
 Bearbeite: **`_data/sources.csv`**
 
+**Für Städte:**
 ```csv
 name,url,type,active,notes
 Stadtwebsite,https://www.meinstadt.de/veranstaltungen,html,true,Offizielle Events
 Kulturzentrum,https://kulturzentrum-meinstadt.de/programm,html,true,Konzerte & Theater
 Facebook Stadtseite,https://facebook.com/stadtmeinstadt,facebook,true,Social Media Events
-VHS Meinstadt,https://vhs-meinstadt.de/kurse,html,true,Kurse
+```
+
+**Für Subkulturen:**
+```csv
+name,url,type,active,notes
+Club SO36,https://so36.de/kalender,html,true,Punk & Hardcore
+Castle Rock,https://castle-rock.de/konzerte,html,true,Metal & Rock
+Facebook Szene-Gruppe,https://facebook.com/groups/punk-berlin,facebook,true,Community-Events
+Bandcamp,https://bandcamp.com/tag/berlin-punk,html,false,Releases (kein Scraper)
+```
+
+**Für Themen-Netzwerke:**
+```csv
+name,url,type,active,notes
+Permakultur-Verein,https://permakultur.de/termine,html,true,Workshops
+Transition-Towns,https://transition-initiativen.org/events,html,true,Netzwerk-Treffen
+Solidagro Newsletter,https://solidagro.org/kalender,html,true,Aktionen
 ```
 
 **Spalten:**
@@ -271,6 +335,7 @@ Verlinke in Footer (bearbeite `_layouts/base.html`).
 ### "Karte zeigt falschen Ort"
 → Prüfe `city.center.lat` und `lng` in `_config.yml`
 → Koordinaten-Format: `lat: 52.5200` (Punkt statt Komma!)
+→ Für überregionale Communities: Wähle geografisches Zentrum oder Haupttreffpunkt
 
 ### "Scraping findet keine Events"
 → Prüfe `_events/_logs/` für Fehler
@@ -306,6 +371,14 @@ Verlinke in Footer (bearbeite `_layouts/base.html`).
 
 → Schick uns einen Link! Wir verlinken gerne andere Instanzen in der README.
 
+**Mögliche Instanzen:**
+- event-kalender-bamberg.github.io
+- punk-szene-berlin.github.io
+- hackerspace-erfurt.github.io
+- permakultur-events.de
+
 ---
 
-**Made with ❤️ for your city**
+**Made with ❤️ for your community**
+
+*Whether it's a city, a subculture, or a movement - every community deserves a great event calendar.*

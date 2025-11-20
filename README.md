@@ -1,4 +1,4 @@
-# 🎉 Event-Kalender für deine Stadt
+# 🎉 Event-Kalender für deine Community
 
 > **Live-Beispiel:** [hof.ist/jetzt](https://feileberlin.github.io/event-kalender-hof/) - Event-Kalender für Hof an der Saale
 
@@ -20,13 +20,14 @@ Ein **community-getriebener, Open-Source Event-Kalender** mit Fokus auf **lokale
 - Kulturschaffende haben keine Zeit für Marketing
 - Bestehende Event-Plattformen sind zu komplex oder kommerziell
 - Gute lokale Events gehen unter
+- Communities (Städte, Subkulturen, Netzwerke) haben keine einfache Event-Übersicht
 
 **Die Lösung:**
 - **Automatisches Scraping** aus beliebigen Quellen
 - **Deduplication-Engine** erkennt Duplikate über Plattformen hinweg
 - **Veranstalter-CRM** für Networking und Recherche
 - **Zero-Config**: Läuft auf GitHub Pages, keine Server nötig
-- **Open Source**: Jede Stadt kann es nutzen
+- **Open Source**: Jede Community kann es nutzen (Städte, Subkulturen, Netzwerke)
 
 ---
 
@@ -67,7 +68,7 @@ Ein **community-getriebener, Open-Source Event-Kalender** mit Fokus auf **lokale
 
 ---
 
-## 🚀 Für deine Stadt anpassen
+## 🚀 Für deine Community anpassen
 
 ### 1. Repository forken
 
@@ -76,22 +77,22 @@ gh repo fork feileberlin/event-kalender-hof --clone
 cd event-kalender-hof
 ```
 
-### 2. Stadt-Konfiguration anpassen
+### 2. Community-Konfiguration anpassen
 
 **`_config.yml`:**
 ```yaml
-title: "meinstadt.events"  # Dein Titel
-description: "Events in Meinstadt"
+title: "meine-community.events"  # Dein Titel
+description: "Events in/für Meine-Community"
 
-city:
-  name: "Meinstadt"
-  name_short: "Meinstadt"
-  state: "Dein Bundesland"
+city:  # Wird auch für Communities genutzt (Name historisch)
+  name: "Meine Community"  # z.B. "Punk Szene Berlin" oder "Hof an der Saale"
+  name_short: "MeineCommunity"  # Kurzform
+  state: "Dein Bundesland"  # Optional, für geografische Communities
   center:
-    lat: 52.5200  # Stadtzentrum-Koordinaten
+    lat: 52.5200  # Zentrum (z.B. Stadtzentrum oder Szene-Hotspot)
     lng: 13.4050
-    name: "Rathaus Meinstadt"
-  admin_email: "redaktion@meinstadt.events"
+    name: "Haupttreffpunkt"  # z.B. "Rathaus" oder "Club XY"
+  admin_email: "redaktion@meine-community.events"
 ```
 
 ### 3. Event-Quellen konfigurieren
@@ -109,16 +110,19 @@ Facebook Stadtseite,https://facebook.com/stadtmeinstadt,facebook,true,
 **`_data/venues.csv`:**
 ```csv
 name,aliases,address,lat,lng,wheelchair_accessible,website,phone,capacity,icon,color,location_type
-Rathaus Meinstadt,Rathaus,"Hauptstr. 1",52.5200,13.4050,true,https://...,+49...,200,🏛️,#2c3e50,rathaus
+Haupttreffpunkt,Main Spot,"Hauptstr. 1",52.5200,13.4050,true,https://...,+49...,200,🎸,#2c3e50,hauptort
+Club Underground,Club UG,"Kellerstr. 5",52.5210,13.4060,false,https://...,+49...,150,🎭,#2c3e50,
 ```
 
 ### 5. GitHub Pages aktivieren
 
 Settings → Pages → Source: `main` branch
 
-**Done!** Deine Stadt hat jetzt einen Event-Kalender.
+**Done!** Deine Community hat jetzt einen Event-Kalender.
 
 > **💡 Migration von v0.x:** Falls du von einer älteren Version upgradest, nutze `site.city.center` statt `site.default_center` (deprecated, aber noch kompatibel).
+> 
+> **💡 Hinweis:** Das Feld heißt `city` aus historischen Gründen, funktioniert aber genauso für Subkulturen, Netzwerke oder thematische Communities.
 
 ---
 
@@ -306,10 +310,11 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 - [ ] Notification-System (E-Mail/Telegram bei neuen Events)
 
 **v2.0 (Vision):**
-- [ ] Federation: Städte-übergreifende Event-Suche
+- [ ] Federation: Community-übergreifende Event-Suche
 - [ ] User-Accounts: Eigene Events einreichen
 - [ ] Moderation-Queue: Community-basierte Qualitätssicherung
 - [ ] Mobile Apps (React Native)
+- [ ] Multi-Tenancy: Mehrere Communities in einer Instanz
 
 **Deine Idee ist nicht dabei?** → [Feature Request](https://github.com/feileberlin/event-kalender-hof/issues/new?template=feature_request.md)
 
@@ -328,7 +333,7 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 - [berlin.digital](https://berlin.digital/) - Tech-Events Berlin
 - Lokalen Kulturschaffenden, die jeden Tag großartige Events auf die Beine stellen
 
-**Entwickelt für:** Die Community in Hof an der Saale - und alle anderen Städte, die folgen.
+**Entwickelt für:** Die Community in Hof an der Saale - und alle anderen Communities (Städte, Subkulturen, Netzwerke), die folgen.
 
 ---
 
@@ -346,7 +351,14 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 - **Diskussionen:** [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
 - **Pull Requests:** Immer willkommen!
 
-**Du nutzt dieses Projekt für deine Stadt?** → Schreib uns! Wir verlinken gerne andere Instanzen.
+**Du nutzt dieses Projekt für deine Community?** → Schreib uns! Wir verlinken gerne andere Instanzen.
+
+**Beispiel-Use-Cases:**
+- 🏙️ **Städte**: Lokale Event-Kalender (Hof, Bamberg, Freiburg...)
+- 🎸 **Subkulturen**: Punk-Szene Berlin, Metal-Events Bayern, Indie-Kultur Hamburg
+- 🛠️ **Maker-Spaces**: Hackerspace-Events, FabLab-Workshops, Repair-Cafés
+- 🌱 **Themen-Netzwerke**: Permakultur-Treffen, Degrowth-Events, Transition Towns
+- 🎮 **Nischen**: Retro-Gaming-Meetups, Brettspiel-Stammtische, Cosplay-Conventions
 
 ---
 

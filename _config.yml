@@ -7,6 +7,12 @@ repository: "feileberlin/event-kalender-hof"
 # Cache invalidation: 2025-11-19T00:15:00Z
 
 # Stadt-spezifische Konfiguration (für Portierung anpassen)
+# HINWEIS: Gilt nicht nur für Städte, sondern für alle Communities:
+#          - Städte & Kommunen (Hof, Bamberg, Berlin-Kreuzberg...)
+#          - Subkulturen (Punk-Szene, Metal-Community, Indie...)
+#          - Maker & Hacker (Hackerspaces, FabLabs, Repair-Cafés...)
+#          - Themen-Netzwerke (Permakultur, Transition Towns, Degrowth...)
+#          - Hobby-Communities (Retro-Gaming, Brettspiele, Cosplay...)
 city:
   name: "Hof an der Saale"
   name_short: "Hof"
