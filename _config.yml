@@ -33,6 +33,12 @@ repository: "feileberlin/krawl.ist"
 #          - 🛠️ Maker & Hacker (Hackerspaces, FabLabs, Repair-Cafés...)
 #          - 🌱 Themen-Netzwerke (Permakultur, Transition Towns, Degrowth...)
 #          - 🎮 Hobby-Communities (Retro-Gaming, Brettspiele, Cosplay...)
+
+# Debug & Testing
+debug:
+  show_test_events: false  # Zeigt Lorem-Ipsum-Test-Events (immer aktuell, für Entwicklung)
+  test_event_count: 10     # Anzahl der Test-Events (falls show_test_events: true)
+
 city:
   name: "Hof an der Saale"
   name_short: "Hof"

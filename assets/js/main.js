@@ -311,9 +311,14 @@ function updateCategoryCounts() {
     const cat = option.value;
     const icon = option.getAttribute('data-icon') || '';
     
-    // Original-Label beim ersten Mal speichern (ohne Counter/Icon)
+    // Original-Label beim ersten Mal speichern (OHNE Icon und Counter)
     if (!option.hasAttribute('data-original-label')) {
-      option.setAttribute('data-original-label', option.textContent.trim());
+      // Entferne vorhandene Icons und Counter aus dem Label
+      let cleanLabel = option.textContent.trim();
+      // Entferne führende Zahlen und Emojis
+      cleanLabel = cleanLabel.replace(/^\d+\s*[\u{1F300}-\u{1F9FF}]\s*/u, '');
+      cleanLabel = cleanLabel.replace(/^[\u{1F300}-\u{1F9FF}]\s*/u, '');
+      option.setAttribute('data-original-label', cleanLabel);
     }
     const originalLabel = option.getAttribute('data-original-label');
     

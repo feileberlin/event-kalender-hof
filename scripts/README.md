@@ -22,7 +22,8 @@ scripts/
 ### Verfügbare Skripte
 - `dev.sh` - Development-Server starten (Jekyll)
 - `setup.sh` - Projekt-Setup (Dependencies, Config)
-- `scrape.sh` - Event-Scraping von konfigurierten Quellen
+- `generate_test_events.py` - Lorem Ipsum Test-Events generieren
+- `cleanup_test_events.py` - Test-Events löschen
 
 ### Verwendung
 ```bash
@@ -32,8 +33,11 @@ scripts/
 # Projekt-Setup
 ./scripts/dev/setup.sh
 
-# Events scrapen
-./scripts/dev/scrape.sh
+# Test-Events generieren (für Filter-Tests)
+python scripts/dev/generate_test_events.py --count 15
+
+# Test-Events wieder löschen
+python scripts/dev/cleanup_test_events.py
 ```
 
 ---
