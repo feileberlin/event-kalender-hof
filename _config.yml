@@ -56,6 +56,67 @@ city:
     instagram: ""
     twitter: ""
 
+# Filter-Kategorien für die Website
+# Diese Kategorien erscheinen im Filter-Dropdown und werden gezählt.
+# Events können beliebige Kategorien haben, aber nur diese hier werden im Filter angezeigt.
+# Format: category_key → { label, icon, singular, plural }
+#
+# SPECIAL: Der Default-Filter (keine Kategorie-Auswahl) kann mit *Sternchen* umbenannt werden:
+#          default_filter_label: "*Events aller Art*"
+filters:
+  default_filter_label: "*Events aller Art*"  # Wird in index.html als "alle anzeigen" genutzt
+  
+  categories:
+    - key: "Musik"
+      icon: "🎵"
+      singular: "Konzert"
+      plural: "Konzerte"
+    
+    - key: "Theater"
+      icon: "🎭"
+      singular: "Theateraufführung"
+      plural: "Theateraufführungen"
+    
+    - key: "Sport"
+      icon: "⚽"
+      singular: "Sportveranstaltung"
+      plural: "Sportveranstaltungen"
+    
+    - key: "Kultur"
+      icon: "🎨"
+      singular: "Ausstellung"
+      plural: "Ausstellungen"
+    
+    - key: "Markt"
+      icon: "🛒"
+      singular: "Markt"
+      plural: "Märkte"
+    
+    - key: "Fest"
+      icon: "🎉"
+      singular: "Fest"
+      plural: "Feste"
+    
+    - key: "Workshop"
+      icon: "🛠️"
+      singular: "Workshop"
+      plural: "Workshops"
+    
+    - key: "Bildung"
+      icon: "📚"
+      singular: "Bildungsveranstaltung"
+      plural: "Bildungsveranstaltungen"
+    
+    - key: "Familie"
+      icon: "👨‍👩‍👧"
+      singular: "Familienveranstaltung"
+      plural: "Familienveranstaltungen"
+    
+    - key: "Sonstiges"
+      icon: "📌"
+      singular: "Event"
+      plural: "Events"
+
 # Jekyll Einstellungen
 markdown: kramdown
 permalink: pretty

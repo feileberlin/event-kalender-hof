@@ -261,31 +261,18 @@ function updateCategoryCounts() {
 
   // Helper: Pluralisierung für deutsche Kategorien
   const pluralize = (category, count) => {
-    if (count === 1) {
-      // Singular-Formen
-      const singular = {
-        'Musik': 'Konzert',
-        'Theater': 'Theateraufführung',
-        'Sport': 'Sportveranstaltung',
-        'Kultur': 'Ausstellung',
-        'Markt': 'Markt',
-        'Fest': 'Fest',
-        'Sonstiges': 'Event'
-      };
-      return singular[category] || category;
-    } else {
-      // Plural-Formen
-      const plural = {
-        'Musik': 'Konzerte',
-        'Theater': 'Theateraufführungen',
-        'Sport': 'Sportveranstaltungen',
-        'Kultur': 'Ausstellungen',
-        'Markt': 'Märkte',
-        'Fest': 'Feste',
-        'Sonstiges': 'Events'
-      };
-      return plural[category] || category;
+    // Try to get singular/plural from data attributes
+    const option = Array.from(categoryFilter.options).find(opt => opt.value === category);
+    if (option) {
+      const singular = option.getAttribute('data-singular');
+      const plural = option.getAttribute('data-plural');
+      if (singular && plural) {
+        return count === 1 ? singular : plural;
+      }
     }
+    
+    // Fallback: return category name
+    return category;
   };
 
   // Update options in select
@@ -294,8 +281,9 @@ function updateCategoryCounts() {
     const icon = option.getAttribute('data-icon') || '';
     
     if (!cat) {
-      // Default: "Events aller Art" mit Counter voran
-      option.textContent = `${filteredEvents.length} ${icon} Events aller Art`;
+      // Default: "Events aller Art" (from config) mit Counter voran
+      const defaultLabel = option.textContent.trim();
+      option.textContent = `${filteredEvents.length} ${icon} ${defaultLabel}`;
     } else if (counts.hasOwnProperty(cat)) {
       // Kategorie-Option: Counter + Plural/Singular
       const label = pluralize(cat, counts[cat]);
