@@ -45,6 +45,12 @@ title: "Event-Kalender Hof"
                         data-singular="{{ category.singular }}"
                         data-plural="{{ category.plural }}">{{ category.key }}</option>
                 {% endfor %}
+                
+                <!-- Restkategorie (Sonstiges) - immer am Ende -->
+                <option value="Sonstiges" 
+                        data-icon="{{ site.filters.others_filter_icon }}"
+                        data-singular="{{ site.filters.others_filter_label }}"
+                        data-plural="{{ site.filters.others_filter_label }}">Sonstiges</option>
             </select>
             
             <select id="timeFilter" class="inline-select">

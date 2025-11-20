@@ -64,6 +64,9 @@ filters:
   default_filter_label: "Events aller Art"  # Label für "alle Kategorien"-Option
   default_filter_icon: "🎉"  # Icon für Default-Filter
   
+  others_filter_label: "Sonstige Events"  # Label für Restkategorie (nicht-konfigurierte Events)
+  others_filter_icon: "📌"  # Icon für Restkategorie
+  
   categories:
     - key: "Musik"
       icon: "🎵"
@@ -109,11 +112,6 @@ filters:
       icon: "👨‍👩‍👧"
       singular: "Familienveranstaltung"
       plural: "Familienveranstaltungen"
-    
-    - key: "Sonstiges"
-      icon: "📌"
-      singular: "Event"
-      plural: "Events"
 
 # Jekyll Einstellungen
 markdown: kramdown
