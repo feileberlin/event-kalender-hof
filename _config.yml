@@ -60,11 +60,8 @@ city:
 # Diese Kategorien erscheinen im Filter-Dropdown und werden gezählt.
 # Events können beliebige Kategorien haben, aber nur diese hier werden im Filter angezeigt.
 # Format: category_key → { label, icon, singular, plural }
-#
-# SPECIAL: Der Default-Filter (keine Kategorie-Auswahl) kann mit *Sternchen* umbenannt werden:
-#          default_filter_label: "*Events aller Art*"
 filters:
-  default_filter_label: "*Events aller Art*"  # Wird in index.html als "alle anzeigen" genutzt
+  default_filter_label: "Events aller Art"  # Label für "alle Kategorien"-Option
   
   categories:
     - key: "Musik"
