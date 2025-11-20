@@ -1,0 +1,8 @@
+---
+layout: rss
+permalink: /feed.xml
+feed_name: "Alle Events bis Sonnenaufgang"
+time_filter: "sunrise"
+category_filter: ""
+radius_filter: ""
+---

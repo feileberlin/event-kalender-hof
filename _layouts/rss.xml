@@ -1,0 +1,79 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.title }} - {{ page.feed_name }}</title>
+    <description>{{ site.description }}</description>
+    <link>{{ site.url }}{{ site.baseurl }}/</link>
+    <atom:link href="{{ site.url }}{{ site.baseurl }}{{ page.url }}" rel="self" type="application/rss+xml"/>
+    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
+    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+    <generator>Jekyll v{{ jekyll.version }}</generator>
+    
+    {% comment %}
+    Filter-Logik: Wende die in _config.yml definierten Filter an
+    {% endcomment %}
+    
+    {% assign now = site.time %}
+    {% assign cutoff_time = now %}
+    
+    {% comment %}Time-Filter berechnen{% endcomment %}
+    {% if page.time_filter != "" %}
+      {% for tf in site.filters.time_filters %}
+        {% if tf.key == page.time_filter %}
+          {% if tf.hours %}
+            {% assign cutoff_seconds = tf.hours | times: 3600 %}
+            {% assign cutoff_time = now | date: "%s" | plus: cutoff_seconds | date: "%Y-%m-%d" %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    
+    {% for event in site.events %}
+      {% comment %}Nur öffentliche Events{% endcomment %}
+      {% if event.status == "Öffentlich" %}
+        
+        {% comment %}Time-Filter prüfen{% endcomment %}
+        {% assign include_event = true %}
+        {% if page.time_filter != "" and cutoff_time %}
+          {% assign event_date = event.date | date: "%Y-%m-%d" %}
+          {% if event_date > cutoff_time %}
+            {% assign include_event = false %}
+          {% endif %}
+        {% endif %}
+        
+        {% comment %}Category-Filter prüfen{% endcomment %}
+        {% if include_event and page.category_filter != "" %}
+          {% if event.category != page.category_filter %}
+            {% assign include_event = false %}
+          {% endif %}
+        {% endif %}
+        
+        {% comment %}Radius-Filter: Wird im RSS nicht umgesetzt (benötigt User-Location){% endcomment %}
+        
+        {% if include_event %}
+    <item>
+      <title>{{ event.title | xml_escape }}</title>
+      <link>{{ site.url }}{{ site.baseurl }}{{ event.url }}</link>
+      <guid isPermaLink="true">{{ site.url }}{{ site.baseurl }}{{ event.url }}</guid>
+      <pubDate>{{ event.date | date_to_rfc822 }}</pubDate>
+      <description><![CDATA[
+        <p><strong>📅 Datum:</strong> {{ event.date | date: "%d.%m.%Y" }}</p>
+        <p><strong>🕐 Zeit:</strong> {{ event.start_time }}{% if event.end_time %} - {{ event.end_time }}{% endif %} Uhr</p>
+        <p><strong>📍 Ort:</strong> {{ event.location }}</p>
+        {% if event.address %}<p><strong>Adresse:</strong> {{ event.address }}</p>{% endif %}
+        {% if event.category %}<p><strong>Kategorie:</strong> {{ event.category }}</p>{% endif %}
+        {% if event.description %}<p>{{ event.description | markdownify }}</p>{% endif %}
+        {% if event.tags %}<p><strong>Tags:</strong> {{ event.tags | join: ", " }}</p>{% endif %}
+      ]]></description>
+      {% if event.category %}
+      <category>{{ event.category }}</category>
+      {% endif %}
+    </item>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </channel>
+</rss>

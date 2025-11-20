@@ -89,6 +89,30 @@ filters:
       label: "🌕 bis Vollmond"  # Label wird dynamisch überschrieben (Vollmond/Neumond)
       # hours: 336  # Optional: Überschreibe mit fester Stundenanzahl (default: Mondphasen-Berechnung)
   
+  # RSS-Feed-Konfiguration (für Traditionalisten 😉)
+  # Tägliche Aktualisierung der RSS-Feeds mit vordefinierten Filter-Kombinationen
+  # Format: time_filter (optional) | category_filter (optional) | radius_km (optional)
+  # Leer lassen = kein Filter für diese Dimension
+  rss_feeds:
+    - name: "Alle Events bis Sonnenaufgang"
+      filename: "feed.xml"  # Standard-Feed
+      time: "sunrise"
+      category: ""
+      radius: ""
+      
+    - name: "Musik-Events diese Woche"
+      filename: "musik.xml"
+      time: "week"  # Erfordert entsprechenden time_filter oben
+      category: "Musik"
+      radius: ""
+      
+    # Beispiele (auskommentiert):
+    # - name: "Kultur im 10km Umkreis"
+    #   filename: "kultur-lokal.xml"
+    #   time: "3days"
+    #   category: "Kultur"
+    #   radius: "10"
+  
   categories:
     - key: "Musik"
       icon: "🎵"

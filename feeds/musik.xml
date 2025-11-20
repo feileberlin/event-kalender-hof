@@ -1,0 +1,8 @@
+---
+layout: rss
+permalink: /feeds/musik.xml
+feed_name: "Musik-Events diese Woche"
+time_filter: "week"
+category_filter: "Musik"
+radius_filter: ""
+---
