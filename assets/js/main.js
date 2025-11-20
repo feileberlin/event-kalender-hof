@@ -311,10 +311,15 @@ function updateCategoryCounts() {
     const cat = option.value;
     const icon = option.getAttribute('data-icon') || '';
     
+    // Original-Label beim ersten Mal speichern (ohne Counter/Icon)
+    if (!option.hasAttribute('data-original-label')) {
+      option.setAttribute('data-original-label', option.textContent.trim());
+    }
+    const originalLabel = option.getAttribute('data-original-label');
+    
     if (!cat) {
       // Default: "Events aller Art" (from config) mit Counter voran
-      const defaultLabel = option.textContent.trim();
-      option.textContent = `${filteredEvents.length} ${icon} ${defaultLabel}`;
+      option.textContent = `${filteredEvents.length} ${icon} ${originalLabel}`;
     } else {
       // Kategorie-Option: Counter + Plural/Singular (auch wenn Count = 0)
       const count = counts[cat] || 0;
