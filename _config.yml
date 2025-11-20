@@ -62,6 +62,7 @@ city:
 # Format: category_key → { label, icon, singular, plural }
 filters:
   default_filter_label: "Events aller Art"  # Label für "alle Kategorien"-Option
+  default_filter_icon: "🎉"  # Icon für Default-Filter
   
   categories:
     - key: "Musik"

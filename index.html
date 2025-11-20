@@ -36,7 +36,7 @@ title: "Event-Kalender Hof"
         <div class="event-info">
             <select id="categoryFilter" class="inline-select">
                 <!-- Default Option -->
-                <option value="" data-icon="🎉">{{ site.filters.default_filter_label }}</option>
+                <option value="" data-icon="{{ site.filters.default_filter_icon }}">{{ site.filters.default_filter_label }}</option>
                 
                 <!-- Dynamische Kategorien aus _config.yml -->
                 {% for category in site.filters.categories %}
