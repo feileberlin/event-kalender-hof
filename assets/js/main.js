@@ -284,10 +284,11 @@ function updateCategoryCounts() {
       // Default: "Events aller Art" (from config) mit Counter voran
       const defaultLabel = option.textContent.trim();
       option.textContent = `${filteredEvents.length} ${icon} ${defaultLabel}`;
-    } else if (counts.hasOwnProperty(cat)) {
-      // Kategorie-Option: Counter + Plural/Singular
-      const label = pluralize(cat, counts[cat]);
-      option.textContent = `${counts[cat]} ${icon} ${label}`;
+    } else {
+      // Kategorie-Option: Counter + Plural/Singular (auch wenn Count = 0)
+      const count = counts[cat] || 0;
+      const label = pluralize(cat, count);
+      option.textContent = `${count} ${icon} ${label}`;
     }
   });
 }
