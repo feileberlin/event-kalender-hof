@@ -1,10 +1,11 @@
-# 🎉 GetVibe
+# 🔥 Krawl
 
-> **Live-Beispiel:** [hof.ist/jetzt](https://feileberlin.github.io/event-kalender-hof/) - GetVibe für Hof an der Saale
+> **Live-Beispiel:** [hof.krawl.ist](https://feileberlin.github.io/event-kalender-hof/) - Krawl für Hof an der Saale
 
-**Get the vibe of your community — right now, right here.**
+**Wo ist der Krawall?**
 
-GetVibe zeigt dir Events in deiner unmittelbaren Nähe - automatisch aggregiert, geografisch gefiltert, zeitlich sortiert. Kein Scrollen durch Social Media, keine verpassten Flyer, keine Überraschungen.
+Krawl zeigt dir Events in deiner unmittelbaren Nähe - jetzt, hier, ohne Lärm.  
+Kein Instagram-Scrollen. Keine verpassten Flyer. Nur eine Frage: **Was läuft heute?**
 
 Entwickelt aus der Frustration heraus, dass gute Events oft untergehen, weil sie auf zig verschiedenen Kanälen verstreut sind.
 
@@ -12,21 +13,28 @@ Entwickelt aus der Frustration heraus, dass gute Events oft untergehen, weil sie
 
 ## 💭 Selbstverständnis
 
-### Was GetVibe ist
+### Was ist Krawl?
 
 **JETZT + HIER**  
-GetVibe beantwortet eine einzige Frage: *"Was kann ich in den nächsten Stunden in meiner unmittelbaren Nähe erleben?"* Nicht nächste Woche, nicht irgendwo in der Stadt - sondern jetzt und hier.
+Krawl beantwortet eine einzige Frage: *"Was kann ich in den nächsten Stunden in meiner unmittelbaren Nähe erleben?"* Nicht nächste Woche, nicht irgendwo in der Stadt - sondern jetzt und hier.
 
 **Read-Only First**  
-GetVibe ist bewusst **kein soziales Netzwerk**. Keine Kommentare, keine User-Profile, kein Lärm. Du siehst, was läuft - ohne Ablenkung. Community-Features (Event-Vorschläge, Reviews) kommen später (v2.0), aber die Kernfunktion bleibt fokussiert.
+Krawl ist bewusst **kein soziales Netzwerk**. Keine Kommentare, keine User-Profile, kein Dopamin-Hack. Du siehst Events - fertig. Community-Features (Event-Vorschläge, Reviews) kommen später (v2.0), aber die Kernfunktion bleibt fokussiert.
+
+**Krawall + Crawl**  
+Der Name kommt aus zwei Welten:
+- **Krawall** (jiddisch) = Aufruhr, Party, wo was los ist
+- **Crawl** (englisch) = Pub Crawl, Event-Tour
+
+**Krawl** = deine Tour durch den Krawall deiner Community.
+
+**Für Krawlisten, von Krawlisten**  
+Wer Krawl nutzt, ist ein **Krawlist**. Krawlisten sind nicht passiv. Sie scrollen nicht Instagram, sie erleben Events. Sie sind Teil der Szene, nicht Zuschauer.
 
 **Open Source & Forkbar**  
-Jede Community kann GetVibe nutzen - ob Stadt, Subkultur, Maker-Space oder Themen-Netzwerk. Keine zentrale Plattform, keine Abhängigkeit. Fork es, pass es an, betreibe es selbst.
+Jede Community kann Krawl nutzen - ob Stadt, Subkultur, Maker-Space oder Themen-Netzwerk. Keine zentrale Plattform, keine Abhängigkeit. Fork es, pass es an, betreibe es selbst.
 
-**Automatisch & Transparent**  
-Scraping statt manueller Eingabe. Deduplication statt Duplikate. Veranstalter-CRM für persönliche Kontakte. Aber: Die Daten gehören dir, nicht einer Plattform.
-
-### Was GetVibe zeigt
+### Was Krawl zeigt
 
 Die **nächsten Events** in **relativer Nähe** zu deinem Kontext:
 - **Stadt:** Umkreis 1-10 km
@@ -99,7 +107,7 @@ Die **nächsten Events** in **relativer Nähe** zu deinem Kontext:
 
 ## ✨ Features
 
-GetVibe kombiniert **Read-Only Simplicity** mit **intelligenter Automatisierung**:
+Krawl kombiniert **Read-Only Simplicity** mit **intelligenter Automatisierung**:
 
 ### 🗺️ Für Besucher
 - **Interaktive Karte** - touch-optimiert, schnell
@@ -375,7 +383,7 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 - 💡 Moderation-Queue: Community-basierte Qualitätssicherung
 - 💡 Mobile Apps (React Native)
 
-**GetVibe bleibt fokussiert:** Auch mit Community-Features steht die Kernfunktion im Mittelpunkt - **Events finden, nicht suchen.**
+**Krawl bleibt fokussiert:** Auch mit Community-Features steht die Kernfunktion im Mittelpunkt - **Events finden, nicht suchen.**
 
 ---
 
@@ -392,13 +400,13 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 - [berlin.digital](https://berlin.digital/) - Tech-Events Berlin
 - Lokalen Kulturschaffenden, die jeden Tag großartige Events auf die Beine stellen
 
-**Entwickelt für:** Die Community in Hof an der Saale - und alle anderen Communities (Städte, Subkulturen, Netzwerke), die folgen.
+**Entwickelt für:** Krawlisten in Hof an der Saale - und alle anderen Communities (Städte, Subkulturen, Netzwerke), die folgen.
 
 ---
 
 ## 🌍 Use-Cases
 
-GetVibe funktioniert für jede Community, die Events hat:
+Krawl funktioniert für jede Community, die Events hat:
 
 - 🏙️ **Städte**: Lokale Event-Kalender (Hof, Bamberg, Freiburg...)
 - 🎸 **Subkulturen**: Punk-Szene Berlin, Metal-Events Bayern, Indie-Kultur Hamburg
@@ -424,13 +432,14 @@ GetVibe funktioniert für jede Community, die Events hat:
 - **Diskussionen:** [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
 - **Pull Requests:** Immer willkommen!
 
-**Du nutzt GetVibe für deine Community?** → Schreib uns! Wir verlinken gerne andere Instanzen.
+**Du nutzt Krawl für deine Community?** → Schreib uns! Wir verlinken gerne andere Krawl-Instanzen.
 
 ---
 
 **Made with ❤️ in Hof an der Saale**
 
-*"Get the vibe — events finden, nicht suchen."*
+*"Krawl — events finden, nicht suchen."*  
+*Für Krawlisten, von Krawlisten.*
 | **[docs/PROJECT.md](docs/PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz, Timeline |
 | **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | Alle | Versionshistorie (v0.1.0 → v1.7.0) |
 | **[docs/ANALYTICS.md](docs/ANALYTICS.md)** | Admins | GoatCounter Analytics-Integration |
