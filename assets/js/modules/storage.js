@@ -48,7 +48,7 @@ export const Storage = {
   loadBookmarks() {
     try {
       const data = localStorage.getItem('krawl_bookmarks');
-      // Convert Array back to Set for O(1) lookup
+      // Convert Array back to Set for O(1) lookup [1]
       return data ? new Set(JSON.parse(data)) : new Set();
     } catch (e) {
       console.warn('Could not load bookmarks:', e);
@@ -65,3 +65,23 @@ export const Storage = {
     localStorage.removeItem('krawl_bookmarks');
   }
 };
+
+// ========================================
+// REFERENCES & INSPIRATIONS
+// ========================================
+
+/**
+ * [1] Set → Array → Set pattern for JSON persistence
+ * Source: MDN Web Docs - Working with Sets
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+ * 
+ * Why notable: Sets can't be directly JSON.stringify()'d, so we use Array.from()
+ * to serialize and new Set() to deserialize. This preserves O(1) lookup performance
+ * while enabling persistence. The pattern is elegant because it's bidirectional:
+ * Set → Array.from() → JSON → localStorage → JSON.parse() → new Set() → Set
+ * 
+ * Alternative approaches (not used):
+ * - Store as array, convert to Set on each lookup (wasteful)
+ * - Use object keys as Set equivalent (less readable)
+ * - Custom serializer (over-engineering)
+ */
