@@ -62,7 +62,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('📍 User location:', location);
   });
 
-  // 4. RESTORE USER PREFERENCES
+  // 4. EXTRACT CONFIGURED CATEGORIES FROM DOM
+  // These are rendered from _config.yml by Jekyll
+  const categoryFilter = document.getElementById('categoryFilter');
+  if (categoryFilter) {
+    const configuredCategories = Array.from(categoryFilter.options)
+      .filter(opt => opt.value !== '' && opt.value !== 'Sonstiges')
+      .map(opt => opt.value);
+    filterManager.setConfiguredCategories(configuredCategories);
+    console.log('📋 Configured categories:', configuredCategories);
+  }
+
+  // 5. RESTORE USER PREFERENCES
   // Load saved filter settings from previous session
   const savedPrefs = Storage.loadPrefs();
   if (savedPrefs) {
@@ -70,10 +81,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     applyFiltersToUI();
   }
 
-  // 5. WIRE UP EVENT LISTENERS
+  // 6. WIRE UP EVENT LISTENERS
   setupEventListeners();
 
-  // 6. INITIAL RENDER
+  // 7. INITIAL RENDER
   updateDisplay();
 
   console.log('✅ Krawl ready!');
@@ -245,18 +256,34 @@ function updateCategoryCounts() {
   const categoryFilter = document.getElementById('categoryFilter');
   if (!categoryFilter) return;
 
-  // Get all categories from EventManager
-  const allCategories = eventManager.getStats().categories;
+  // Get configured categories from dropdown (these are from _config.yml)
+  const configuredCategories = Array.from(categoryFilter.options)
+    .filter(opt => opt.value !== '' && opt.value !== 'Sonstiges')
+    .map(opt => opt.value);
+  
   // Get filtered events
   const filteredEvents = eventManager.events;
 
   // Count events per category
   const counts = {};
-  allCategories.forEach(cat => { counts[cat] = 0; });
+  configuredCategories.forEach(cat => { counts[cat] = 0; });
+  counts['Sonstiges'] = 0;
+
   filteredEvents.forEach(event => {
+    let matchedConfiguredCategory = false;
+    
+    // Check if event matches any configured category
     event.categories.forEach(cat => {
-      if (counts.hasOwnProperty(cat)) counts[cat]++;
+      if (configuredCategories.includes(cat)) {
+        counts[cat] = (counts[cat] || 0) + 1;
+        matchedConfiguredCategory = true;
+      }
     });
+    
+    // If event doesn't match any configured category, count it as "Sonstiges"
+    if (!matchedConfiguredCategory) {
+      counts['Sonstiges']++;
+    }
   });
 
   // Helper: Pluralisierung für deutsche Kategorien

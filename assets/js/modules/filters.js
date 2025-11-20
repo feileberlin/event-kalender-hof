@@ -17,6 +17,18 @@ export class FilterManager {
       radius: 5,                  // Distance in km from user location
       location: null              // Specific venue filter
     };
+    
+    // Configured categories (from _config.yml, excluding "Sonstiges")
+    // Needed to determine which events belong to "Sonstiges" category
+    this.configuredCategories = [];
+  }
+  
+  /**
+   * Set list of configured categories (from _config.yml)
+   * Needed to determine which events belong to "Sonstiges"
+   */
+  setConfiguredCategories(categories) {
+    this.configuredCategories = categories.filter(c => c !== 'Sonstiges');
   }
 
   // ========================================
@@ -100,10 +112,21 @@ export class FilterManager {
       // FILTER 1: Categories (if any selected)
       if (this.activeFilters.categories.size > 0) {
         const eventCategories = event.categories || [];
-        const hasMatch = eventCategories.some(cat => // [13]
-          this.activeFilters.categories.has(cat)
-        );
-        if (!hasMatch) continue; // Skip to next event [11]
+        
+        // Special handling for "Sonstiges": show events that DON'T match configured categories
+        if (this.activeFilters.categories.has('Sonstiges')) {
+          const matchesConfiguredCategory = eventCategories.some(cat => 
+            this.configuredCategories.includes(cat)
+          );
+          // For "Sonstiges": skip if event matches any configured category
+          if (matchesConfiguredCategory) continue;
+        } else {
+          // Normal categories: check if event matches any selected category
+          const hasMatch = eventCategories.some(cat => // [13]
+            this.activeFilters.categories.has(cat)
+          );
+          if (!hasMatch) continue; // Skip to next event [11]
+        }
       }
 
       // FILTER 2: Time Range
