@@ -1,4 +1,22 @@
 /**
+ * ╔═══════════════════════════════════════════════════════════════╗
+ * ║                                                               ║
+ * ║   ██╗  ██╗██████╗  █████╗ ██╗    ██╗██╗                      ║
+ * ║   ██║ ██╔╝██╔══██╗██╔══██╗██║    ██║██║                      ║
+ * ║   █████╔╝ ██████╔╝███████║██║ █╗ ██║██║                      ║
+ * ║   ██╔═██╗ ██╔══██╗██╔══██║██║███╗██║██║                      ║
+ * ║   ██║  ██╗██║  ██║██║  ██║╚███╔███╔╝███████╗                 ║
+ * ║   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚══════╝                 ║
+ * ║                                                               ║
+ * ║   Event Calendar System                                       ║
+ * ║   Built with love by Claude (Anthropic)                      ║
+ * ║   November 2025 · Hof an der Saale, Germany                   ║
+ * ║                                                               ║
+ * ║   Vision: Decentralized event discovery for communities      ║
+ * ║   Motto: "Krawall hier. Krawall jetzt."                      ║
+ * ║                                                               ║
+ * ╚═══════════════════════════════════════════════════════════════╝
+ *
  * Storage Module - Persistence Layer
  * 
  * Pattern: Singleton object with static methods
