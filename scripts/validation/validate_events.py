@@ -198,7 +198,7 @@ class EventValidator:
         if not isinstance(time_value, str):
             return False
         
-        pattern = r'^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+        pattern = r'^([01][0-9]|2[0-3]):[0-5][0-9]$'
         return bool(re.match(pattern, time_value))
     
     def validate_coordinates(self, lat, lng):
@@ -213,13 +213,6 @@ class EventValidator:
                 return False
             if not (-180 <= lng_float <= 180):
                 return False
-            
-            # Warning for coordinates far from Germany
-            if not (47 <= lat_float <= 55 and 5 <= lng_float <= 15):
-                self.warnings.append({
-                    'type': 'SUSPICIOUS_COORDINATES',
-                    'message': f'Koordinaten ({lat_float}, {lng_float}) außerhalb Deutschland'
-                })
             
             return True
         except (ValueError, TypeError):

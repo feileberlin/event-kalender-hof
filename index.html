@@ -130,29 +130,21 @@ const allEvents = [
     {% for event in site.events %}
     {% comment %}Filter: Nur öffentliche Events + Debug-Switch für Test-Events{% endcomment %}
     {% if event.status == "Öffentlich" %}
-        {% comment %}Prüfe ob Event ein Test-Event ist und ob diese angezeigt werden sollen{% endcomment %}
+        {% assign should_include = false %}
+        {% assign is_test = false %}
+        
+        {% comment %}Prüfe ob Event angezeigt werden soll{% endcomment %}
         {% if event.test_event %}
             {% if site.debug.show_test_events %}
-    {
-        title: {{ event.title | jsonify }},
-        date: "{{ event.date | date: '%Y-%m-%d' }}",
-        startTime: "{{ event.start_time }}",
-        endTime: "{{ event.end_time }}",
-        location: {{ event.location | jsonify }},
-        address: {{ event.address | jsonify }},
-        category: {{ event.category | jsonify }},
-        description: {{ event.description | jsonify }},
-        url: "{{ event.url | relative_url }}",
-        coordinates: {
-            lat: {{ event.coordinates.lat | default: site.default_center.lat }},
-            lng: {{ event.coordinates.lng | default: site.default_center.lng }}
-        },
-        tags: {{ event.tags | jsonify }},
-        testEvent: true
-    }{% unless forloop.last %},{% endunless %}
+                {% assign should_include = true %}
+                {% assign is_test = true %}
             {% endif %}
         {% else %}
-            {% comment %}Normales Event (kein Test-Event) - immer anzeigen{% endcomment %}
+            {% assign should_include = true %}
+            {% assign is_test = false %}
+        {% endif %}
+        
+        {% if should_include %}
     {
         title: {{ event.title | jsonify }},
         date: "{{ event.date | date: '%Y-%m-%d' }}",
@@ -168,7 +160,7 @@ const allEvents = [
             lng: {{ event.coordinates.lng | default: site.default_center.lng }}
         },
         tags: {{ event.tags | jsonify }},
-        testEvent: false
+        testEvent: {{ is_test }}
     }{% unless forloop.last %},{% endunless %}
         {% endif %}
     {% endif %}
