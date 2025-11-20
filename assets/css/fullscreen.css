@@ -28,6 +28,20 @@ body.fullscreen-layout {
     z-index: 1;
 }
 
+/* Karten-Style: Minimalistisch, Event-fokussiert */
+.fullscreen-map .leaflet-tile-pane {
+    /* Graustufen-Filter für ablenkungsfreie Karte */
+    filter: grayscale(100%) brightness(1.1) contrast(0.9);
+    opacity: 0.6;
+}
+
+/* Events sollen hervorstechen */
+.fullscreen-map .leaflet-marker-pane,
+.fullscreen-map .leaflet-popup-pane {
+    filter: none !important;
+    opacity: 1 !important;
+}
+
 /* Leaflet-Controls verstecken */
 .leaflet-control-container .leaflet-top,
 .leaflet-control-container .leaflet-bottom {
