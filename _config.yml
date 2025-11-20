@@ -1,6 +1,6 @@
 # Krawl - Krawall hier. Krawall jetzt.
 title: "krawl.ist/hof"
-description: "Krawall hier. Krawall jetzt. — Events in Hof an der Saale"
+description: "Krawall hier. Krawall jetzt. — Events bis Sonnenaufgang in Hof an der Saale"
 baseurl: ""
 url: "https://krawl.ist"
 repository: "feileberlin/krawl.ist"
@@ -50,7 +50,7 @@ city:
     name: "Rathaus Hof"
   
   # Kontakt
-  admin_email: "info@example.com"  # Anpassen!
+  admin_email: "feile@posteo.de"  # Anpassen!
   social_media:
     facebook: ""
     instagram: ""

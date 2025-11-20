@@ -259,16 +259,47 @@ function updateCategoryCounts() {
     });
   });
 
+  // Helper: Pluralisierung für deutsche Kategorien
+  const pluralize = (category, count) => {
+    if (count === 1) {
+      // Singular-Formen
+      const singular = {
+        'Musik': 'Konzert',
+        'Theater': 'Theateraufführung',
+        'Sport': 'Sportveranstaltung',
+        'Kultur': 'Ausstellung',
+        'Markt': 'Markt',
+        'Fest': 'Fest',
+        'Sonstiges': 'Event'
+      };
+      return singular[category] || category;
+    } else {
+      // Plural-Formen
+      const plural = {
+        'Musik': 'Konzerte',
+        'Theater': 'Theateraufführungen',
+        'Sport': 'Sportveranstaltungen',
+        'Kultur': 'Ausstellungen',
+        'Markt': 'Märkte',
+        'Fest': 'Feste',
+        'Sonstiges': 'Events'
+      };
+      return plural[category] || category;
+    }
+  };
+
   // Update options in select
   Array.from(categoryFilter.options).forEach(option => {
     const cat = option.value;
+    const icon = option.getAttribute('data-icon') || '';
+    
     if (!cat) {
-      // "alle Kategorien" Option: zeigt Gesamtsumme
-      option.textContent = `alle Kategorien (${filteredEvents.length})`;
+      // Default: "Events aller Art" mit Counter voran
+      option.textContent = `${filteredEvents.length} ${icon} Events aller Art`;
     } else if (counts.hasOwnProperty(cat)) {
-      // Kategorie-Option: zeigt Count
-      const icon = option.getAttribute('data-icon') || '';
-      option.textContent = `${icon} ${cat} (${counts[cat]})`;
+      // Kategorie-Option: Counter + Plural/Singular
+      const label = pluralize(cat, counts[cat]);
+      option.textContent = `${counts[cat]} ${icon} ${label}`;
     }
   });
 }
