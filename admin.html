@@ -1,5 +1,5 @@
 ---
-layout: base
+layout: admin
 title: Admin - Event-Verwaltung
 ---
 
@@ -863,6 +863,16 @@ title: Admin - Event-Verwaltung
             🤖 Diese Events wurden auf mehreren Quellen gefunden. Prüfe die Daten und merge sie zu einem kanonischen Event.<br>
             <strong>Confidence Score:</strong> Wie sicher das System ist, dass es dasselbe Event ist.
         </p>
+        
+        <div class="recurring-actions" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn-action" onclick="runDedupEngine()" id="dedupButton">
+                🔄 Dedup-Skript ausführen
+            </button>
+            <button class="btn-action" onclick="loadDuplicates()">
+                🔍 Duplikate neu laden
+            </button>
+        </div>
+        
         <div id="duplicates-list"></div>
     </div>
 
@@ -2191,6 +2201,48 @@ switchTab = function(tab) {
     const recurringCount = allEvents.filter(e => e.recurring && e.recurring.enabled).length;
     document.getElementById('stat-recurring').textContent = recurringCount;
 };
+
+// Dedup-Engine ausf\u00fchren
+async function runDedupEngine() {
+    const button = document.getElementById('dedupButton');
+    const originalText = button.textContent;
+    
+    button.disabled = true;
+    button.textContent = '\u231b Dedup-Skript l\u00e4uft...';
+    
+    try {
+        // GitHub Action workflow dispatch
+        const response = await fetch('https://api.github.com/repos/{{ site.github.repository_nwo }}/actions/workflows/deduplication.yml/dispatches', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ref: 'main',
+                inputs: {}
+            })
+        });
+        
+        if (response.ok || response.status === 204) {
+            button.textContent = '\u2705 Workflow gestartet';
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+                alert('\u2705 Dedup-Workflow wurde gestartet!\\n\\nDu kannst den Fortschritt unter Actions verfolgen:\\nhttps://github.com/{{ site.github.repository_nwo }}/actions');
+            }, 2000);
+        } else {
+            throw new Error('HTTP ' + response.status);
+        }
+    } catch (error) {
+        console.error('Dedup-Workflow-Fehler:', error);
+        button.textContent = originalText;
+        button.disabled = false;
+        
+        // Fallback: Python-Skript lokal ausf\u00fchren (nur im Dev-Environment)
+        alert('\u26a0\ufe0f GitHub Action konnte nicht gestartet werden.\\n\\nF\u00fchre stattdessen manuell aus:\\n\\n$ python scripts/deduplication_engine.py\\n\\nOder pr\u00fcfe ob du authentifiziert bist:\\n$ gh auth status');
+    }
+}
 
 </script>
 
