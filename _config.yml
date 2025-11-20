@@ -36,7 +36,7 @@ repository: "feileberlin/krawl.ist"
 
 # Debug & Testing
 debug:
-  show_test_events: false  # Zeigt Lorem-Ipsum-Test-Events (immer aktuell, für Entwicklung)
+  show_test_events: true   # Zeigt Lorem-Ipsum-Test-Events (immer aktuell, für Entwicklung)
   test_event_count: 10     # Anzahl der Test-Events (falls show_test_events: true)
 
 city:
