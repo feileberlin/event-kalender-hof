@@ -4,7 +4,7 @@ description: "Krawall hier. Krawall jetzt. — Events bis Sonnenaufgang in Hof a
 baseurl: ""
 url: "https://krawl.ist"
 repository: "feileberlin/krawl.ist"
-# Cache invalidation: 2025-11-20T00:00:00Z
+# Cache invalidation: 2025-11-20T18:32:01Z
 
 # ⚠️ HARDCODED LINKS (müssen bei Repo-Umbenennung manuell geändert werden):
 # Die folgenden Dateien enthalten hardcoded GitHub-URLs, da sie statisches HTML sind
