@@ -38,7 +38,7 @@ export const Storage = {
   
   saveBookmarks(bookmarks) {
     try {
-      // Convert Set to Array for JSON serialization
+      // Convert Set to Array for JSON serialization [1]
       localStorage.setItem('krawl_bookmarks', JSON.stringify(Array.from(bookmarks)));
     } catch (e) {
       console.warn('Could not save bookmarks:', e);
@@ -49,7 +49,7 @@ export const Storage = {
     try {
       const data = localStorage.getItem('krawl_bookmarks');
       // Convert Array back to Set for O(1) lookup [1]
-      return data ? new Set(JSON.parse(data)) : new Set();
+      return data ? new Set(JSON.parse(data)) : new Set(); // [2]
     } catch (e) {
       console.warn('Could not load bookmarks:', e);
       return new Set();
@@ -71,17 +71,17 @@ export const Storage = {
 // ========================================
 
 /**
- * [1] Set → Array → Set pattern for JSON persistence
- * Source: MDN Web Docs - Working with Sets
+ * [1] Set ↔ Array Conversion Pattern
+ * Source: MDN Web Docs - Set
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
  * 
- * Why notable: Sets can't be directly JSON.stringify()'d, so we use Array.from()
- * to serialize and new Set() to deserialize. This preserves O(1) lookup performance
- * while enabling persistence. The pattern is elegant because it's bidirectional:
- * Set → Array.from() → JSON → localStorage → JSON.parse() → new Set() → Set
+ * Insight: Sets can't be JSON-serialized directly, but Array.from() + new Set()
+ * provide clean conversion. This pattern gives us O(1) lookups in memory with
+ * easy persistence. Alternative would be storing as Array and using .includes()
+ * which is O(n) - significant for large bookmark collections.
  * 
- * Alternative approaches (not used):
- * - Store as array, convert to Set on each lookup (wasteful)
- * - Use object keys as Set equivalent (less readable)
- * - Custom serializer (over-engineering)
+ * [2] Ternary Default Pattern
+ * Source: JavaScript: The Good Parts (Douglas Crockford, 2008)
+ * Insight: `data ? parse(data) : default` is more elegant than if/else for
+ * fallback values. Crockford's influence on modern JS best practices is massive.
  */

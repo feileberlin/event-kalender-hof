@@ -71,10 +71,10 @@ export class BookmarkManager {
     const eventUrl = button.dataset.eventUrl;
     const isBookmarked = this.has(eventUrl);
     
-    // Visual feedback: ★ = bookmarked, ☆ = not bookmarked [1]
+    // Visual feedback: ★ = bookmarked, ☆ = not bookmarked [3]
     button.textContent = isBookmarked ? '★' : '☆';
     button.title = isBookmarked ? 'Remove bookmark' : 'Add bookmark';
-    button.classList.toggle('bookmarked', isBookmarked); // [2]
+    button.classList.toggle('bookmarked', isBookmarked); // [4]
   }
 
   // ========================================
@@ -84,19 +84,19 @@ export class BookmarkManager {
   /**
    * Extract full event data for bookmarked events
    * Use case: Print/email features
-   * Pattern: DOM scraping (no event data duplication)
+   * Pattern: DOM scraping (no event data duplication) [5]
    */
   getEventData() {
     const events = [];
     
     this.bookmarks.forEach(url => {
       // Find corresponding event card in DOM
-      const card = document.querySelector(`[data-event-url-card="${url}"]`);
+      const card = document.querySelector(`[data-event-url-card="${url}"]`); // [6]
       
       if (card) {
         events.push({
           url,
-          title: card.querySelector('h3')?.textContent || '',
+          title: card.querySelector('h3')?.textContent || '', // [7]
           date: card.querySelector('.event-date')?.textContent || '',
           location: card.querySelector('.event-location')?.textContent || ''
         });
@@ -112,36 +112,39 @@ export class BookmarkManager {
 // ========================================
 
 /**
- * [1] Unicode star characters for bookmark UI
- * Source: Unicode.org - Miscellaneous Symbols
- * https://unicode.org/charts/PDF/U2600.pdf
+ * [3] Unicode Star Symbols
+ * Source: Unicode Character Table - Stars/Asterisks
+ * https://unicode-table.com/en/sets/star-symbols/
  * 
- * Why notable: Using ★ (U+2605 BLACK STAR) and ☆ (U+2606 WHITE STAR) instead of
- * icon fonts or SVGs eliminates dependencies and reduces file size. The symbols
- * render consistently across all modern browsers and are screen-reader friendly.
- * This is peak KISS - no Font Awesome, no webpack, just UTF-8.
+ * Insight: ★ (U+2605) vs ☆ (U+2606) provide instant visual feedback without
+ * needing image assets or icon fonts. Clever use of Unicode = zero dependencies.
  * 
- * Alternative approaches (not used):
- * - Font Awesome (5KB+ overhead for 2 icons)
- * - Custom SVG (overkill for simple toggle)
- * - CSS ::before with content (less flexible)
- */
-
-/**
- * [2] classList.toggle() with boolean parameter
- * Source: DOM Living Standard
- * https://dom.spec.whatwg.org/#dom-domtokenlist-toggle
+ * [4] classList.toggle() with State Parameter
+ * Source: MDN Web Docs - Element.classList
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
  * 
- * Why notable: Many developers don't know classList.toggle() accepts a second
- * parameter to force add/remove. Common pattern is:
+ * Insight: Most developers don't know toggle() accepts a second param (boolean)
+ * to force add/remove. This avoids if/else boilerplate. One-liner elegance.
  * 
- *   if (condition) el.classList.add('class');
- *   else el.classList.remove('class');
+ * [5] DOM as Database Pattern
+ * Source: Concept from Tom Dale (Ember.js creator) - "The Front-end Database"
+ * https://tomdale.net/2015/02/youre-missing-the-point-of-server-side-rendered-javascript-apps/
  * 
- * But toggle with boolean is cleaner:
+ * Insight: For static sites, HTML IS the data. Why duplicate event data in JS
+ * when it's already in the DOM? Scrape it. KISS over architectural purity.
  * 
- *   el.classList.toggle('class', condition);
+ * [6] CSS Attribute Selectors
+ * Source: CSS Tricks - Attribute Selectors
+ * https://css-tricks.com/almanac/selectors/a/attribute/
  * 
- * This is a hidden gem in the DOM API that eliminates if/else verbosity.
- * Supported since IE11, so no polyfill needed.
+ * Insight: [data-foo="bar"] is often faster than .class or #id for dynamic
+ * lookups because it's more specific. Great for data-driven UIs.
+ * 
+ * [7] Optional Chaining Operator (?.)
+ * Source: TC39 Proposal - Optional Chaining (2020, ES2020)
+ * https://github.com/tc39/proposal-optional-chaining
+ * 
+ * Insight: Before this, we'd write card.querySelector('h3') && card.querySelector('h3').textContent.
+ * ?. collapsed entire defensive coding patterns into elegant syntax. Game-changer
+ * for DOM manipulation safety.
  */

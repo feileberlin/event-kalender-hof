@@ -137,12 +137,12 @@ function setupEventListeners() {
   }
 
   // ------ BOOKMARKS ------
-  // Pattern: Event delegation (works for dynamically added elements) [1]
+  // Pattern: Event delegation (works for dynamically added elements) [18]
   
   document.addEventListener('click', (e) => {
     
     // Toggle bookmark
-    if (e.target.matches('.bookmark-btn')) { // [2]
+    if (e.target.matches('.bookmark-btn')) { // [19]
       const eventUrl = e.target.dataset.eventUrl;
       bookmarkManager.toggle(eventUrl);
       bookmarkManager.updateButton(e.target);
@@ -355,7 +355,7 @@ function emailBookmarks() {
     `${e.title}\n${e.date}\n${e.location}\n${e.url}\n`
   ).join('\n---\n\n');
 
-  // Use mailto: protocol (opens system mail client) [3]
+  // Use mailto: protocol (opens system mail client) [20]
   window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
@@ -364,7 +364,7 @@ function emailBookmarks() {
 // ========================================
 
 /**
- * Expose API for browser console debugging [4]
+ * Expose API for browser console debugging [21]
  * Usage in console:
  *   krawl.bookmarks.getAll()
  *   krawl.events.getStats()
@@ -383,86 +383,37 @@ window.krawl = {
 // ========================================
 
 /**
- * [1] Event delegation pattern
- * Source: JavaScript design patterns, jQuery best practices
- * Reference: https://davidwalsh.name/event-delegate
+ * [18] Event Delegation Pattern
+ * Source: David Walsh - "How JavaScript Event Delegation Works" (2012)
+ * https://davidwalsh.name/event-delegate
+ * Also: jQuery's .on() popularized this pattern (2006-2012)
  * 
- * Why notable: Instead of attaching click handlers to each bookmark button:
+ * Insight: Instead of adding listeners to every button, add ONE listener to a
+ * parent (document) and check e.target. Works for dynamically added elements.
+ * Memory-efficient (one listener vs. thousands). Fundamental DOM pattern that
+ * pre-dates modern frameworks. jQuery made this mainstream.
  * 
- *   buttons.forEach(btn => btn.addEventListener('click', handler))
- * 
- * We attach ONE handler to document and check e.target. Benefits:
- * - Works for dynamically added elements (no re-binding needed)
- * - Less memory (1 listener instead of N)
- * - Simpler cleanup (no need to remove individual listeners)
- * 
- * This pattern is fundamental to modern SPA frameworks (React uses it internally).
- * Historical note: jQuery popularized this as .on() with delegation parameter.
- */
-
-/**
- * [2] Element.matches() for CSS selector matching
- * Source: DOM Living Standard
+ * [19] Element.matches() for Selector Checking
+ * Source: DOM Living Standard - Element.matches()
  * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
  * 
- * Why notable: e.target.matches('.bookmark-btn') checks if element matches selector.
- * This is more flexible than className checks:
+ * Insight: Before matches(), we'd use classList.contains() or check IDs manually.
+ * matches('.class') or matches('#id') uses CSS selector syntax. Unified API for
+ * checking if element matches ANY selector. Elegant DX improvement.
  * 
- *   // Old way:
- *   if (e.target.className.includes('bookmark-btn')) { ... }
- *   
- *   // New way:
- *   if (e.target.matches('.bookmark-btn')) { ... }
+ * [20] mailto: Protocol for Email Integration
+ * Source: RFC 6068 - The 'mailto' URI Scheme (2010)
+ * https://www.rfc-editor.org/rfc/rfc6068.html
  * 
- * matches() supports full CSS selector syntax (.class, #id, [attr], :pseudo, etc.)
- * and handles multiple classes correctly. Supported since IE9.
+ * Insight: No server-side email handling needed. Browser opens user's default
+ * mail client. Works on mobile too (opens Gmail/Mail/Outlook app). Zero dependencies
+ * for email functionality. Old-school web API that still works perfectly.
  * 
- * Pro tip: For checking parent chain, use e.target.closest('.selector')
- */
-
-/**
- * [3] mailto: protocol for email sharing
- * Source: RFC 6068 - mailto URI Scheme
- * https://tools.ietf.org/html/rfc6068
+ * [21] Debug API on window Object
+ * Source: Pattern from browser DevTools (Chrome DevTools, 2008+)
+ * Popularized by libraries like jQuery ($), Lodash (_), moment (moment)
  * 
- * Why notable: mailto: is a standard way to open default mail client with pre-filled
- * content. No server-side code needed, works offline, respects user's email preference.
- * 
- * Caveats:
- * - Body length limited (~2000 chars on some clients)
- * - Formatting is plain text only
- * - Requires default mail client configured
- * 
- * Alternative approaches (not used):
- * - Web Share API (navigator.share) - better UX but limited support
- * - Server-side email sending - requires backend
- * - Copy to clipboard - less discoverable
- * 
- * For our use case (event list sharing), mailto: is the KISS solution.
- */
-
-/**
- * [4] window namespace for debugging API
- * Source: JavaScript module patterns, browser DevTools best practices
- * 
- * Why notable: In modular code, variables are scoped to modules (not global).
- * This is great for production but annoying for debugging. Solution:
- * 
- *   window.krawl = { ...modules }
- * 
- * Now developers can interact with modules in console:
- * 
- *   > krawl.events.getStats()
- *   { total: 42, filtered: 15, ... }
- *   
- *   > krawl.bookmarks.getAll()
- *   ['event-1', 'event-2']
- *   
- *   > krawl.refresh()  // Force re-render
- * 
- * This is common in libraries (e.g., jQuery as $, lodash as _). For dev experience,
- * exposing a debug API is invaluable. Production builds could strip this via
- * minifier or build flag.
- * 
- * Pro tip: Use Object.freeze(window.krawl) to prevent accidental mutations.
+ * Insight: Exposing module instances on window makes REPL debugging effortless.
+ * Type `krawl.events.getStats()` in console and see live data. No breakpoints
+ * needed. This is how jQuery ($) became so developer-friendly. Simple but powerful.
  */

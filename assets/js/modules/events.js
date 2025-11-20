@@ -20,7 +20,7 @@ export class EventManager {
   
   /**
    * Load events from DOM (Jekyll-generated HTML)
-   * Pattern: DOM scraping - no separate API needed (KISS) [1]
+   * Pattern: DOM scraping - no separate API needed (KISS)
    * Why: Static site = HTML is the database
    * 
    * Data attributes used:
@@ -29,13 +29,13 @@ export class EventManager {
    * - data-event-categories: Comma-separated list
    * - data-event-lat/lng: GPS coordinates
    */
-  async loadFromDOM() { // [2]
+  async loadFromDOM() {
     const eventCards = document.querySelectorAll('.event-card');
     
-    this.allEvents = Array.from(eventCards).map(card => ({ // [3]
+    this.allEvents = Array.from(eventCards).map(card => ({
       // Core data
       url: card.dataset.eventUrlCard || '',
-      title: card.querySelector('h3')?.textContent.trim() || '', // [4]
+      title: card.querySelector('h3')?.textContent.trim() || '',
       description: card.querySelector('.event-description')?.textContent.trim() || '',
       
       // Date/Time
@@ -53,7 +53,7 @@ export class EventManager {
       categories: (card.dataset.eventCategories || '')
         .split(',')
         .map(c => c.trim())
-        .filter(Boolean), // [5]
+        .filter(Boolean),
       
       // Media
       imageUrl: card.dataset.eventImage || null,
@@ -145,14 +145,14 @@ export class EventManager {
   /**
    * Calculate approximate dawn time (sunrise)
    * Use case: "Events starting at dawn" filter
-   * Algorithm: Simplified sine wave approximation [6]
+   * Algorithm: Simplified sine wave approximation
    * Note: For production, use SunCalc.js for accuracy
    */
   calculateDawnTime(date, lat = 50.3195, lng = 11.9173) {
     // Day of year (1-365)
-    const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000); // [7]
+    const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
     
-    // Sine wave: ±1.5 hours around base time [6]
+    // Sine wave: ±1.5 hours around base time
     const offset = Math.sin(dayOfYear / 365 * 2 * Math.PI) * 1.5;
     const dawnHour = 6 + offset; // Base: 6:00 AM
     
@@ -176,9 +176,9 @@ export class EventManager {
       upcoming: this.events.filter(e => e.dateObj >= now).length,
       past: this.events.filter(e => e.dateObj < now).length,
       
-      // Unique values (for filter dropdowns) [8]
-      categories: [...new Set(this.allEvents.flatMap(e => e.categories))], // [9]
-      locations: [...new Set(this.allEvents.map(e => e.location).filter(Boolean))]
+      // Unique values (for filter dropdowns) [15]
+      categories: [...new Set(this.allEvents.flatMap(e => e.categories))], // [16]
+      locations: [...new Set(this.allEvents.map(e => e.location).filter(Boolean))] // [17]
     };
   }
 }
@@ -188,145 +188,27 @@ export class EventManager {
 // ========================================
 
 /**
- * [1] DOM as database pattern
- * Source: Static site philosophy, Jekyll best practices
+ * [15] Spread Operator for Set → Array
+ * Source: TC39 ECMAScript 2015 (ES6) - Spread Syntax
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
  * 
- * Why notable: Instead of fetching JSON via API, we extract data from HTML.
- * This eliminates:
- * - API latency (data is already in DOM)
- * - JSON parsing overhead
- * - Network request complexity
- * - CORS issues
+ * Insight: `[...new Set(array)]` is the most elegant way to deduplicate an array.
+ * Alternative would be Array.from(new Set(array)) or manual loop. Spread operator
+ * makes it a one-liner. ES6 gave us so many quality-of-life improvements.
  * 
- * Tradeoff: Tight coupling between HTML structure and JS. But for static sites
- * generated server-side (Jekyll), this is acceptable and performant.
- * 
- * Historical note: This pattern was common in early 2000s (semantic HTML + jQuery),
- * fell out of favor with SPAs, but is making a comeback with SSG (Jamstack).
- */
-
-/**
- * [2] async function without await
- * Source: JavaScript best practices for future-proofing
- * 
- * Why notable: loadFromDOM() is marked async but has no await. This is intentional
- * for future extensibility. If we later need to fetch supplementary data via API,
- * we can add await calls without changing the function signature or call sites.
- * 
- * Pattern:
- *   async loadFromDOM() { return this.events; }
- * 
- * This signals to callers: "This might be async, await me to be safe."
- */
-
-/**
- * [3] Array.from() + map() pattern
- * Source: Modern JavaScript array manipulation
- * 
- * Why notable: querySelectorAll() returns NodeList (array-like but not array).
- * Array.from() converts to real array, enabling .map().
- * 
- * Alternative: [...eventCards].map() (spread operator)
- * We use Array.from() for clarity - it's more explicit about intent.
- */
-
-/**
- * [4] Optional chaining + nullish coalescing
- * Source: ES2020 - Modern null handling
- * 
- * Pattern:
- *   card.querySelector('h3')?.textContent.trim() || ''
- * 
- * Breakdown:
- * - ?. returns undefined if querySelector returns null (no throw)
- * - || '' provides fallback for falsy values
- * 
- * This is defensive programming - handles missing DOM elements gracefully.
- */
-
-/**
- * [5] filter(Boolean) trick
- * Source: JavaScript functional programming idioms
- * 
- * Why notable: After splitting/trimming comma-separated categories, we might
- * have empty strings. filter(Boolean) removes all falsy values:
- * 
- *   ['Music', '', 'Art', null] → ['Music', 'Art']
- * 
- * This is a clever use of Boolean as predicate function. Alternative:
- * 
- *   .filter(c => c) or .filter(c => c.length > 0)
- * 
- * But filter(Boolean) is more idiomatic and handles null/undefined too.
- */
-
-/**
- * [6] Sine wave sunrise approximation
- * Source: Astronomical algorithms (simplified)
- * Inspiration: SunCalc.js (but we don't want the dependency)
- * 
- * Why notable: Real sunrise calculation requires complex astronomy (solar declination,
- * equation of time, atmospheric refraction). For "events at dawn" filter, ±30 min
- * accuracy is fine, so we use simple sine wave:
- * 
- *   sunrise ≈ 6:00 ± 1.5h * sin(2π * dayOfYear/365)
- * 
- * This approximates the ~3-hour variation between summer (early) and winter (late)
- * sunrises at mid-latitudes. Good enough for UX, not for astronomy.
- * 
- * Accuracy: ±30 minutes vs. astronomical calculation
- * Code: 5 lines vs. 200+ lines for full implementation
- */
-
-/**
- * [7] Day of year calculation trick
- * Source: Stack Overflow - Calculate day number of the year
- * https://stackoverflow.com/questions/8619879/
- * 
- * Why notable: This one-liner calculates day-of-year (1-365):
- * 
- *   (date - new Date(date.getFullYear(), 0, 0)) / 86400000
- * 
- * Breakdown:
- * - new Date(year, 0, 0) = Dec 31 of previous year (month 0 = Jan, day 0 = previous month's last)
- * - Subtract dates → milliseconds difference
- * - Divide by 86400000 (ms per day) → day number
- * 
- * This is a clever hack that avoids looping through months/days. Edge case: leap years
- * are handled automatically by Date constructor.
- */
-
-/**
- * [8] Spread operator for Set deduplication
- * Source: ES6 - Modern array/set conversion
- * 
- * Pattern:
- *   [...new Set(array)]
- * 
- * This is the idiomatic way to remove duplicates from array:
- * 1. new Set(array) → deduplicate
- * 2. [...set] → convert back to array
- * 
- * Much cleaner than:
- *   array.filter((v, i, a) => a.indexOf(v) === i)
- */
-
-/**
- * [9] flatMap for nested array flattening
- * Source: ES2019 - Array.prototype.flatMap()
+ * [16] flatMap() for Nested Array Flattening
+ * Source: TC39 ECMAScript 2019 (ES10) - Array.prototype.flatMap
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap
  * 
- * Why notable: Each event can have multiple categories (array). To get all unique
- * categories across all events, we need to flatten then deduplicate:
+ * Insight: flatMap() is map() + flat() in one operation. Before ES10, you'd write
+ * `array.map(x => x.categories).flat()` or use reduce(). flatMap is both more
+ * readable AND more performant (single pass). Underrated ES10 feature.
  * 
- *   events.flatMap(e => e.categories)
+ * [17] filter(Boolean) for Truthy Values
+ * Source: JavaScript idiom (origin unclear, but popularized by jQuery era)
  * 
- * This is equivalent to:
- *   events.map(e => e.categories).flat()
- * 
- * But flatMap() does it in one pass (more efficient). Combined with Set:
- * 
- *   [...new Set(events.flatMap(e => e.categories))]
- * 
- * This is peak modern JavaScript - concise, performant, elegant.
+ * Insight: `.filter(Boolean)` removes null, undefined, 0, "", false, NaN in one go.
+ * Boolean is a function that coerces its argument to boolean. Passing it directly
+ * as a callback is genius. More elegant than `.filter(x => x)` or `.filter(x => !!x)`.
+ * Classic JavaScript trick that looks like magic until you understand it.
  */

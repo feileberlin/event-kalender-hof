@@ -84,8 +84,8 @@ export class FilterManager {
   
   /**
    * Apply all active filters to event list
-   * Pattern: Pipeline - each filter eliminates non-matching events [1]
-   * Performance: Early return (continue) avoids checking remaining filters [2]
+   * Pattern: Pipeline - each filter eliminates non-matching events [10]
+   * Performance: Early return (continue) avoids checking remaining filters [11]
    * 
    * @param {Array} events - All available events
    * @param {MapManager} mapManager - Needed for distance calculation
@@ -95,30 +95,30 @@ export class FilterManager {
     const now = new Date();
     const filtered = [];
 
-    for (const event of events) { // [3]
+    for (const event of events) { // [12]
       
       // FILTER 1: Categories (if any selected)
       if (this.activeFilters.categories.size > 0) {
         const eventCategories = event.categories || [];
-        const hasMatch = eventCategories.some(cat => // [4]
+        const hasMatch = eventCategories.some(cat => // [13]
           this.activeFilters.categories.has(cat)
         );
-        if (!hasMatch) continue; // Skip to next event [2]
+        if (!hasMatch) continue; // Skip to next event [11]
       }
 
       // FILTER 2: Time Range
       const eventDate = new Date(event.date);
       
       if (this.activeFilters.timeRange === 'upcoming' && eventDate < now) {
-        continue; // [2]
+        continue;
       } else if (this.activeFilters.timeRange === 'past' && eventDate >= now) {
-        continue; // [2]
+        continue;
       }
       // 'all' = no time filtering
 
       // FILTER 3: Radius (GPS distance)
       // Only applies if user shared their location
-      if (mapManager?.userLocation && event.lat && event.lng) { // [5]
+      if (mapManager?.userLocation && event.lat && event.lng) { // [14]
         const distance = mapManager.getDistanceKm(
           mapManager.userLocation.lat,
           mapManager.userLocation.lng,
@@ -126,7 +126,7 @@ export class FilterManager {
           event.lng
         );
         if (distance > this.activeFilters.radius) {
-          continue; // [2]
+          continue;
         }
       }
 
@@ -153,7 +153,7 @@ export class FilterManager {
    */
   export() {
     return {
-      categories: Array.from(this.activeFilters.categories), // Set → Array
+      categories: Array.from(this.activeFilters.categories), // Set → Array [1]
       timeRange: this.activeFilters.timeRange,
       radius: this.activeFilters.radius,
       location: this.activeFilters.location
@@ -165,7 +165,7 @@ export class FilterManager {
    */
   import(state) {
     if (state.categories) {
-      this.activeFilters.categories = new Set(state.categories); // Array → Set
+      this.activeFilters.categories = new Set(state.categories); // Array → Set [1]
     }
     if (state.timeRange) {
       this.activeFilters.timeRange = state.timeRange;
@@ -184,79 +184,43 @@ export class FilterManager {
 // ========================================
 
 /**
- * [1] Pipeline pattern for filtering
- * Source: Functional Programming design patterns
- * Inspiration: Unix pipes, Array.prototype.filter chaining
+ * [10] Pipeline Pattern for Filtering
+ * Source: Functional Programming concepts (Haskell, Unix pipes)
+ * Also: "Eloquent JavaScript" by Marijn Haverbeke (Chapter 5: Higher-Order Functions)
+ * https://eloquentjavascript.net/05_higher_order.html
  * 
- * Why notable: Instead of functional chaining like:
+ * Insight: Each filter acts as a stage in a pipeline. Event passes through all
+ * stages or gets eliminated. This is the Unix philosophy applied to data processing:
+ * compose small, focused filters. Easier to debug than nested if/else trees.
  * 
- *   events
- *     .filter(e => categoryMatch(e))
- *     .filter(e => timeMatch(e))
- *     .filter(e => radiusMatch(e))
+ * [11] Early Return / Guard Clauses
+ * Source: "Refactoring" by Martin Fowler (1999) - "Replace Nested Conditional with Guard Clauses"
+ * https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html
  * 
- * We use imperative for-loop with early continues. This is FASTER because:
- * - Single pass through array (not 3 passes)
- * - Short-circuits on first failed filter
- * - No intermediate arrays created
+ * Insight: `continue` is an early return for loops. Reduces nesting, improves
+ * readability. Alternative would be deeply nested if-statements. Fowler's book
+ * revolutionized how we think about code structure.
  * 
- * Tradeoff: Functional style is more elegant, but for real-time filtering
- * on potentially 1000+ events, performance matters. Benchmarks show 3-5x
- * speedup for this approach.
- */
-
-/**
- * [2] Early return pattern with 'continue'
- * Source: Performance optimization best practices
+ * [12] for...of Loop (ES6)
+ * Source: TC39 ECMAScript 2015 (ES6) Spec
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
  * 
- * Why notable: Each 'continue' short-circuits the remaining filters for that event.
- * If category filter fails, we don't waste time checking time/radius/location.
+ * Insight: `for (const x of array)` is cleaner than `for (let i=0; i<array.length; i++)`.
+ * No index tracking needed. More readable, less error-prone (off-by-one bugs impossible).
  * 
- * Example: 100 events, 50 fail category filter
- * - With continues: ~150 filter checks
- * - Without: 400 filter checks (all 4 filters for all 100 events)
+ * [13] Array.some() for Existence Check
+ * Source: Functional programming patterns, popularized by Underscore.js (2009)
+ * https://underscorejs.org/#some
  * 
- * This is a micro-optimization that scales well.
- */
-
-/**
- * [3] for...of loop instead of forEach
- * Source: JavaScript performance benchmarks
+ * Insight: `array.some(predicate)` stops iterating as soon as it finds a match.
+ * O(n) worst case but often O(1) in practice. More declarative than for-loop +
+ * break. Jeremy Ashkenas (Underscore creator) made FP accessible to JS devs.
  * 
- * Why notable: for...of is 2-3x faster than forEach because:
- * - No function call overhead per iteration
- * - Can be optimized by JIT compiler
- * - Works with 'continue' and 'break' (forEach doesn't)
+ * [14] Optional Chaining + Nullish Coalescing
+ * Source: TC39 Proposal - Optional Chaining (ES2020)
+ * https://github.com/tc39/proposal-optional-chaining
  * 
- * Tradeoff: forEach is more functional, but for...of is more practical here.
- */
-
-/**
- * [4] Array.some() for category matching
- * Source: MDN Web Docs - Array.prototype.some()
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
- * 
- * Why notable: some() short-circuits - stops checking after first match.
- * Alternative (event.categories.includes(cat)) would require nested loop.
- * 
- * Pattern:
- *   eventCategories.some(cat => selectedCategories.has(cat))
- * 
- * This reads as: "Does event have ANY of the selected categories?"
- * Much cleaner than nested for-loops.
- */
-
-/**
- * [5] Optional chaining (?.) for null safety
- * Source: ES2020 - Optional Chaining Operator
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
- * 
- * Why notable: mapManager?.userLocation is syntactic sugar for:
- * 
- *   if (mapManager && mapManager.userLocation) { ... }
- * 
- * This is a modern JavaScript feature (2020) that eliminates verbose null checks.
- * Supported in all browsers since 2020, so no polyfill needed for our target.
- * 
- * Fun fact: Before ES2020, devs used lodash.get() or nested ternaries for this.
+ * Insight: `mapManager?.userLocation` returns undefined if mapManager is null/undefined,
+ * avoiding "Cannot read property of null" errors. Replaces verbose checks like
+ * `mapManager && mapManager.userLocation`. Massive DX improvement.
  */
