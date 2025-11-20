@@ -17,7 +17,7 @@ layout: null
     {% endcomment %}
     
     {% assign now = site.time %}
-    {% assign cutoff_time = now %}
+    {% assign cutoff_str = now | date: "%Y-%m-%d" %}
     
     {% comment %}Time-Filter berechnen{% endcomment %}
     {% if page.time_filter != "" %}
@@ -25,7 +25,8 @@ layout: null
         {% if tf.key == page.time_filter %}
           {% if tf.hours %}
             {% assign cutoff_seconds = tf.hours | times: 3600 %}
-            {% assign cutoff_time = now | date: "%s" | plus: cutoff_seconds | date: "%Y-%m-%d" %}
+            {% assign cutoff_timestamp = now | date: "%s" | plus: cutoff_seconds %}
+            {% assign cutoff_str = cutoff_timestamp | date: "%Y-%m-%d" %}
           {% endif %}
         {% endif %}
       {% endfor %}
@@ -37,9 +38,9 @@ layout: null
         
         {% comment %}Time-Filter prüfen{% endcomment %}
         {% assign include_event = true %}
-        {% if page.time_filter != "" and cutoff_time %}
-          {% assign event_date = event.date | date: "%Y-%m-%d" %}
-          {% if event_date > cutoff_time %}
+        {% if page.time_filter != "" and cutoff_str %}
+          {% assign event_date_str = event.date | date: "%Y-%m-%d" %}
+          {% if event_date_str > cutoff_str %}
             {% assign include_event = false %}
           {% endif %}
         {% endif %}
