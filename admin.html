@@ -850,6 +850,7 @@ title: Admin - Event-Verwaltung
         <button class="tab-button" onclick="switchTab('recurring')">🔄 Wiederkehrend</button>
         <button class="tab-button" onclick="switchTab('all')">📋 Alle Events</button>
         <button class="tab-button" onclick="switchTab('create')">➕ Neues Event</button>
+        <button class="tab-button" onclick="switchTab('github-meta')">⚙️ GitHub Meta</button>
     </div>
 
     <div id="tab-drafts" class="tab-content active">
@@ -1096,6 +1097,76 @@ title: Admin - Event-Verwaltung
                     📋 In Zwischenablage kopieren
                 </button>
             </div>
+        </div>
+    </div>
+
+    <div id="tab-github-meta" class="tab-content">
+        <h2>⚙️ GitHub Repository Metadaten</h2>
+        
+        <div class="alert alert-info">
+            <strong>ℹ️ Info:</strong> Diese Einstellungen steuern die "About"-Sektion des GitHub Repositories.
+            Änderungen erfordern ein GitHub Personal Access Token mit <code>repo</code>-Berechtigung.
+        </div>
+
+        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            <h3>Repository Information</h3>
+            
+            <div class="form-group">
+                <label>Description (Kurzbeschreibung)</label>
+                <textarea id="github-description" rows="3" placeholder="Kurze Beschreibung des Repositories"></textarea>
+                <small style="color: #666;">Wird auf der Repository-Startseite angezeigt</small>
+            </div>
+
+            <div class="form-group">
+                <label>Homepage URL</label>
+                <input type="url" id="github-homepage" placeholder="https://krawl.ist">
+                <small style="color: #666;">Link zur Website (erscheint unter der Description)</small>
+            </div>
+
+            <div class="form-group">
+                <label>Topics (Tags, kommagetrennt)</label>
+                <input type="text" id="github-topics" placeholder="events,calendar,jekyll,open-source,punk,diy">
+                <small style="color: #666;">Suchbare Keywords für GitHub Discovery</small>
+            </div>
+
+            <div class="form-group">
+                <label>GitHub Personal Access Token</label>
+                <input type="password" id="github-token" placeholder="ghp_...">
+                <small style="color: #666;">
+                    Erforderlich für API-Zugriff. 
+                    <a href="https://github.com/settings/tokens/new?scopes=repo&description=Krawl%20Admin" target="_blank">
+                        Token erstellen
+                    </a> (Scope: <code>repo</code>)
+                </small>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-action" onclick="loadGitHubMeta()">
+                    🔄 Aktuelle Werte laden
+                </button>
+                <button class="btn-primary" onclick="saveGitHubMeta()">
+                    💾 Änderungen speichern
+                </button>
+            </div>
+        </div>
+
+        <div id="github-meta-status"></div>
+
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #0366d6;">
+            <h4>📚 Dokumentation</h4>
+            <p><strong>Wo finde ich die GitHub About-Sektion?</strong></p>
+            <ul>
+                <li>Gehe zu <a href="https://github.com/feileberlin/krawl.ist" target="_blank">github.com/feileberlin/krawl.ist</a></li>
+                <li>Klicke auf das Zahnrad-Symbol ⚙️ neben "About" (rechte Sidebar)</li>
+                <li>Oder nutze dieses Admin-Panel mit einem GitHub Token</li>
+            </ul>
+            
+            <p><strong>GitHub API Endpoints:</strong></p>
+            <ul>
+                <li><code>GET /repos/{owner}/{repo}</code> - Repository-Info laden</li>
+                <li><code PATCH /repos/{owner}/{repo}</code> - Metadaten aktualisieren</li>
+                <li><code>PUT /repos/{owner}/{repo}/topics</code> - Topics setzen</li>
+            </ul>
         </div>
     </div>
 </div>
@@ -2241,6 +2312,158 @@ async function runDedupEngine() {
         
         // Fallback: Python-Skript lokal ausf\u00fchren (nur im Dev-Environment)
         alert('\u26a0\ufe0f GitHub Action konnte nicht gestartet werden.\\n\\nF\u00fchre stattdessen manuell aus:\\n\\n$ python scripts/deduplication_engine.py\\n\\nOder pr\u00fcfe ob du authentifiziert bist:\\n$ gh auth status');
+    }
+}
+
+// ========================================
+// GITHUB METADATA MANAGEMENT
+// ========================================
+
+const GITHUB_REPO = 'feileberlin/krawl.ist';
+const GITHUB_API_BASE = 'https://api.github.com';
+
+/**
+ * Load current GitHub repository metadata
+ */
+async function loadGitHubMeta() {
+    const statusDiv = document.getElementById('github-meta-status');
+    statusDiv.innerHTML = '<div class="alert alert-info">🔄 Lade aktuelle Metadaten...</div>';
+    
+    try {
+        // Fetch repository info
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO}`, {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const repo = await response.json();
+        
+        // Populate form fields
+        document.getElementById('github-description').value = repo.description || '';
+        document.getElementById('github-homepage').value = repo.homepage || '';
+        document.getElementById('github-topics').value = repo.topics ? repo.topics.join(', ') : '';
+        
+        statusDiv.innerHTML = `
+            <div class="alert alert-success">
+                ✅ Metadaten erfolgreich geladen!
+                <ul style="margin-top: 10px;">
+                    <li><strong>Description:</strong> ${repo.description || '(leer)'}</li>
+                    <li><strong>Homepage:</strong> ${repo.homepage || '(leer)'}</li>
+                    <li><strong>Topics:</strong> ${repo.topics?.length ? repo.topics.join(', ') : '(keine)'}</li>
+                    <li><strong>Stars:</strong> ⭐ ${repo.stargazers_count}</li>
+                    <li><strong>Forks:</strong> 🍴 ${repo.forks_count}</li>
+                </ul>
+            </div>
+        `;
+    } catch (error) {
+        statusDiv.innerHTML = `
+            <div class="alert alert-error">
+                ❌ Fehler beim Laden: ${error.message}
+                <br><small>Öffentliche Repository-Infos sollten ohne Token ladbar sein.</small>
+            </div>
+        `;
+        console.error('GitHub API Error:', error);
+    }
+}
+
+/**
+ * Save GitHub repository metadata
+ */
+async function saveGitHubMeta() {
+    const token = document.getElementById('github-token').value.trim();
+    const description = document.getElementById('github-description').value.trim();
+    const homepage = document.getElementById('github-homepage').value.trim();
+    const topicsInput = document.getElementById('github-topics').value.trim();
+    const topics = topicsInput ? topicsInput.split(',').map(t => t.trim().toLowerCase()).filter(t => t) : [];
+    
+    const statusDiv = document.getElementById('github-meta-status');
+    
+    // Validation
+    if (!token) {
+        statusDiv.innerHTML = `
+            <div class="alert alert-error">
+                ❌ GitHub Personal Access Token fehlt!
+                <br>Erstelle einen Token mit <code>repo</code>-Berechtigung:
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=Krawl%20Admin" target="_blank">Token erstellen</a>
+            </div>
+        `;
+        return;
+    }
+    
+    statusDiv.innerHTML = '<div class="alert alert-info">💾 Speichere Änderungen...</div>';
+    
+    try {
+        // Update repository metadata (description, homepage)
+        const repoResponse = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO}`, {
+            method: 'PATCH',
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                description: description,
+                homepage: homepage
+            })
+        });
+        
+        if (!repoResponse.ok) {
+            const errorData = await repoResponse.json();
+            throw new Error(`Repository Update: ${errorData.message || repoResponse.statusText}`);
+        }
+        
+        // Update topics separately (different endpoint)
+        const topicsResponse = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_REPO}/topics`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/vnd.github.mercy-preview+json',
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                names: topics
+            })
+        });
+        
+        if (!topicsResponse.ok) {
+            const errorData = await topicsResponse.json();
+            throw new Error(`Topics Update: ${errorData.message || topicsResponse.statusText}`);
+        }
+        
+        // Success!
+        statusDiv.innerHTML = `
+            <div class="alert alert-success">
+                ✅ GitHub Metadaten erfolgreich aktualisiert!
+                <ul style="margin-top: 10px;">
+                    <li><strong>Description:</strong> ${description || '(leer)'}</li>
+                    <li><strong>Homepage:</strong> ${homepage || '(leer)'}</li>
+                    <li><strong>Topics:</strong> ${topics.length ? topics.join(', ') : '(keine)'}</li>
+                </ul>
+                <p style="margin-top: 10px;">
+                    🔗 Siehe Änderungen: <a href="https://github.com/${GITHUB_REPO}" target="_blank">github.com/${GITHUB_REPO}</a>
+                </p>
+            </div>
+        `;
+        
+        // Clear token field for security
+        document.getElementById('github-token').value = '';
+        
+        // Reload data to confirm
+        setTimeout(() => loadGitHubMeta(), 1000);
+        
+    } catch (error) {
+        statusDiv.innerHTML = `
+            <div class="alert alert-error">
+                ❌ Fehler beim Speichern: ${error.message}
+                <br><small>Prüfe ob dein Token die <code>repo</code>-Berechtigung hat.</small>
+            </div>
+        `;
+        console.error('GitHub API Error:', error);
     }
 }
 
