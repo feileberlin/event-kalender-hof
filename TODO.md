@@ -78,15 +78,22 @@
   - Bessere Fehlerbehandlung in updateCategoryCounts()
 - **Files:** `assets/js/main.js`
 
-### 8. Performance Optimization
-- **Status:** 🔴 TODO
-- **Maßnahmen:**
-  - Lazy Loading für Event-Marker (nur sichtbare laden)
-  - Resource Hints (dns-prefetch für CDNs)
-  - Image Optimization (WebP für Venue-Fotos)
-  - Code Splitting (separate Bundles für Map/Admin)
-- **Impact:** MEDIUM (Ladezeit-Verbesserung)
+### ~~8. Performance Optimization~~ ✅ PARTIALLY COMPLETED
+- **Status:** 🟡 IN PROGRESS
+- **Completed:**
+  - ✅ Resource Hints (dns-prefetch, preconnect für CDNs)
+    - cdnjs.cloudflare.com (Normalize CSS)
+    - unpkg.com (Leaflet.js)
+    - gc.zgo.at (GoatCounter Analytics)
+    - tile.openstreetmap.org (Map Tiles)
+  - ✅ Preconnect mit crossorigin für kritische Resources
+- **Remaining:**
+  - 🔴 Lazy Loading für Event-Marker (nur sichtbare laden)
+  - 🔴 Image Optimization (WebP für Venue-Fotos)
+  - 🔴 Code Splitting (separate Bundles für Map/Admin)
+- **Impact:** MEDIUM (Ladezeit-Verbesserung, DNS-Lookup gespart)
 - **Test:** Lighthouse Performance Score > 90
+- **Files:** `_layouts/base.html`, `_layouts/map.html`
 
 ### ~~9. Debug-Switch für Test-Events~~ ✅ ERLEDIGT
 - **Status:** ✅ COMPLETED (2025-11-20)
