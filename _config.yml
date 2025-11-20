@@ -71,6 +71,10 @@ filters:
   
   # Time-Filter-Optionen (bis max. 720h = 1 Monat)
   # Format: label → Stunden ab jetzt (oder spezielle Berechnungen für sunrise/tatort/moon)
+  # Weitere Beispiele:
+  #   - { key: "midnight", label: "🌙 bis Mitternacht", hours: 6 }
+  #   - { key: "week", label: "📅 diese Woche", hours: 168 }
+  #   - { key: "3days", label: "🎸 nächste 3 Tage", hours: 72 }
   time_filters:
     - key: "sunrise"
       label: "🌅 bis Sonnenaufgang"
