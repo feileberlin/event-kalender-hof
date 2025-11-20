@@ -2,10 +2,10 @@
 
 > **Live-Beispiel:** [hof.krawl.ist](https://feileberlin.github.io/event-kalender-hof/) - Krawl für Hof an der Saale
 
-**Wo ist der Krawall?**
+**Krawall hier. Krawall jetzt.**
 
-Krawl zeigt dir Events in deiner unmittelbaren Nähe - jetzt, hier, ohne Lärm.  
-Kein Instagram-Scrollen. Keine verpassten Flyer. Nur eine Frage: **Was läuft heute?**
+Krawl zeigt dir Events in deiner unmittelbaren Nähe - ohne Instagram-Scrollen, ohne verpasste Flyer.  
+Nur eine Frage: **Was läuft heute?**
 
 Entwickelt aus der Frustration heraus, dass gute Events oft untergehen, weil sie auf zig verschiedenen Kanälen verstreut sind.
 
