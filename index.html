@@ -63,10 +63,12 @@ title: "Event-Kalender Hof"
             </select>
             
             <select id="radiusFilter" class="inline-select">
-                <option value="1">🚶in 1 km Umkreis</option>
-                <option value="3" selected>🚴 in 3 km Umkreis</option>
-                <option value="10">🚌 10 km Umkreis</option>
-                <option value="999999">🚕 weit entfernt</option>
+                {% for filter in site.filters.radius_filters %}
+                    <option value="{{ filter.key }}"
+                        data-km="{{ filter.km }}"
+                        data-original-label="{{ filter.label }}"
+                        {% if filter.default %}selected{% endif %}>{{ filter.label }}</option>
+                {% endfor %}
             </select>
             
             <select id="locationSelect" class="inline-select">

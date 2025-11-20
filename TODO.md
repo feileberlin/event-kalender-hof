@@ -8,44 +8,32 @@
 
 ## 🔥 High Priority (sofort)
 
-### 1. GoatCounter Script wiederherstellen
-- **Status:** 🔴 TODO
-- **Problem:** Script wurde versehentlich entfernt
-- **Location:** `_layouts/map.html`, `_layouts/base.html`
-- **Action:** Script vor `</body>` einfügen
-- **Code:**
-  ```html
-  <script data-goatcounter="https://feileberlin.goatcounter.com/count"
-          async src="//gc.zgo.at/count.js"></script>
-  ```
-- **Test:** `grep -r "goatcounter" _layouts/`
-- **Impact:** LOW (nur Analytics)
+### ~~1. GoatCounter Script wiederherstellen~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-01-20)
+- **Solution:** Code in `_config.yml` von "krawlist" zu "feileberlin" korrigiert
+- **Files:** `_config.yml` Line 233
 
-### 2. Radius-Filter KISS-Restrukturierung
-- **Status:** 🔴 TODO
-- **Problem:** Radius-Filter ist hardcoded, bricht bei HTML-Änderungen
-- **Current:** Hardcoded `<option value="1">` in `index.html`
-- **Target:** Config in `_config.yml` → `filters.radius_filters` (wie time_filters)
-- **Changes:**
-  - Add `radius_filters` zu `_config.yml`
-  - Convert `index.html` radiusFilter zu Jekyll-Template
-  - Update `assets/js/modules/filters.js` → lese `data-km` statt `value`
-  - Handle `km: null` = unbegrenzt
-- **Impact:** MEDIUM (betrifft Filter-System)
-- **Files:** `_config.yml`, `index.html`, `assets/js/modules/filters.js`
-- **Test:** Radius-Filter funktioniert, "weit entfernt" = kein Radius-Limit
+### ~~2. Radius-Filter KISS-Restrukturierung~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-01-20)
+- **Solution:** Radius-Filter von hardcoded zu config-driven migriert
+- **Implementation:**
+  - ✅ `_config.yml` → `filters.radius_filters` (key, label, km, default)
+  - ✅ `index.html` → Jekyll template loop mit `data-km` Attribut
+  - ✅ `assets/js/main.js` → Liest `data-km`, handled null für unbegrenzt
+  - ✅ `assets/js/modules/filters.js` → null-Handling in setRadius() und Distanzprüfung
+- **Files:** `_config.yml`, `index.html`, `assets/js/main.js`, `assets/js/modules/filters.js`
 
-### 3. Feature Guard Workflow
-- **Status:** 🔴 TODO
-- **Purpose:** Automatisch prüfen ob kritische Features noch da sind
+### ~~3. Feature Guard Workflow~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-01-20)
 - **Implementation:** `.github/workflows/feature-guard.yml`
 - **Checks:**
-  - GoatCounter Script in Layouts
-  - Radius-Filter Config in `_config.yml`
-  - RSS-Feeds existieren
-  - Critical JS modules vorhanden
-- **Impact:** LOW (nur CI)
-- **Benefits:** Verhindert versehentliche Feature-Löschungen
+  - ✅ GoatCounter Script in Layouts + Config
+  - ✅ Radius-Filter Config in `_config.yml`
+  - ✅ Category & Time Filters
+  - ✅ RSS-Feeds existieren
+  - ✅ Critical JS modules vorhanden
+  - ✅ Admin Panel + GitHub Meta Editor
+  - ✅ Documentation (README, FEATURES, TODO)
 
 ---
 

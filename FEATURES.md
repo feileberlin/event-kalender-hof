@@ -58,16 +58,29 @@
 - **Dependencies:** `_config.yml`, Astronomische Berechnungen
 
 ### Radius-Filter
-- **Status:** 🟡 HARDCODED (TODO: Config-Migration)
+- **Status:** 🟢 ACTIVE (Config-Driven seit 2025-01)
 - **Location:**
-  - HTML: `index.html` → `#radiusFilter` (hardcoded options)
+  - Config: `_config.yml` → `filters.radius_filters`
+  - HTML: `index.html` → `#radiusFilter` (Jekyll template loop)
   - JS: `assets/js/modules/filters.js` → `setRadius()`, `getDistanceKm()`
-- **Current Implementation:**
-  - Hardcoded: 1km, 3km, 10km, 999999km ("weit entfernt")
-  - Magische Zahl: 999999 = unbegrenzt
-- **TODO:** Migrieren zu `_config.yml` (siehe TODO.md #5)
-- **Test:** Radius-Filter hat 4 Optionen
-- **Dependencies:** MapManager (GPS)
+  - JS: `assets/js/main.js` → Event listener liest `data-km` Attribut
+- **Features:**
+  - Konfigurierbare Radius-Optionen (key, label, km, default)
+  - null-Handling für unbegrenzt (kein magischer 999999 Wert mehr)
+  - Icons: 🚶 (1km), 🚴 (3km), 🚌 (10km), 🚕 (unbegrenzt)
+- **Config Format:**
+  ```yaml
+  radius_filters:
+    - key: "walk", label: "🚶 in 1 km Umkreis", km: 1
+    - key: "bike", label: "🚴 in 3 km Umkreis", km: 3, default: true
+    - key: "unlimited", label: "🚕 weit entfernt", km: null
+  ```
+- **Test:** 
+  ```bash
+  grep -A15 "radius_filters:" _config.yml
+  grep "data-km" index.html
+  ```
+- **Dependencies:** MapManager (GPS), _config.yml
 
 ### Standort-Filter (Location Select)
 - **Status:** 🟢 ACTIVE

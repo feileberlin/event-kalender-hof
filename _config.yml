@@ -95,6 +95,27 @@ filters:
       label: "🌕 bis Vollmond"  # Label wird dynamisch überschrieben (Vollmond/Neumond)
       # hours: 336  # Optional: Überschreibe mit fester Stundenanzahl (default: Mondphasen-Berechnung)
   
+  # Radius-Filter für Umkreissuche
+  # km: Radius in Kilometern (null = unbegrenzt)
+  # default: true = Vorausgewählt beim Laden der Seite
+  radius_filters:
+    - key: "walk"
+      label: "🚶 in 1 km Umkreis"
+      km: 1
+    
+    - key: "bike"
+      label: "🚴 in 3 km Umkreis"
+      km: 3
+      default: true
+    
+    - key: "bus"
+      label: "🚌 10 km Umkreis"
+      km: 10
+    
+    - key: "unlimited"
+      label: "🚕 weit entfernt"
+      km: null
+  
   # RSS-Feed-Konfiguration (für Traditionalisten 😉)
   # Tägliche Aktualisierung der RSS-Feeds mit vordefinierten Filter-Kombinationen
   # Format: time_filter (optional) | category_filter (optional) | radius_km (optional)

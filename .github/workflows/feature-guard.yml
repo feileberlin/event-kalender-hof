@@ -1,0 +1,190 @@
+name: Feature Guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-features:
+    runs-on: ubuntu-latest
+    name: Verify Critical Features
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Check GoatCounter Analytics
+        run: |
+          echo "🔍 Checking GoatCounter..."
+          
+          # Check config exists
+          if ! grep -q "goatcounter:" _config.yml; then
+            echo "❌ FEHLER: GoatCounter config fehlt in _config.yml"
+            exit 1
+          fi
+          
+          # Check correct subdomain code
+          if ! grep -q 'code: "feileberlin"' _config.yml; then
+            echo "❌ FEHLER: GoatCounter code ist nicht 'feileberlin'"
+            exit 1
+          fi
+          
+          # Check templates exist
+          for layout in _layouts/base.html _layouts/map.html _layouts/admin.html; do
+            if ! grep -q "site.analytics.goatcounter.code" "$layout"; then
+              echo "❌ FEHLER: GoatCounter template fehlt in $layout"
+              exit 1
+            fi
+          done
+          
+          echo "✅ GoatCounter vorhanden und korrekt konfiguriert"
+      
+      - name: Check Filter System
+        run: |
+          echo "🔍 Checking Filter System..."
+          
+          # Check category filters config
+          if ! grep -q "category_filters:" _config.yml; then
+            echo "❌ FEHLER: category_filters fehlt in _config.yml"
+            exit 1
+          fi
+          
+          # Check time filters config
+          if ! grep -q "time_filters:" _config.yml; then
+            echo "❌ FEHLER: time_filters fehlt in _config.yml"
+            exit 1
+          fi
+          
+          # Check radius filters config
+          if ! grep -q "radius_filters:" _config.yml; then
+            echo "❌ FEHLER: radius_filters fehlt in _config.yml"
+            exit 1
+          fi
+          
+          # Check filter module exists
+          if [ ! -f "assets/js/modules/filters.js" ]; then
+            echo "❌ FEHLER: filters.js fehlt"
+            exit 1
+          fi
+          
+          # Check critical filter functions
+          if ! grep -q "setCategory" assets/js/modules/filters.js; then
+            echo "❌ FEHLER: setCategory Funktion fehlt in filters.js"
+            exit 1
+          fi
+          
+          if ! grep -q "setTime" assets/js/modules/filters.js; then
+            echo "❌ FEHLER: setTime Funktion fehlt in filters.js"
+            exit 1
+          fi
+          
+          if ! grep -q "setRadius" assets/js/modules/filters.js; then
+            echo "❌ FEHLER: setRadius Funktion fehlt in filters.js"
+            exit 1
+          fi
+          
+          echo "✅ Filter System vorhanden"
+      
+      - name: Check RSS Feeds
+        run: |
+          echo "🔍 Checking RSS Feeds..."
+          
+          # Check feed layouts exist
+          for feed in _layouts/feed-all-events.xml _layouts/feed-current-events.xml _layouts/feed-upcoming-events.xml; do
+            if [ ! -f "$feed" ]; then
+              echo "❌ FEHLER: $feed fehlt"
+              exit 1
+            fi
+          done
+          
+          # Check feed pages exist
+          for page in feeds/alle-events.xml feeds/aktuelle-events.xml feeds/kommende-events.xml; do
+            if [ ! -f "$page" ]; then
+              echo "❌ FEHLER: $page fehlt"
+              exit 1
+            fi
+          done
+          
+          echo "✅ RSS Feeds vorhanden"
+      
+      - name: Check Core JavaScript Modules
+        run: |
+          echo "🔍 Checking JavaScript Modules..."
+          
+          required_modules=(
+            "assets/js/modules/map.js"
+            "assets/js/modules/filters.js"
+            "assets/js/modules/locationSearch.js"
+            "assets/js/modules/eventMarkers.js"
+            "assets/js/modules/dateUtils.js"
+          )
+          
+          for module in "${required_modules[@]}"; do
+            if [ ! -f "$module" ]; then
+              echo "❌ FEHLER: $module fehlt"
+              exit 1
+            fi
+          done
+          
+          echo "✅ Alle Core JS Module vorhanden"
+      
+      - name: Check Admin Panel
+        run: |
+          echo "🔍 Checking Admin Panel..."
+          
+          if [ ! -f "admin.html" ]; then
+            echo "❌ FEHLER: admin.html fehlt"
+            exit 1
+          fi
+          
+          if [ ! -f "_layouts/admin.html" ]; then
+            echo "❌ FEHLER: _layouts/admin.html fehlt"
+            exit 1
+          fi
+          
+          # Check GitHub Meta Editor exists
+          if ! grep -q "GitHub Meta Editor" admin.html; then
+            echo "❌ FEHLER: GitHub Meta Editor fehlt in admin.html"
+            exit 1
+          fi
+          
+          echo "✅ Admin Panel vorhanden"
+      
+      - name: Check Documentation
+        run: |
+          echo "🔍 Checking Documentation..."
+          
+          required_docs=(
+            "README.md"
+            "FEATURES.md"
+            "TODO.md"
+            "INSTALL.md"
+            "CODE_OF_CONDUCT.md"
+          )
+          
+          for doc in "${required_docs[@]}"; do
+            if [ ! -f "$doc" ]; then
+              echo "❌ FEHLER: $doc fehlt"
+              exit 1
+            fi
+          done
+          
+          echo "✅ Alle Dokumentations-Dateien vorhanden"
+      
+      - name: Summary
+        run: |
+          echo ""
+          echo "═══════════════════════════════════════"
+          echo "✨ Feature Guard Check: SUCCESSFUL ✨"
+          echo "═══════════════════════════════════════"
+          echo ""
+          echo "Alle kritischen Features sind vorhanden:"
+          echo "  ✅ GoatCounter Analytics"
+          echo "  ✅ Filter System (Categories, Time, Radius)"
+          echo "  ✅ RSS Feeds (3 Feeds)"
+          echo "  ✅ Core JavaScript Modules"
+          echo "  ✅ Admin Panel mit GitHub Meta Editor"
+          echo "  ✅ Dokumentation (README, FEATURES, TODO)"
+          echo ""

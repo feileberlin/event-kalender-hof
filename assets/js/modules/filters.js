@@ -150,9 +150,11 @@ export class FilterManager {
   // RADIUS FILTER
   // ========================================
   // Only applies if user location is available
+  // null = unlimited (disable radius filter)
   
   setRadius(radius) {
-    this.activeFilters.radius = parseFloat(radius);
+    // null means "unlimited" - disable radius filtering
+    this.activeFilters.radius = radius === null ? null : parseFloat(radius);
   }
 
   getRadius() {
@@ -239,9 +241,15 @@ export class FilterManager {
       
       if (cutoff && eventDate > cutoff) continue;
 
-      // FILTER 3: Radius (GPS distance)
-      // Only applies if user shared their location
-      if (mapManager?.userLocation && event.lat && event.lng) { // [14]
+      // FILTER 3: Radius (Distance)
+      // Only applies if:
+      // - User shared their location
+      // - Radius is not null (unlimited)
+      // - Event has coordinates
+      if (this.activeFilters.radius !== null && 
+          mapManager?.userLocation && 
+          event.lat && 
+          event.lng) {
         const distance = mapManager.getDistanceKm(
           mapManager.userLocation.lat,
           mapManager.userLocation.lng,

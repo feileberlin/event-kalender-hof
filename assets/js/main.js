@@ -136,7 +136,13 @@ function setupEventListeners() {
   // Radius: Distance from user location
   if (radiusFilter) {
     radiusFilter.addEventListener('change', () => {
-      filterManager.setRadius(radiusFilter.value);
+      const selectedOption = radiusFilter.options[radiusFilter.selectedIndex];
+      const radiusKm = selectedOption.getAttribute('data-km');
+      
+      // Handle null (unlimited) as null, otherwise parse as float
+      const radius = radiusKm === 'null' || radiusKm === '' ? null : parseFloat(radiusKm);
+      
+      filterManager.setRadius(radius);
       updateDisplay();
       savePrefs();
     });
@@ -348,9 +354,25 @@ function applyFiltersToUI() {
   if (document.getElementById('timeFilter')) {
     document.getElementById('timeFilter').value = state.timeRange;
   }
+  
+  // Radius: Find option with matching data-km value
   if (document.getElementById('radiusFilter')) {
-    document.getElementById('radiusFilter').value = state.radius;
+    const radiusFilter = document.getElementById('radiusFilter');
+    const savedRadius = state.radius;
+    
+    // Find option with matching data-km
+    for (let i = 0; i < radiusFilter.options.length; i++) {
+      const option = radiusFilter.options[i];
+      const optionKm = option.getAttribute('data-km');
+      const optionRadius = optionKm === 'null' || optionKm === '' ? null : parseFloat(optionKm);
+      
+      if (optionRadius === savedRadius) {
+        radiusFilter.selectedIndex = i;
+        break;
+      }
+    }
   }
+  
   if (document.getElementById('locationSelect') && state.location) {
     document.getElementById('locationSelect').value = state.location;
   }
