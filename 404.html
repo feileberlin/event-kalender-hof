@@ -1,0 +1,185 @@
+---
+layout: base
+title: "404 - Nichts gefunden"
+permalink: /404.html
+---
+
+<style>
+.error-404 {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+  color: #fff;
+}
+
+.error-404 h1 {
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 900;
+  margin: 0;
+  background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: glitch 2s infinite;
+  text-shadow: 3px 3px 0 rgba(255, 0, 255, 0.3),
+               -3px -3px 0 rgba(0, 255, 255, 0.3);
+}
+
+.error-404 h2 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  margin: 1rem 0;
+  color: #ff00ff;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.error-404 .manifesto {
+  max-width: 600px;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 2rem 0;
+  padding: 2rem;
+  border: 3px solid #ff00ff;
+  background: rgba(255, 0, 255, 0.1);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+}
+
+.error-404 .manifesto strong {
+  color: #ffff00;
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.error-404 .actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.error-404 .btn {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-decoration: none;
+  border: 3px solid;
+  background: #000;
+  color: #fff;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.error-404 .btn-primary {
+  border-color: #ff00ff;
+  color: #ff00ff;
+}
+
+.error-404 .btn-primary:hover {
+  background: #ff00ff;
+  color: #000;
+  box-shadow: 0 0 20px #ff00ff;
+}
+
+.error-404 .btn-secondary {
+  border-color: #00ffff;
+  color: #00ffff;
+}
+
+.error-404 .btn-secondary:hover {
+  background: #00ffff;
+  color: #000;
+  box-shadow: 0 0 20px #00ffff;
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 2px); }
+}
+
+.punk-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.1;
+}
+
+.punk-lines::before,
+.punk-lines::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff00ff, transparent);
+  animation: scan 3s linear infinite;
+}
+
+.punk-lines::before {
+  top: 20%;
+  animation-delay: -1s;
+}
+
+.punk-lines::after {
+  top: 60%;
+  animation-delay: -2s;
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+
+@media (max-width: 768px) {
+  .error-404 .manifesto {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+  
+  .error-404 .actions {
+    flex-direction: column;
+  }
+  
+  .error-404 .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<div class="error-404">
+  <div class="punk-lines"></div>
+  
+  <h1>404</h1>
+  <h2>Seite nicht gefunden</h2>
+  
+  <div class="manifesto">
+    <strong>🎸 Krawlisten aller Länder vereinigt euch! 🎸</strong>
+    <p>
+      Diese Seite existiert nicht. Aber was existiert schon wirklich? 
+      DIY-Kultur ist überall! Fork dieses Projekt, starte deinen eigenen 
+      Event-Kalender für deine Community – Punk, Metal, Indie, Maker, 
+      oder was auch immer dir am Herzen liegt.
+    </p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: #00ffff;">
+      → Dezentral. Open Source. Community-driven. Das ist der Weg.
+    </p>
+  </div>
+  
+  <div class="actions">
+    <a href="/" class="btn btn-primary">🏠 Zur Startseite</a>
+    <a href="https://github.com/feileberlin/krawl.ist" class="btn btn-secondary">🔱 Fork auf GitHub</a>
+  </div>
+</div>
