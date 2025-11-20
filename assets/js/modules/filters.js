@@ -213,20 +213,30 @@ export class FilterManager {
       const eventDate = new Date(event.date);
       const timeRange = this.activeFilters.timeRange;
       
-      if (timeRange === 'sunrise') {
-        // Bis Sonnenaufgang (heute oder morgen)
-        const cutoff = this.getNextSunrise();
-        if (eventDate > cutoff) continue;
-      } else if (timeRange === 'tatort') {
-        // Bis zum nächsten Tatort (kommender Sonntag 20:15)
-        const cutoff = this.getNextTatort();
-        if (eventDate > cutoff) continue;
-      } else if (timeRange === 'moon') {
-        // Bis Vollmond oder Neumond (je nachdem was näher)
-        const cutoff = this.getNextMoonPhase();
-        if (eventDate > cutoff) continue;
+      // Cutoff-Zeit berechnen (entweder aus Config oder astronomisch)
+      let cutoff;
+      
+      // Prüfe ob im DOM ein data-hours Attribut gesetzt ist (aus _config.yml)
+      const timeFilterSelect = document.getElementById('timeFilter');
+      const selectedOption = timeFilterSelect?.querySelector(`option[value="${timeRange}"]`);
+      const configuredHours = selectedOption?.dataset.hours;
+      
+      if (configuredHours) {
+        // Verwende konfigurierte Stunden aus _config.yml (max. 720h = 1 Monat)
+        const hours = Math.min(parseFloat(configuredHours), 720);
+        cutoff = new Date(Date.now() + hours * 60 * 60 * 1000);
+      } else {
+        // Fallback: Astronomische Berechnung
+        if (timeRange === 'sunrise') {
+          cutoff = this.getNextSunrise();
+        } else if (timeRange === 'tatort') {
+          cutoff = this.getNextTatort();
+        } else if (timeRange === 'moon') {
+          cutoff = this.getNextMoonPhase();
+        }
       }
-      // Keine anderen time range Optionen mehr
+      
+      if (cutoff && eventDate > cutoff) continue;
 
       // FILTER 3: Radius (GPS distance)
       // Only applies if user shared their location

@@ -54,9 +54,12 @@ title: "Event-Kalender Hof"
             </select>
             
             <select id="timeFilter" class="inline-select">
-                <option value="sunrise" selected>🌅 bis Sonnenaufgang</option>
-                <option value="tatort">📺 bis zum nächsten Tatort</option>
-                <option value="moon" id="moonOption">🌕 bis Vollmond</option>
+                {% for filter in site.filters.time_filters %}
+                <option value="{{ filter.key }}" 
+                        {% if filter.default %}selected{% endif %}
+                        data-hours="{{ filter.hours }}"
+                        {% if filter.key == 'moon' %}id="moonOption"{% endif %}>{{ filter.label }}</option>
+                {% endfor %}
             </select>
             
             <select id="radiusFilter" class="inline-select">
