@@ -280,6 +280,8 @@ defaults:
 include:
   - favicon.ico
   - favicon.svg
+  - manifest.json
+  - sw.js
   - assets/
 
 # Exclude

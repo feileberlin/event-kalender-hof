@@ -19,6 +19,38 @@
  * - No global variables polluting namespace
  */
 
+// ========================================
+// SERVICE WORKER REGISTRATION (PWA)
+// ========================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('✅ Service Worker registered:', registration.scope);
+        
+        // Auto-update bei neuem Service Worker
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // Neuer Service Worker verfügbar - Skip waiting für sofortiges Update
+              newWorker.postMessage({ type: 'SKIP_WAITING' });
+            }
+          });
+        });
+      })
+      .catch(err => console.log('❌ Service Worker registration failed:', err));
+  });
+  
+  // Reload bei neuem Service Worker
+  let refreshing;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
+
 import { Storage } from './modules/storage.js';
 import { BookmarkManager } from './modules/bookmarks.js';
 import { MapManager } from './modules/map.js';

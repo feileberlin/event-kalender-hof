@@ -1,0 +1,28 @@
+{
+  "name": "krawl.ist/hof - Event-Kalender",
+  "short_name": "krawl.ist",
+  "description": "Krawall hier. Krawall jetzt. — Events bis Sonnenaufgang in Hof an der Saale",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["entertainment", "lifestyle", "social"],
+  "lang": "de-DE",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}
