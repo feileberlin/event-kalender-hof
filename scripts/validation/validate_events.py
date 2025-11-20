@@ -194,11 +194,17 @@ class EventValidator:
         return hasattr(date_value, 'year')
     
     def validate_time_format(self, time_value):
-        """Validate time format (HH:MM)"""
+        """Validate time format (HH:MM or H:MM)
+        
+        Accepts both:
+        - HH:MM (00:00 - 23:59) with leading zeros
+        - H:MM (0:00 - 23:59) without leading zeros
+        """
         if not isinstance(time_value, str):
             return False
         
-        pattern = r'^([01][0-9]|2[0-3]):[0-5][0-9]$'
+        # Allow optional leading zero for single-digit hours
+        pattern = r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$'
         return bool(re.match(pattern, time_value))
     
     def validate_coordinates(self, lat, lng):
@@ -235,7 +241,7 @@ class EventValidator:
         
         print(f"📁 Dateien geprüft: {self.stats['total']}")
         print(f"✅ Valide Events: {self.stats['valid']}")
-        print(f"❌ Events mit Fehlern: {len([e for e in self.errors if e['type'] != 'PARSE_ERROR'])}")
+        print(f"❌ Events mit Fehlern: {sum(1 for e in self.errors if e['type'] != 'PARSE_ERROR')}")
         print(f"⚠️  Warnungen: {len(self.warnings)}")
         print()
         
