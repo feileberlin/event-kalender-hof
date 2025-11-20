@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     filterManager.import(savedPrefs);
     applyFiltersToUI();
   }
+  
+  // 5b. INITIALIZE MOON PHASE LABEL
+  // Calculate next moon phase and update UI label
+  filterManager.getNextMoonPhase();
 
   // 6. WIRE UP EVENT LISTENERS
   setupEventListeners();

@@ -38,7 +38,9 @@ city:
   name_short: "Hof"
   state: "Bayern"
   country: "Deutschland"
-  timezone: "Europe/Berlin"
+  timezone: "Europe/Berlin"  # Für Sonnenaufgang-Berechnung im Time-Filter
+  latitude: 50.3197  # Für astronomische Berechnungen
+  longitude: 11.9168
   population: 44000
   tagline: "Events bis Sonnenaufgang"
   website: "https://www.hof.de"

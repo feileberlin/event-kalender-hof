@@ -13,7 +13,7 @@ export class FilterManager {
     // Filter state - all criteria combined
     this.activeFilters = {
       categories: new Set(),      // Multi-select: Set for O(1) lookup
-      timeRange: 'upcoming',      // 'upcoming', 'past', or 'all'
+      timeRange: 'sunrise',       // 'sunrise', 'tatort', 'moon' (Default: bis Sonnenaufgang)
       radius: 5,                  // Distance in km from user location
       location: null              // Specific venue filter
     };
@@ -63,6 +63,86 @@ export class FilterManager {
 
   getTimeRange() {
     return this.activeFilters.timeRange;
+  }
+  
+  /**
+   * Berechnet n\u00e4chsten Sonnenaufgang (heute oder morgen)
+   * Vereinfachte Berechnung: 6:00 Uhr lokale Zeit (TODO: echte astronomische Berechnung)
+   */
+  getNextSunrise() {
+    const now = new Date();
+    const sunrise = new Date(now);
+    sunrise.setHours(6, 0, 0, 0);
+    
+    // Wenn Sonnenaufgang heute schon vorbei, nehme morgen
+    if (now > sunrise) {
+      sunrise.setDate(sunrise.getDate() + 1);
+    }
+    
+    return sunrise;
+  }
+  
+  /**
+   * Berechnet n\u00e4chsten Tatort-Termin (Sonntag 20:15)
+   */
+  getNextTatort() {
+    const now = new Date();
+    const tatort = new Date(now);
+    
+    // N\u00e4chster Sonntag
+    const daysUntilSunday = (7 - now.getDay()) % 7;
+    tatort.setDate(now.getDate() + (daysUntilSunday === 0 ? 7 : daysUntilSunday));
+    tatort.setHours(20, 15, 0, 0);
+    
+    // Wenn heute Sonntag ist und 20:15 schon vorbei, nehme n\u00e4chsten Sonntag
+    if (now.getDay() === 0 && now.getHours() >= 20 && now.getMinutes() >= 15) {
+      tatort.setDate(tatort.getDate() + 7);
+    }
+    
+    return tatort;
+  }
+  
+  /**
+   * Berechnet n\u00e4chste Mondphase (Vollmond oder Neumond, je nachdem was n\u00e4her)
+   * Vereinfachte Berechnung basierend auf Lunation (29.53 Tage)
+   */
+  getNextMoonPhase() {
+    const now = new Date();
+    
+    // Referenz: Neumond am 1. Januar 2000, 18:14 UTC
+    const knownNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14));
+    const lunarCycle = 29.530588853; // Tage
+    
+    // Tage seit Referenz-Neumond
+    const daysSinceNew = (now - knownNewMoon) / (1000 * 60 * 60 * 24);
+    const currentPhase = (daysSinceNew % lunarCycle) / lunarCycle;
+    
+    // N\u00e4chster Vollmond (Phase 0.5) und Neumond (Phase 0.0/1.0)
+    let daysToFullMoon, daysToNewMoon;
+    
+    if (currentPhase < 0.5) {
+      daysToFullMoon = (0.5 - currentPhase) * lunarCycle;
+      daysToNewMoon = (1.0 - currentPhase) * lunarCycle;
+    } else {
+      daysToFullMoon = (1.5 - currentPhase) * lunarCycle;
+      daysToNewMoon = (1.0 - currentPhase) * lunarCycle;
+    }
+    
+    // N\u00e4here Phase ausw\u00e4hlen
+    const daysToNext = Math.min(daysToFullMoon, daysToNewMoon);
+    const nextPhase = new Date(now.getTime() + daysToNext * 24 * 60 * 60 * 1000);
+    
+    // UI-Update: Label im Select anpassen
+    if (typeof document !== 'undefined') {
+      const moonOption = document.getElementById('moonOption');
+      if (moonOption) {
+        const isFullMoon = daysToFullMoon < daysToNewMoon;
+        moonOption.textContent = isFullMoon ? '\ud83c\udf15 bis Vollmond' : '\ud83c\udf11 bis Neumond';
+        moonOption.value = 'moon';
+      }
+    }
+    
+    return nextPhase;
   }
 
   // ========================================
@@ -131,13 +211,22 @@ export class FilterManager {
 
       // FILTER 2: Time Range
       const eventDate = new Date(event.date);
+      const timeRange = this.activeFilters.timeRange;
       
-      if (this.activeFilters.timeRange === 'upcoming' && eventDate < now) {
-        continue;
-      } else if (this.activeFilters.timeRange === 'past' && eventDate >= now) {
-        continue;
+      if (timeRange === 'sunrise') {
+        // Bis Sonnenaufgang (heute oder morgen)
+        const cutoff = this.getNextSunrise();
+        if (eventDate > cutoff) continue;
+      } else if (timeRange === 'tatort') {
+        // Bis zum nächsten Tatort (kommender Sonntag 20:15)
+        const cutoff = this.getNextTatort();
+        if (eventDate > cutoff) continue;
+      } else if (timeRange === 'moon') {
+        // Bis Vollmond oder Neumond (je nachdem was näher)
+        const cutoff = this.getNextMoonPhase();
+        if (eventDate > cutoff) continue;
       }
-      // 'all' = no time filtering
+      // Keine anderen time range Optionen mehr
 
       // FILTER 3: Radius (GPS distance)
       // Only applies if user shared their location
