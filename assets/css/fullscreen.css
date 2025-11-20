@@ -28,18 +28,27 @@ body.fullscreen-layout {
     z-index: 1;
 }
 
-/* Karten-Style: Minimalistisch, Event-fokussiert */
+/* Karten-Style: Minimal & Event-fokussiert */
 .fullscreen-map .leaflet-tile-pane {
-    /* Graustufen-Filter für ablenkungsfreie Karte */
-    filter: grayscale(100%) brightness(1.1) contrast(0.9);
-    opacity: 0.6;
+    /* Grayscale + leicht entsättigen = Karte tritt zurück, Events im Fokus */
+    filter: grayscale(80%) contrast(0.9) brightness(1.1);
+    opacity: 0.7;
 }
 
-/* Events sollen hervorstechen */
-.fullscreen-map .leaflet-marker-pane,
-.fullscreen-map .leaflet-popup-pane {
-    filter: none !important;
+/* OpenStreetMap Labels weniger aufdringlich */
+.fullscreen-map .leaflet-overlay-pane {
+    opacity: 0.4; /* Straßennamen, POIs sehr dezent */
+}
+
+/* Event-Marker bleiben farbig und prominent */
+.fullscreen-map .leaflet-marker-pane {
+    filter: none !important; /* Keine Filter auf Marker */
     opacity: 1 !important;
+}
+
+/* Popup bleibt lesbar */
+.leaflet-popup {
+    filter: none !important;
 }
 
 /* Leaflet-Controls verstecken */
