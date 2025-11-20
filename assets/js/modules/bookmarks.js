@@ -1,18 +1,40 @@
-// Bookmark-Modul - Vereinfacht, fokussiert
+/**
+ * Bookmark Manager - User's Saved Events
+ * 
+ * Pattern: Class with instance state
+ * State: Set of event URLs (auto-deduplication)
+ * Persistence: Syncs to Storage layer on every mutation
+ * Why: Encapsulates bookmark logic + UI updates
+ */
+
 import { Storage } from './storage.js';
 
 export class BookmarkManager {
+  
   constructor() {
+    // Load bookmarks from persistent storage
+    // Set data structure: O(1) lookups, auto-dedup
     this.bookmarks = Storage.loadBookmarks();
   }
 
+  // ========================================
+  // CORE OPERATIONS (CRUD)
+  // ========================================
+  
+  /**
+   * Toggle bookmark on/off
+   * @returns {boolean} New bookmark state (true = bookmarked)
+   */
   toggle(eventUrl) {
     if (this.bookmarks.has(eventUrl)) {
       this.bookmarks.delete(eventUrl);
     } else {
       this.bookmarks.add(eventUrl);
     }
+    
+    // Persist immediately (no batch saves - KISS)
     Storage.saveBookmarks(this.bookmarks);
+    
     return this.bookmarks.has(eventUrl);
   }
 
@@ -29,7 +51,7 @@ export class BookmarkManager {
   }
 
   clear() {
-    if (confirm('Alle Bookmarks löschen?')) {
+    if (confirm('Delete all bookmarks?')) {
       this.bookmarks.clear();
       Storage.saveBookmarks(this.bookmarks);
       return true;
@@ -37,21 +59,40 @@ export class BookmarkManager {
     return false;
   }
 
-  // UI-Update (einfach)
+  // ========================================
+  // UI INTEGRATION
+  // ========================================
+  
+  /**
+   * Update bookmark button appearance
+   * Pattern: Direct DOM manipulation (no virtual DOM - KISS)
+   */
   updateButton(button) {
     const eventUrl = button.dataset.eventUrl;
     const isBookmarked = this.has(eventUrl);
     
+    // Visual feedback: ★ = bookmarked, ☆ = not bookmarked
     button.textContent = isBookmarked ? '★' : '☆';
-    button.title = isBookmarked ? 'Bookmark entfernen' : 'Bookmark setzen';
+    button.title = isBookmarked ? 'Remove bookmark' : 'Add bookmark';
     button.classList.toggle('bookmarked', isBookmarked);
   }
 
-  // Bookmarked Events extrahieren (für Print/Mail)
+  // ========================================
+  // DATA EXPORT
+  // ========================================
+  
+  /**
+   * Extract full event data for bookmarked events
+   * Use case: Print/email features
+   * Pattern: DOM scraping (no event data duplication)
+   */
   getEventData() {
     const events = [];
+    
     this.bookmarks.forEach(url => {
+      // Find corresponding event card in DOM
       const card = document.querySelector(`[data-event-url-card="${url}"]`);
+      
       if (card) {
         events.push({
           url,
@@ -61,6 +102,7 @@ export class BookmarkManager {
         });
       }
     });
+    
     return events;
   }
 }

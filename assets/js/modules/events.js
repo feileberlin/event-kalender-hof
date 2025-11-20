@@ -1,44 +1,93 @@
-// Events-Modul - Event-Daten & Logik
+/**
+ * Event Manager - Event Data & Business Logic
+ * 
+ * Pattern: Stateful class managing event collection
+ * Data Source: DOM (Jekyll-generated HTML) - no API calls
+ * State: allEvents (immutable source), events (filtered subset)
+ * Why: Single source of truth for event data
+ */
+
 export class EventManager {
+  
   constructor() {
-    this.events = [];
-    this.allEvents = [];
+    this.allEvents = [];    // Immutable source of truth (all events)
+    this.events = [];       // Current filtered/sorted subset
   }
 
-  // Events laden (von Jekyll-generierten Daten)
+  // ========================================
+  // DATA LOADING
+  // ========================================
+  
+  /**
+   * Load events from DOM (Jekyll-generated HTML)
+   * Pattern: DOM scraping - no separate API needed (KISS)
+   * Why: Static site = HTML is the database
+   * 
+   * Data attributes used:
+   * - data-event-url-card: Unique event URL
+   * - data-event-date: ISO date string
+   * - data-event-categories: Comma-separated list
+   * - data-event-lat/lng: GPS coordinates
+   */
   async loadFromDOM() {
     const eventCards = document.querySelectorAll('.event-card');
+    
     this.allEvents = Array.from(eventCards).map(card => ({
+      // Core data
       url: card.dataset.eventUrlCard || '',
       title: card.querySelector('h3')?.textContent.trim() || '',
+      description: card.querySelector('.event-description')?.textContent.trim() || '',
+      
+      // Date/Time
       date: card.dataset.eventDate || '',
-      dateObj: new Date(card.dataset.eventDate || ''),
+      dateObj: new Date(card.dataset.eventDate || ''),  // For sorting/filtering
       time: card.dataset.eventTime || '',
+      
+      // Location
       location: card.dataset.eventLocation || '',
       venue: card.querySelector('.event-location')?.textContent.trim() || '',
-      categories: (card.dataset.eventCategories || '').split(',').map(c => c.trim()).filter(Boolean),
-      description: card.querySelector('.event-description')?.textContent.trim() || '',
       lat: parseFloat(card.dataset.eventLat) || null,
       lng: parseFloat(card.dataset.eventLng) || null,
+      
+      // Categories (array for multi-category support)
+      categories: (card.dataset.eventCategories || '')
+        .split(',')
+        .map(c => c.trim())
+        .filter(Boolean),
+      
+      // Media
       imageUrl: card.dataset.eventImage || null,
+      
+      // DOM reference (for show/hide operations)
       element: card
     }));
 
+    // Initialize filtered set to all events
     this.events = [...this.allEvents];
+    
     return this.events;
   }
 
-  // Alle Events zurücksetzen
+  // ========================================
+  // FILTER STATE MANAGEMENT
+  // ========================================
+  
   resetFilter() {
     this.events = [...this.allEvents];
   }
 
-  // Gefilterte Events setzen
   setFiltered(filteredEvents) {
     this.events = filteredEvents;
   }
 
-  // Upcoming Events (ab jetzt)
+  // ========================================
+  // QUERIES
+  // ========================================
+  
+  /**
+   * Get upcoming events (future only)
+   * @param {number} limit - Optional: return only first N events
+   */
   getUpcoming(limit = null) {
     const now = new Date();
     const upcoming = this.events
@@ -48,7 +97,10 @@ export class EventManager {
     return limit ? upcoming.slice(0, limit) : upcoming;
   }
 
-  // Events nach Datum sortieren
+  /**
+   * Sort events by date
+   * Mutates this.events array
+   */
   sortByDate(ascending = true) {
     this.events.sort((a, b) => {
       return ascending 
@@ -58,20 +110,9 @@ export class EventManager {
     return this.events;
   }
 
-  // Sonnenaufgang berechnen (vereinfacht)
-  calculateDawnTime(date, lat = 50.3195, lng = 11.9173) {
-    // Vereinfachte Berechnung (ohne Bibliothek)
-    // Für genauere Berechnung: SunCalc.js o.ä.
-    const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
-    const offset = Math.sin(dayOfYear / 365 * 2 * Math.PI) * 1.5;
-    const dawnHour = 6 + offset; // ~6:00 Uhr ± 1.5h je nach Jahreszeit
-    
-    const dawn = new Date(date);
-    dawn.setHours(Math.floor(dawnHour), Math.floor((dawnHour % 1) * 60), 0, 0);
-    return dawn;
-  }
-
-  // Events für einen bestimmten Tag
+  /**
+   * Get events for specific date
+   */
   getByDate(date) {
     const targetDate = new Date(date).toDateString();
     return this.events.filter(e => 
@@ -79,28 +120,63 @@ export class EventManager {
     );
   }
 
-  // Events nach Kategorie
+  /**
+   * Get events by category
+   */
   getByCategory(category) {
     return this.events.filter(e => 
       e.categories.includes(category)
     );
   }
 
-  // Events nach Location
+  /**
+   * Get events by location
+   */
   getByLocation(location) {
     return this.events.filter(e => 
       e.location === location
     );
   }
 
-  // Event-Statistiken
+  // ========================================
+  // UTILITIES
+  // ========================================
+  
+  /**
+   * Calculate approximate dawn time (sunrise)
+   * Use case: "Events starting at dawn" filter
+   * Algorithm: Simplified sine wave approximation
+   * Note: For production, use SunCalc.js for accuracy
+   */
+  calculateDawnTime(date, lat = 50.3195, lng = 11.9173) {
+    // Day of year (1-365)
+    const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+    
+    // Sine wave: ±1.5 hours around base time
+    const offset = Math.sin(dayOfYear / 365 * 2 * Math.PI) * 1.5;
+    const dawnHour = 6 + offset; // Base: 6:00 AM
+    
+    const dawn = new Date(date);
+    dawn.setHours(Math.floor(dawnHour), Math.floor((dawnHour % 1) * 60), 0, 0);
+    
+    return dawn;
+  }
+
+  /**
+   * Get statistics about current event set
+   * Use case: Display counters, analytics
+   */
   getStats() {
     const now = new Date();
+    
     return {
+      // Counts
       total: this.allEvents.length,
       filtered: this.events.length,
       upcoming: this.events.filter(e => e.dateObj >= now).length,
       past: this.events.filter(e => e.dateObj < now).length,
+      
+      // Unique values (for filter dropdowns)
       categories: [...new Set(this.allEvents.flatMap(e => e.categories))],
       locations: [...new Set(this.allEvents.map(e => e.location).filter(Boolean))]
     };

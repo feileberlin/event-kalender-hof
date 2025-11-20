@@ -1,71 +1,115 @@
-// Krawl Event-Kalender - Modulare Version
+/**
+ * Krawl Event Calendar - Main Orchestrator
+ * 
+ * Architecture: Modular design with separated concerns
+ * Pattern: Manager instances coordinate module interactions
+ * Lifecycle: Load → Init → Listen → React
+ * 
+ * Modules:
+ * - Storage: Persistent data (LocalStorage)
+ * - BookmarkManager: User's saved events
+ * - MapManager: Leaflet.js map with markers
+ * - FilterManager: Multi-criteria event filtering
+ * - EventManager: Event data & business logic
+ * 
+ * Why this structure:
+ * - Each module has ONE clear responsibility (Single Responsibility Principle)
+ * - Easy to test modules in isolation
+ * - Easy to extend (add new filter types, etc.)
+ * - No global variables polluting namespace
+ */
+
 import { Storage } from './modules/storage.js';
 import { BookmarkManager } from './modules/bookmarks.js';
 import { MapManager } from './modules/map.js';
 import { FilterManager } from './modules/filters.js';
 import { EventManager } from './modules/events.js';
 
-// Globale Manager-Instanzen
+// ========================================
+// MODULE INSTANCES
+// ========================================
+// Initialized in DOMContentLoaded
+
 let bookmarkManager;
 let mapManager;
 let filterManager;
 let eventManager;
 
-// DOM Ready
-document.addEventListener('DOMContentLoaded', async () => {
-  console.log('🎪 Krawl initialisiert...');
+// ========================================
+// APPLICATION LIFECYCLE
+// ========================================
 
-  // Manager initialisieren
+/**
+ * Main initialization - runs when DOM is ready
+ * Lifecycle: Load data → Init UI → Restore state → Listen
+ */
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log('🎪 Krawl initializing...');
+
+  // 1. INSTANTIATE MODULES
   bookmarkManager = new BookmarkManager();
   mapManager = new MapManager('map', [50.3195, 11.9173], 13);
   filterManager = new FilterManager();
   eventManager = new EventManager();
 
-  // Events aus DOM laden
+  // 2. LOAD DATA
+  // Events are embedded in HTML by Jekyll (static site)
   await eventManager.loadFromDOM();
 
-  // Karte initialisieren
+  // 3. INIT MAP
   mapManager.init();
   mapManager.getUserLocation((location) => {
-    console.log('📍 Standort:', location);
+    console.log('📍 User location:', location);
   });
 
-  // Präferenzen laden
+  // 4. RESTORE USER PREFERENCES
+  // Load saved filter settings from previous session
   const savedPrefs = Storage.loadPrefs();
   if (savedPrefs) {
     filterManager.import(savedPrefs);
     applyFiltersToUI();
   }
 
-  // Event-Listener registrieren
+  // 5. WIRE UP EVENT LISTENERS
   setupEventListeners();
 
-  // Initial: Events anzeigen
+  // 6. INITIAL RENDER
   updateDisplay();
 
-  console.log('✅ Krawl bereit!');
+  console.log('✅ Krawl ready!');
 });
 
-// Event-Listener Setup
+// ========================================
+// EVENT LISTENERS
+// ========================================
+
+/**
+ * Register all UI event handlers
+ * Pattern: Event delegation for dynamic elements
+ */
 function setupEventListeners() {
-  // Filter-Events
+  
+  // ------ FILTER CONTROLS ------
+  
   const categoryFilter = document.getElementById('categoryFilter');
   const timeFilter = document.getElementById('timeFilter');
   const radiusFilter = document.getElementById('radiusFilter');
   const locationSelect = document.getElementById('locationSelect');
 
+  // Category: Multi-select via dropdown
   if (categoryFilter) {
     categoryFilter.addEventListener('change', () => {
       const selected = categoryFilter.value;
       if (selected) {
         filterManager.toggleCategory(selected);
-        categoryFilter.value = ''; // Reset dropdown
+        categoryFilter.value = ''; // Reset dropdown to "Select..."
       }
       updateDisplay();
       savePrefs();
     });
   }
 
+  // Time range: upcoming/past/all
   if (timeFilter) {
     timeFilter.addEventListener('change', () => {
       filterManager.setTimeRange(timeFilter.value);
@@ -74,6 +118,7 @@ function setupEventListeners() {
     });
   }
 
+  // Radius: Distance from user location
   if (radiusFilter) {
     radiusFilter.addEventListener('change', () => {
       filterManager.setRadius(radiusFilter.value);
@@ -82,6 +127,7 @@ function setupEventListeners() {
     });
   }
 
+  // Location: Specific venue
   if (locationSelect) {
     locationSelect.addEventListener('change', () => {
       filterManager.setLocation(locationSelect.value);
@@ -90,9 +136,12 @@ function setupEventListeners() {
     });
   }
 
-  // Bookmark-Events (Event-Delegation)
+  // ------ BOOKMARKS ------
+  // Pattern: Event delegation (works for dynamically added elements)
+  
   document.addEventListener('click', (e) => {
-    // Bookmark-Button
+    
+    // Toggle bookmark
     if (e.target.matches('.bookmark-btn')) {
       const eventUrl = e.target.dataset.eventUrl;
       bookmarkManager.toggle(eventUrl);
@@ -100,23 +149,27 @@ function setupEventListeners() {
       updateBookmarkCount();
     }
 
-    // Bookmark-Actions
+    // Clear all bookmarks
     if (e.target.matches('#clearBookmarksBtn')) {
       if (bookmarkManager.clear()) {
         updateDisplay();
       }
     }
 
+    // Print bookmarks
     if (e.target.matches('#printBookmarksBtn')) {
       printBookmarks();
     }
 
+    // Email bookmarks
     if (e.target.matches('#emailBookmarksBtn')) {
       emailBookmarks();
     }
   });
 
-  // Such-Panel Toggle
+  // ------ UI TOGGLES ------
+  
+  // Search panel collapse/expand
   const searchToggle = document.getElementById('searchToggle');
   const searchPanel = document.getElementById('searchPanel');
   if (searchToggle && searchPanel) {
@@ -126,7 +179,7 @@ function setupEventListeners() {
     });
   }
 
-  // Sidebar Toggle
+  // Sidebar collapse/expand
   const sidebarToggle = document.getElementById('sidebarToggle');
   const eventSidebar = document.getElementById('eventSidebar');
   if (sidebarToggle && eventSidebar) {
@@ -136,19 +189,36 @@ function setupEventListeners() {
   }
 }
 
-// Display aktualisieren
+// ========================================
+// DISPLAY UPDATE (CORE RENDERING)
+// ========================================
+
+/**
+ * Re-render entire UI based on current filter state
+ * Pattern: Explicit re-render (no virtual DOM - KISS)
+ * Triggered by: Filter changes, bookmark actions
+ * 
+ * Steps:
+ * 1. Filter events
+ * 2. Show/hide event cards in DOM
+ * 3. Update map markers
+ * 4. Update bookmark UI
+ * 5. Update stats
+ */
 function updateDisplay() {
-  // Events filtern
+  
+  // 1. APPLY FILTERS
   const filtered = filterManager.filterEvents(eventManager.allEvents, mapManager);
   eventManager.setFiltered(filtered);
 
-  // Event-Cards im DOM zeigen/verstecken
+  // 2. SHOW/HIDE EVENT CARDS
+  // Direct DOM manipulation (no framework overhead)
   eventManager.allEvents.forEach(event => {
     const isVisible = filtered.includes(event);
     event.element.style.display = isVisible ? 'block' : 'none';
   });
 
-  // Karte aktualisieren
+  // 3. UPDATE MAP
   mapManager.clearMarkers();
   filtered.forEach(event => {
     if (event.lat && event.lng) {
@@ -157,16 +227,24 @@ function updateDisplay() {
     }
   });
 
-  // Bookmark-Buttons aktualisieren
+  // 4. UPDATE BOOKMARK BUTTONS
   document.querySelectorAll('.bookmark-btn').forEach(btn => {
     bookmarkManager.updateButton(btn);
   });
 
+  // 5. UPDATE COUNTERS
   updateBookmarkCount();
   updateStats();
 }
 
-// UI-Helper
+// ========================================
+// UI HELPERS
+// ========================================
+
+/**
+ * Apply saved filter state to UI controls
+ * Use case: Restore filter dropdowns after page reload
+ */
 function applyFiltersToUI() {
   const state = filterManager.export();
   
@@ -181,6 +259,9 @@ function applyFiltersToUI() {
   }
 }
 
+/**
+ * Update bookmark counter badge
+ */
 function updateBookmarkCount() {
   const count = bookmarkManager.count();
   const countEl = document.getElementById('bookmarkCount');
@@ -189,34 +270,49 @@ function updateBookmarkCount() {
   }
 }
 
+/**
+ * Update event statistics display
+ */
 function updateStats() {
   const stats = eventManager.getStats();
   console.log('📊 Stats:', stats);
   
-  // Optional: Stats im UI anzeigen
+  // Optional: Display stats in UI
   const statsEl = document.getElementById('eventStats');
   if (statsEl) {
-    statsEl.textContent = `${stats.filtered} von ${stats.total} Events`;
+    statsEl.textContent = `${stats.filtered} of ${stats.total} events`;
   }
 }
 
+/**
+ * Save current filter state to persistent storage
+ */
 function savePrefs() {
   Storage.savePrefs(filterManager.export());
 }
 
-// Bookmark-Actions
+// ========================================
+// BOOKMARK ACTIONS
+// ========================================
+
+/**
+ * Print bookmarked events
+ * Opens print dialog with formatted event list
+ */
 function printBookmarks() {
   const events = bookmarkManager.getEventData();
+  
   if (events.length === 0) {
-    alert('Keine Bookmarks vorhanden');
+    alert('No bookmarks yet');
     return;
   }
 
+  // Generate printable HTML in new window
   const printWindow = window.open('', '_blank');
   printWindow.document.write(`
     <html>
     <head>
-      <title>Meine Krawl-Bookmarks</title>
+      <title>My Krawl Bookmarks</title>
       <style>
         body { font-family: sans-serif; margin: 2cm; }
         h1 { font-size: 24px; }
@@ -226,12 +322,12 @@ function printBookmarks() {
       </style>
     </head>
     <body>
-      <h1>🎪 Meine Krawl-Bookmarks</h1>
+      <h1>🎪 My Krawl Bookmarks</h1>
       ${events.map(e => `
         <div class="event">
           <h2>${e.title}</h2>
-          <p><strong>Datum:</strong> ${e.date}</p>
-          <p><strong>Ort:</strong> ${e.location}</p>
+          <p><strong>Date:</strong> ${e.date}</p>
+          <p><strong>Location:</strong> ${e.location}</p>
           <p><a href="${e.url}">${e.url}</a></p>
         </div>
       `).join('')}
@@ -242,22 +338,38 @@ function printBookmarks() {
   printWindow.print();
 }
 
+/**
+ * Email bookmarked events
+ * Opens default mail client with formatted event list
+ */
 function emailBookmarks() {
   const events = bookmarkManager.getEventData();
+  
   if (events.length === 0) {
-    alert('Keine Bookmarks vorhanden');
+    alert('No bookmarks yet');
     return;
   }
 
-  const subject = 'Meine Krawl-Bookmarks';
+  const subject = 'My Krawl Bookmarks';
   const body = events.map(e => 
     `${e.title}\n${e.date}\n${e.location}\n${e.url}\n`
   ).join('\n---\n\n');
 
+  // Use mailto: protocol (opens system mail client)
   window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-// Export für Debugging
+// ========================================
+// DEVELOPER TOOLS
+// ========================================
+
+/**
+ * Expose API for browser console debugging
+ * Usage in console:
+ *   krawl.bookmarks.getAll()
+ *   krawl.events.getStats()
+ *   krawl.refresh()
+ */
 window.krawl = {
   bookmarks: bookmarkManager,
   map: mapManager,

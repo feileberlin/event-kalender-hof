@@ -1,22 +1,46 @@
-// Map-Modul - Leaflet Integration
+/**
+ * Map Manager - Leaflet.js Wrapper
+ * 
+ * Pattern: Stateful class managing map lifecycle
+ * Tech: Leaflet.js (open source, lighter than Google Maps)
+ * State: Map instance, markers array, user location
+ * Why: Encapsulates all map operations in one place
+ */
+
 export class MapManager {
+  
   constructor(mapElementId, initialCenter = [50.3195, 11.9173], initialZoom = 13) {
-    this.map = null;
-    this.markers = [];
-    this.mapElementId = mapElementId;
-    this.center = initialCenter;
-    this.zoom = initialZoom;
-    this.userLocation = null;
+    // State
+    this.map = null;                    // Leaflet map instance
+    this.markers = [];                  // Track markers for cleanup
+    this.userLocation = null;           // GPS coordinates if available
+    
+    // Config
+    this.mapElementId = mapElementId;   // DOM element ID
+    this.center = initialCenter;        // Default: Hof, Germany
+    this.zoom = initialZoom;            // Default zoom level
   }
 
+  // ========================================
+  // LIFECYCLE
+  // ========================================
+  
+  /**
+   * Initialize map with OpenStreetMap tiles
+   * Pattern: Lazy initialization (only when needed)
+   */
   init() {
-    if (!document.getElementById(this.mapElementId)) {
+    const element = document.getElementById(this.mapElementId);
+    
+    if (!element) {
       console.warn('Map element not found');
       return;
     }
 
+    // Create Leaflet map instance
     this.map = L.map(this.mapElementId).setView(this.center, this.zoom);
     
+    // Add OpenStreetMap tile layer (free, open source)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19
@@ -25,38 +49,67 @@ export class MapManager {
     return this.map;
   }
 
+  // ========================================
+  // MARKER MANAGEMENT
+  // ========================================
+  
+  /**
+   * Remove all markers from map
+   * Use case: Before re-rendering filtered events
+   */
   clearMarkers() {
     this.markers.forEach(marker => marker.remove());
     this.markers = [];
   }
 
+  /**
+   * Add event marker to map
+   * @param {string} iconUrl - Optional custom marker icon
+   * @returns {Marker} Leaflet marker instance
+   */
   addMarker(lat, lng, popupContent, iconUrl) {
     if (!this.map) return null;
 
+    // Custom icon or default pin
     const icon = iconUrl ? L.icon({
       iconUrl,
       iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
+      iconAnchor: [16, 32],        // Point of icon that touches the map
+      popupAnchor: [0, -32]        // Where popup opens relative to icon
     }) : undefined;
 
     const marker = L.marker([lat, lng], icon ? { icon } : {})
       .bindPopup(popupContent)
       .addTo(this.map);
 
+    // Track for cleanup
     this.markers.push(marker);
+    
     return marker;
   }
 
+  // ========================================
+  // VIEW CONTROL
+  // ========================================
+  
   setView(lat, lng, zoom) {
     if (this.map) {
       this.map.setView([lat, lng], zoom);
     }
   }
 
+  // ========================================
+  // GEOLOCATION
+  // ========================================
+  
+  /**
+   * Get user's GPS location
+   * Pattern: Callback-based (async operation)
+   * Browser API: navigator.geolocation
+   */
   getUserLocation(callback) {
     if (!navigator.geolocation) {
-      console.warn('Geolocation nicht verfügbar');
+      console.warn('Geolocation not available');
       return;
     }
 
@@ -74,14 +127,29 @@ export class MapManager {
     );
   }
 
+  // ========================================
+  // DISTANCE CALCULATION
+  // ========================================
+  
+  /**
+   * Haversine formula - Calculate distance between two GPS points
+   * @returns {number} Distance in kilometers
+   * Use case: Radius filter (show events within X km)
+   */
   getDistanceKm(lat1, lng1, lat2, lng2) {
-    const R = 6371; // Erdradius in km
+    const R = 6371; // Earth radius in km
+    
+    // Convert degrees to radians
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLng = (lng2 - lng1) * Math.PI / 180;
+    
+    // Haversine formula
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
               Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
               Math.sin(dLng/2) * Math.sin(dLng/2);
+    
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    
     return R * c;
   }
 }
