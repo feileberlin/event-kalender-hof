@@ -363,9 +363,10 @@ function updateCategoryCounts() {
     if (!option.hasAttribute('data-original-label')) {
       // Entferne vorhandene Icons und Counter aus dem Label
       let cleanLabel = option.textContent.trim();
-      // Entferne führende Zahlen und Emojis
-      cleanLabel = cleanLabel.replace(/^\d+\s*[\u{1F300}-\u{1F9FF}]\s*/u, '');
-      cleanLabel = cleanLabel.replace(/^[\u{1F300}-\u{1F9FF}]\s*/u, '');
+      // Robuste Regex: Entferne führende Zahlen, Emojis und Whitespace
+      // Pattern: ^(\d+\s*)?([\u{1F000}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]\s*)*
+      // Das matched: "123 🎉 Text" oder "🎉 Text" oder "123 Text"
+      cleanLabel = cleanLabel.replace(/^(\d+\s*)?([\u{1F000}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]\s*)*/u, '');
       option.setAttribute('data-original-label', cleanLabel);
     }
     const originalLabel = option.getAttribute('data-original-label');

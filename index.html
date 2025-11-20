@@ -128,7 +128,11 @@ title: "Event-Kalender Hof"
 // Event-Daten aus Jekyll
 const allEvents = [
     {% for event in site.events %}
+    {% comment %}Filter: Nur öffentliche Events + Debug-Switch für Test-Events{% endcomment %}
     {% if event.status == "Öffentlich" %}
+        {% comment %}Prüfe ob Event ein Test-Event ist und ob diese angezeigt werden sollen{% endcomment %}
+        {% if event.test_event %}
+            {% if site.debug.show_test_events %}
     {
         title: {{ event.title | jsonify }},
         date: "{{ event.date | date: '%Y-%m-%d' }}",
@@ -143,8 +147,30 @@ const allEvents = [
             lat: {{ event.coordinates.lat | default: site.default_center.lat }},
             lng: {{ event.coordinates.lng | default: site.default_center.lng }}
         },
-        tags: {{ event.tags | jsonify }}
+        tags: {{ event.tags | jsonify }},
+        testEvent: true
     }{% unless forloop.last %},{% endunless %}
+            {% endif %}
+        {% else %}
+            {% comment %}Normales Event (kein Test-Event) - immer anzeigen{% endcomment %}
+    {
+        title: {{ event.title | jsonify }},
+        date: "{{ event.date | date: '%Y-%m-%d' }}",
+        startTime: "{{ event.start_time }}",
+        endTime: "{{ event.end_time }}",
+        location: {{ event.location | jsonify }},
+        address: {{ event.address | jsonify }},
+        category: {{ event.category | jsonify }},
+        description: {{ event.description | jsonify }},
+        url: "{{ event.url | relative_url }}",
+        coordinates: {
+            lat: {{ event.coordinates.lat | default: site.default_center.lat }},
+            lng: {{ event.coordinates.lng | default: site.default_center.lng }}
+        },
+        tags: {{ event.tags | jsonify }},
+        testEvent: false
+    }{% unless forloop.last %},{% endunless %}
+        {% endif %}
     {% endif %}
     {% endfor %}
 ];

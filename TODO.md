@@ -69,12 +69,14 @@
 
 ## ⚡ Medium Priority (bald)
 
-### 7. Filter-Icon-Bug final fixen
-- **Status:** 🟡 PARTIALLY FIXED
-- **Problem:** Icons duplizieren sich manchmal noch
-- **Current Fix:** `data-original-label` Attribut
-- **Remaining Issue:** Edge Cases bei schnellen Filter-Wechseln?
-- **Test:** Mehrfach Filter wechseln, Icons prüfen
+### ~~7. Filter-Icon-Bug final fixen~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Solution:** Verbesserte Regex für robusteres Icon-Parsing
+- **Implementation:**
+  - Erweiterte Unicode-Ranges für alle Emoji-Kategorien
+  - Kombiniertes Pattern für Zahlen + Emojis in einem Regex
+  - Bessere Fehlerbehandlung in updateCategoryCounts()
+- **Files:** `assets/js/main.js`
 
 ### 8. Performance Optimization
 - **Status:** 🔴 TODO
@@ -86,12 +88,16 @@
 - **Impact:** MEDIUM (Ladezeit-Verbesserung)
 - **Test:** Lighthouse Performance Score > 90
 
-### 9. Debug-Switch für Test-Events
-- **Status:** 🟡 CONFIG ADDED, NOT WIRED
-- **Config:** `_config.yml` → `debug.show_test_events: false`
-- **TODO:** Jekyll Template liest Config, filtert test_event: true
-- **Location:** `index.html` → Event-Loop
-- **Impact:** LOW (nur Development)
+### ~~9. Debug-Switch für Test-Events~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Solution:** Jekyll Template filtert Test-Events basierend auf Config
+- **Implementation:**
+  - Prüfung auf `event.test_event` Flag in index.html
+  - Conditional Rendering basierend auf `site.debug.show_test_events`
+  - Test-Events erhalten zusätzlich `testEvent: true` Property in JS
+  - Normale Events erhalten `testEvent: false` Property
+- **Usage:** In `_config.yml` setze `debug.show_test_events: false` um Test-Events zu verstecken
+- **Files:** `index.html`
 
 ### 10. Responsive Filter-Counter
 - **Status:** 🟢 WORKING, needs UX polish
