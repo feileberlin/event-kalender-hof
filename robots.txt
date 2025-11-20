@@ -1,0 +1,17 @@
+# robots.txt für krawl.ist
+# Erlaubt allen Suchmaschinen die Indexierung der öffentlichen Seiten
+
+User-agent: *
+Allow: /
+
+# Admin-Bereich nicht indexieren
+Disallow: /admin.html
+Disallow: /admin/
+
+# Technische Dateien nicht indexieren
+Disallow: /*.json$
+Disallow: /scripts/
+Disallow: /_site/
+
+# Sitemap für Crawler
+Sitemap: https://krawl.ist/sitemap.xml
