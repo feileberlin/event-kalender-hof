@@ -1,101 +1,258 @@
-# 🎉 Event-Kalender Hof an der Saale
+# 🎉 Event-Kalender für deine Stadt
 
-**hof.ist/jetzt** - Events bis Sonnenaufgang in Hof an der Saale
+> **Live-Beispiel:** [hof.ist/jetzt](https://feileberlin.github.io/event-kalender-hof/) - Event-Kalender für Hof an der Saale
 
-Ein Jekyll-basierter Event-Kalender für GitHub Pages, der automatisch Events aus verschiedenen Quellen sammelt und auf einer interaktiven Karte darstellt.
+Ein **community-getriebener, Open-Source Event-Kalender** mit Fokus auf **lokale Events** und **Automatisierung**. Entwickelt aus der Frustration heraus, dass gute Events oft untergehen, weil sie auf zig verschiedenen Kanälen verstreut sind.
+
+**Kern-Idee:** Sammle Events automatisch aus verschiedenen Quellen (Websites, Facebook, PDFs), erkenne Duplikate intelligent, reichere Daten an und präsentiere sie auf einer **simplen, schnellen Karte**.
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://feileberlin.github.io/event-kalender-hof/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Jekyll](https://img.shields.io/badge/Jekyll-3.10-red)](https://jekyllrb.com/)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)
 
-## 🌟 Features
+---
 
-- **📍 Interaktive Karte** mit Leaflet.js, zentriert auf Hof an der Saale
-- **🕐 Zeitfilter "Bis Sonnenaufgang"**: Zeigt nur Events bis zur Morgendämmerung (6:30 Uhr)
-- **🔍 Intelligente Filter**: Textsuche, Kategorie, Zeitraum, Umkreis (Fuß, Rad, ÖPNV, Taxi)
-- **📱 Geolocation**: GPS-basierte Umkreissuche
-- **📌 Bookmark-System**: Events merken, drucken oder per E-Mail versenden (Cookie-basiert, DSGVO-konform)
-- **🤖 Automatisches Scraping**: Sammelt Events von lokalen Websites
-- **⚡ Auto-Scraping**: Startet automatisch bei Änderungen an `sources.csv`
-- **📝 Scraping-Logs**: Detaillierte Protokolle aller Scraping-Durchläufe mit Recurring-Detection
-- **✅ Datums-Validierung**: Erkennt fehlerhafte Event-Daten (Veröffentlichungsdatum vs. Event-Datum)
-- **🔄 Wiederkehrende Events**: Erweiterte Logik mit `by_set_pos`, `additions`, mehrere Wochentage
-- **🎛️ Admin-UI**: Vollständiges Interface mit Event-Erstellung, Recurring-Vorschau, Markdown-Generator
-- **🖼️ AI-Flyer-Analyse**: Extrahiert Events aus Bildern/PDFs (GitHub Models / DuckDuckGo AI)
-- **🎨 Minimalistisch**: Skeleton CSS, Mobile-First, Touch-optimiert
-- **🖨️ Druckfreundlich**: Optimierte Print-Styles
-- **🏛️ Venue-Management**: Verwaltet Veranstaltungsorte mit Barrierefreiheit & Metadaten
-- **📦 Auto-Archivierung**: Events älter als 30 Tage werden automatisch archiviert
+## 🎯 Warum dieses Projekt?
 
-## 🚀 Quick Start
+**Das Problem:**
+- Events sind auf 20+ Websites/Social Media verstreut
+- Kulturschaffende haben keine Zeit für Marketing
+- Bestehende Event-Plattformen sind zu komplex oder kommerziell
+- Gute lokale Events gehen unter
 
-### Für Benutzer
+**Die Lösung:**
+- **Automatisches Scraping** aus beliebigen Quellen
+- **Deduplication-Engine** erkennt Duplikate über Plattformen hinweg
+- **Veranstalter-CRM** für Networking und Recherche
+- **Zero-Config**: Läuft auf GitHub Pages, keine Server nötig
+- **Open Source**: Jede Stadt kann es nutzen
 
-➡️ **Website öffnen**: [feileberlin.github.io/event-kalender-hof](https://feileberlin.github.io/event-kalender-hof/)
+---
 
-**Funktionen:**
-- Suchmaske für Freitextsuche
-- Filter nach Kategorie, Zeitraum, Umkreis
-- "Mein Standort" für GPS-basierte Suche
-- Klick auf Marker für Event-Details
-- 📌 **Bookmark-System**: Events merken, drucken (PDF), per E-Mail versenden
+## ✨ Features (die wirklich was bringen)
 
-### Für Admins
+### 🗺️ Für Besucher
+- **Interaktive Karte** mit Leaflet.js - touch-optimiert
+- **Intelligente Filter**: Zeitraum, Umkreis (🚶 1km, 🚴 3km, 🚌 10km), Kategorie
+- **"Bis Sonnenaufgang"-Filter**: Zeigt nur Events bis 6:30 Uhr (für Nachteulen)
+- **GPS-basierte Umkreissuche**: "Mein Standort" nutzt Browser-Geolocation
+- **Bookmark-System**: Events merken, als PDF drucken, per E-Mail teilen (Cookie-basiert, DSGVO-konform)
+- **Mobile-First**: Funktioniert auf jedem Device
 
-➡️ **Admin-Interface**: [admin/](https://feileberlin.github.io/event-kalender-hof/admin/)
+### 🤖 Für Admins/Redakteure
+- **Auto-Scraping**: Sammelt Events von konfigurierten Websites (läuft als GitHub Action)
+- **Deduplication-Engine**: Erkennt Duplikate via Fuzzy-Matching (Titel, Datum, Ort, Zeit ±30min)
+- **Data Enrichment**: Merged beste Daten aus allen Quellen (längste Beschreibung, beste Bilder)
+- **Veranstalter-CRM**: 
+  - Kontaktdaten (E-Mail, Telefon, Ansprechpartner)
+  - One-Click-Actions (E-Mail schreiben, anrufen, Social Media)
+  - Relationship-Tracking (neu → active → established)
+  - Pattern Recognition (welcher Veranstalter nutzt welche Kanäle?)
+- **AI-Flyer-Analyse**: Extrahiert Events aus Bildern/PDFs via GitHub Models oder DuckDuckGo AI
+- **Admin-Interface**: 
+  - Entwürfe prüfen & publizieren
+  - Events manuell erstellen mit Recurring-Support
+  - Duplikate reviewen mit Confidence Scores
+  - Venue-Management (Barrierefreiheit, Kapazität, Kontakt)
+- **Auto-Archivierung**: Events älter als 30 Tage wandern nach `_history/`
 
-**Aufgaben:**
-- Entwürfe prüfen und publizieren
-- Events manuell erstellen (mit Recurring-Support & Vorschau)
-- Scraping-Quellen verwalten
-- Veranstaltungsorte pflegen (Barrierefreiheit, Kontakt, etc.)
-- Markdown-Generator für komplexe Event-Konfigurationen
+### 🛠️ Für Entwickler
+- **Modular**: Scraping, Deduplication, Venue-Management als separate Python-Scripts
+- **Jekyll + GitHub Pages**: Zero hosting costs
+- **CSV-basiert**: Einfach zu editieren (Excel, Google Sheets)
+- **Parametrisiert**: Stadt-Name, Koordinaten, etc. in `_config.yml`
+- **Gut dokumentiert**: `docs/` mit ausführlichen Guides
+- **GitHub Actions**: CI/CD für Scraping, Archivierung, Validation
 
-📖 **Vollständige Anleitung**: [docs/ADMIN.md](docs/ADMIN.md)
-📍 **Venue-Management**: [docs/VENUES.md](docs/VENUES.md)
+---
 
-### Für Entwickler
+## 🚀 Für deine Stadt anpassen
+
+### 1. Repository forken
 
 ```bash
-# Repository klonen
-git clone https://github.com/feileberlin/event-kalender-hof.git
+gh repo fork feileberlin/event-kalender-hof --clone
 cd event-kalender-hof
-
-# Dependencies installieren
-bundle install
-pip install -r requirements.txt
-
-# Scraping starten
-python scripts/scrape_events.py
-
-# ⚡ NEU: Auto-Scraping bei sources.csv Änderungen
-./scripts/scrape.sh              # Startet Watcher
-./scripts/scrape.sh --trigger    # Einmaliges Scraping
-./scripts/demo_sources_watcher.sh  # Interaktive Demo
-
-# Datums-Validierung ausführen
-python scripts/validate_event_dates.py
-
-# Venue-Verwaltung
-python scripts/venue_admin.py      # Interaktives CLI-Tool
-python scripts/venue_examples.py   # Beispiel-Code
-
-# Server starten
-bundle exec jekyll serve --livereload
 ```
 
-➡️ Öffne: http://localhost:4000
+### 2. Stadt-Konfiguration anpassen
 
-📖 **Entwickler-Guide**: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
+**`_config.yml`:**
+```yaml
+title: "meinstadt.events"  # Dein Titel
+description: "Events in Meinstadt"
 
-## 🛠️ Tech Stack
+city:
+  name: "Meinstadt"
+  name_short: "Meinstadt"
+  state: "Dein Bundesland"
+  center:
+    lat: 52.5200  # Stadtzentrum-Koordinaten
+    lng: 13.4050
+    name: "Rathaus Meinstadt"
+  admin_email: "redaktion@meinstadt.events"
+```
 
-| Komponente | Technologie |
-|------------|-------------|
-| **Frontend** | Jekyll 4.3, Skeleton CSS 2.0.4, Leaflet.js 1.9.4 |
-| **JavaScript** | Vanilla ES6+ (keine jQuery) |
-| **Scraping** | Python 3.11+, BeautifulSoup4, PyYAML |
-| **CI/CD** | GitHub Actions, GitHub Pages |
-| **Tests** | Node.js, Custom Test Suite |
+### 3. Event-Quellen konfigurieren
+
+**`_data/sources.csv`:**
+```csv
+name,url,type,active,notes
+Stadtwebsite,https://www.meinstadt.de/events,html,true,Offizielle Events
+Kulturzentrum,https://kulturzentrum.de/programm,html,true,
+Facebook Stadtseite,https://facebook.com/stadtmeinstadt,facebook,true,
+```
+
+### 4. Veranstaltungsorte anlegen
+
+**`_data/venues.csv`:**
+```csv
+name,aliases,address,lat,lng,wheelchair_accessible,website,phone,capacity,icon,color,location_type
+Rathaus Meinstadt,Rathaus,"Hauptstr. 1",52.5200,13.4050,true,https://...,+49...,200,🏛️,#2c3e50,rathaus
+```
+
+### 5. GitHub Pages aktivieren
+
+Settings → Pages → Source: `main` branch
+
+**Done!** Deine Stadt hat jetzt einen Event-Kalender.
+
+> **💡 Migration von v0.x:** Falls du von einer älteren Version upgradest, nutze `site.city.center` statt `site.default_center` (deprecated, aber noch kompatibel).
+
+---
+
+## 📦 Installation (lokal entwickeln)
+
+```bash
+# 1. Ruby + Jekyll
+bundle install
+
+# 2. Python-Dependencies
+pip install -r requirements.txt
+
+# 3. Jekyll Server starten
+bundle exec jekyll serve
+
+# 4. Browser öffnen
+open http://localhost:4000/event-kalender-hof/
+```
+
+**Scripts testen:**
+```bash
+# Events scrapen
+python3 scripts/scrape_events.py
+
+# Duplikate finden
+python3 scripts/deduplication_engine.py
+
+# Alte Events archivieren
+python3 scripts/archive_old_events.py
+
+# Flyer analysieren
+python3 scripts/analyze_flyer.py path/to/flyer.pdf
+```
+
+---
+
+## 🤝 Mitmachen & Weiterentwickeln
+
+**Das Projekt lebt von der Community!** Jede Stadt, die es nutzt, macht es besser.
+
+### 🐛 Bugs gefunden?
+→ [Issue aufmachen](https://github.com/feileberlin/event-kalender-hof/issues)
+
+### 💡 Feature-Ideen?
+→ [Discussion starten](https://github.com/feileberlin/event-kalender-hof/discussions)
+
+### 🔧 Code beitragen?
+
+1. **Fork** das Repo
+2. **Branch** erstellen: `git checkout -b feature/mein-feature`
+3. **Commit** mit klarer Message: `feat: Neue Scraping-Quelle für XY`
+4. **Push** und **Pull Request** öffnen
+
+**Besonders willkommen:**
+- Neue Scraper für häufige Plattformen (Eventbrite, Meetup, etc.)
+- Verbesserungen der Deduplication-Engine
+- UI/UX-Optimierungen
+- Barrierefreiheit (a11y)
+- Performance-Optimierungen
+- Übersetzungen (i18n)
+
+### 📝 Dokumentation verbessern?
+
+Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach Markdown editieren und PR öffnen.
+
+---
+
+## 🏗️ Architektur (Überblick)
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     DATENQUELLEN                        │
+│  Websites · Facebook · PDFs · Manuelle Eingabe         │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│               SCRAPING & PROCESSING                     │
+│  scrape_events.py → _events/*.md (YAML Front Matter)   │
+│  analyze_flyer.py → AI-basierte PDF/Bild-Extraktion    │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│            DEDUPLICATION & ENRICHMENT                   │
+│  deduplication_engine.py:                              │
+│  - Fuzzy-Matching (Titel/Ort/Zeit)                     │
+│  - Confidence Scoring                                   │
+│  - Data Merging (beste Daten aus allen Quellen)        │
+│  - Veranstalter-Matching (CRM-Integration)             │
+│  → _data/event_clusters.csv                            │
+│  → _data/admin_review_queue.json                       │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│                  ADMIN REVIEW                           │
+│  admin.html:                                            │
+│  - Tab: Entwürfe → Publizieren                         │
+│  - Tab: Duplikate → Merge/Split/Ignore                 │
+│  - Tab: Neue Events → Recurring-Support                │
+│  - Veranstalter-Kontakte (One-Click-Actions)           │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│                 JEKYLL BUILD                            │
+│  _events/*.md → JSON für JavaScript                    │
+│  _data/venues.csv → Locations mit Icons                │
+│  _layouts/event.html → Event-Detailseiten              │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│                GITHUB PAGES                             │
+│  index.html: Interaktive Karte (Leaflet.js)           │
+│  assets/js/main.js: Filter, Suche, Bookmarks          │
+│  → Live auf https://deineststadt.github.io/            │
+└─────────────────────────────────────────────────────────┘
+```
+
+**CSV-basierte Konfiguration:**
+- `_data/sources.csv` → Scraping-Quellen
+- `_data/venues.csv` → Veranstaltungsorte (mit Icons, Farben, Barrierefreiheit)
+- `_data/organizers.csv` → Veranstalter-CRM (Kontakte, Social Media, Notizen)
+- `_data/event_clusters.csv` → Duplikat-Tracking
+
+**Automatisierung via GitHub Actions:**
+- Scraping: Täglich 6:00 + 18:00 UTC
+- Archivierung: Täglich 3:00 UTC
+- Validation: Täglich 4:00 UTC
+- → Konfigurierbar in `_config.yml` (Cron-Format)
+
+---
 
 ## 📚 Dokumentation
 
@@ -103,14 +260,99 @@ bundle exec jekyll serve --livereload
 |-------|------------|--------|
 | **[docs/QUICKSTART.md](docs/QUICKSTART.md)** | Alle | Schnelleinstieg in 5 Minuten |
 | **[docs/ADMIN.md](docs/ADMIN.md)** | Admins | Event-Verwaltung, Scraping-Konfiguration |
+| **[docs/DEDUPLICATION.md](docs/DEDUPLICATION.md)** | Admins/Devs | Duplikat-Erkennung & Enrichment |
+| **[docs/ORGANIZER_CRM.md](docs/ORGANIZER_CRM.md)** | Admins | Veranstalter-CRM, Networking, Kontakte |
 | **[docs/BOOKMARKS.md](docs/BOOKMARKS.md)** | Alle/Devs | Bookmark-System: Merken, Drucken, Mailen |
 | **[docs/VENUES.md](docs/VENUES.md)** | Admins | Venue-Management, Barrierefreiheit |
 | **[docs/ARCHIVING.md](docs/ARCHIVING.md)** | Admins | Auto-Archivierung vergangener Events |
 | **[docs/DATE_VALIDATION.md](docs/DATE_VALIDATION.md)** | Admins/Devs | Datums-Validierung, Qualitätssicherung |
 | **[docs/SOURCES_WATCHER.md](docs/SOURCES_WATCHER.md)** | Admins/Devs | Auto-Scraping bei sources.csv Änderungen |
 | **[docs/RECURRING_EVENTS.md](docs/RECURRING_EVENTS.md)** | Admins/Devs | Wiederkehrende Events (Basis) |
-| **[docs/RECURRING_EVENTS_ADVANCED.md](docs/RECURRING_EVENTS_ADVANCED.md)** | Devs | Erweiterte Recurring-Logik (by_set_pos, additions) |
+| **[docs/RECURRING_EVENTS_ADVANCED.md](docs/RECURRING_EVENTS_ADVANCED.md)** | Devs | Erweiterte Recurring-Logik |
 | **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** | Entwickler | Tests, Code-Style, Pull Requests |
+
+---
+
+## 🛠️ Tech Stack
+
+| Komponente | Technologie | Warum? |
+|------------|-------------|--------|
+| **Frontend** | Jekyll 3.10 | Statische Seiten, GitHub Pages native |
+| **CSS** | Skeleton 2.0.4 | Minimal, responsive, <5KB |
+| **Karte** | Leaflet.js 1.9.4 | Open-Source, touch-optimiert |
+| **JavaScript** | Vanilla ES6+ | Keine Dependencies, schnell |
+| **Scraping** | Python 3.11+, BeautifulSoup | Flexibel, gut dokumentiert |
+| **AI** | GitHub Models / DuckDuckGo | Kostenlos, keine API-Keys |
+| **Hosting** | GitHub Pages | Gratis, CDN, SSL, CI/CD |
+| **Daten** | CSV + YAML | Human-readable, Excel-kompatibel |
+
+---
+
+## 🎯 Roadmap
+
+**v1.0 (aktuell):**
+- ✅ Automatisches Scraping
+- ✅ Deduplication-Engine
+- ✅ Veranstalter-CRM
+- ✅ Admin-Interface
+- ✅ Bookmark-System
+
+**v1.1 (geplant):**
+- [ ] Multi-Language Support (i18n)
+- [ ] iCal/CalDAV Export
+- [ ] PWA (Progressive Web App)
+- [ ] Scraper für Eventbrite, Meetup, Facebook Events API
+- [ ] Machine Learning für besseres Duplikat-Matching
+- [ ] Notification-System (E-Mail/Telegram bei neuen Events)
+
+**v2.0 (Vision):**
+- [ ] Federation: Städte-übergreifende Event-Suche
+- [ ] User-Accounts: Eigene Events einreichen
+- [ ] Moderation-Queue: Community-basierte Qualitätssicherung
+- [ ] Mobile Apps (React Native)
+
+**Deine Idee ist nicht dabei?** → [Feature Request](https://github.com/feileberlin/event-kalender-hof/issues/new?template=feature_request.md)
+
+---
+
+## 🙏 Credits & Inspiration
+
+**Gebaut mit:**
+- [Jekyll](https://jekyllrb.com/) - Static Site Generator
+- [Leaflet.js](https://leafletjs.com/) - Interactive Maps
+- [Skeleton CSS](http://getskeleton.com/) - Minimalist CSS Framework
+- [OpenStreetMap](https://www.openstreetmap.org/) - Kartendaten
+
+**Inspiriert von:**
+- [Graz Advent](https://grazadvent.at/) - Minimalistische Event-Übersicht
+- [berlin.digital](https://berlin.digital/) - Tech-Events Berlin
+- Lokalen Kulturschaffenden, die jeden Tag großartige Events auf die Beine stellen
+
+**Entwickelt für:** Die Community in Hof an der Saale - und alle anderen Städte, die folgen.
+
+---
+
+## 📄 Lizenz
+
+**MIT License** - siehe [LICENSE](LICENSE)
+
+**TL;DR:** Du kannst dieses Projekt für alles nutzen (privat, kommerziell, modifiziert) - solange du den Copyright-Hinweis beibehältst. Keine Garantie, keine Haftung.
+
+---
+
+## 💬 Kontakt & Community
+
+- **Issues/Bugs:** [GitHub Issues](https://github.com/feileberlin/event-kalender-hof/issues)
+- **Diskussionen:** [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
+- **Pull Requests:** Immer willkommen!
+
+**Du nutzt dieses Projekt für deine Stadt?** → Schreib uns! Wir verlinken gerne andere Instanzen.
+
+---
+
+**Made with ❤️ in Hof an der Saale**
+
+*"Events finden, nicht suchen."*
 | **[docs/PROJECT.md](docs/PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz, Timeline |
 | **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | Alle | Versionshistorie (v0.1.0 → v1.7.0) |
 | **[docs/ANALYTICS.md](docs/ANALYTICS.md)** | Admins | GoatCounter Analytics-Integration |

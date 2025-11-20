@@ -6,6 +6,30 @@ url: "https://feileberlin.github.io"
 repository: "feileberlin/event-kalender-hof"
 # Cache invalidation: 2025-11-19T00:15:00Z
 
+# Stadt-spezifische Konfiguration (für Portierung anpassen)
+city:
+  name: "Hof an der Saale"
+  name_short: "Hof"
+  state: "Bayern"
+  country: "Deutschland"
+  timezone: "Europe/Berlin"
+  population: 44000
+  tagline: "Events bis Sonnenaufgang"
+  website: "https://www.hof.de"
+  
+  # Geo-Koordinaten (Stadtzentrum/Rathaus)
+  center:
+    lat: 50.3197
+    lng: 11.9168
+    name: "Rathaus Hof"
+  
+  # Kontakt
+  admin_email: "info@example.com"  # Anpassen!
+  social_media:
+    facebook: ""
+    instagram: ""
+    twitter: ""
+
 # Jekyll Einstellungen
 markdown: kramdown
 permalink: pretty
@@ -29,7 +53,7 @@ defaults:
       layout: "event"
       status: "Entwurf"
 
-# Hof an der Saale Koordinaten (Rathaus)
+# DEPRECATED: Verwende city.center stattdessen
 default_center:
   lat: 50.3197
   lng: 11.9168
