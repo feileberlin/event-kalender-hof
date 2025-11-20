@@ -230,7 +230,7 @@ archiving:
 analytics:
   goatcounter:
     enabled: true
-    code: "krawlist"  # Subdomain: krawlist.goatcounter.com
+    code: "feileberlin"  # Subdomain: feileberlin.goatcounter.com
     # HINWEIS: Bei Fork anpassen! Erstelle neues GoatCounter-Konto:
     # 1. Gehe zu: https://www.goatcounter.com/signup
     # 2. Wähle Subdomain (z.B. "bamberg-events")
