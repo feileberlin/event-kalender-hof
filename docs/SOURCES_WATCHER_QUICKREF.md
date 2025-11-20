@@ -112,7 +112,7 @@ Log anzeigen
 pip install watchdog
 
 # Scraping testen (ohne Watcher)
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 
 # Neueste Log-Datei
 cat _events/_logs/$(ls -t _events/_logs/*-scraping.log | head -1)

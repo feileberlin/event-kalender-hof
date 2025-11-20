@@ -77,7 +77,7 @@ Get-ChildItem _events/2025-11-25*.md | ForEach-Object {
 
 **Manuell** (Script):
 ```bash
-python scripts/archive_old_events.py --days 30
+python scripts/editorial/archive_old_events.py --days 30
 ```
 
 **Manuell** (YAML + Verschieben):
@@ -152,13 +152,13 @@ for file in Path('_events').glob('*.md'):
 ### Lokal testen
 ```bash
 # Dry-Run (keine Änderungen)
-python scripts/archive_old_events.py --days 30 --dry-run
+python scripts/editorial/archive_old_events.py --days 30 --dry-run
 
 # Live
-python scripts/archive_old_events.py --days 30
+python scripts/editorial/archive_old_events.py --days 30
 
 # Interactive
-python scripts/archive_old_events.py --days 30 --interactive
+python scripts/editorial/archive_old_events.py --days 30 --interactive
 ```
 
 ## 🎨 Frontend-Filter
@@ -202,7 +202,7 @@ defaults:
       status: "Entwurf"  # Neue Events sind Entwurf
 ```
 
-### scripts/scrape_events.py
+### scripts/editorial/scrape_events.py
 ```python
 event_data = {
     'title': event['title'],
@@ -253,5 +253,5 @@ git push
 
 - **Archivierungs-Guide**: `docs/ARCHIVING.md`
 - **Admin-Guide**: `docs/ADMIN.md`
-- **Script-Hilfe**: `python scripts/archive_old_events.py --help`
+- **Script-Hilfe**: `python scripts/editorial/archive_old_events.py --help`
 - **Archiv-README**: `_events/_history/README.md`

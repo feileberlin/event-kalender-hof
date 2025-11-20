@@ -1,97 +1,184 @@
-# 📜 Scripts
+# 📜 Scripts Directory
 
-Alle Automatisierungs- und Verwaltungs-Scripts für den Event-Kalender.
+Organisierte Skript-Sammlung für Entwicklung, Redaktion und Wartung.
 
-## 🚀 Schnellstart-Scripts
+## 📁 Struktur
 
-### Development
+```
+scripts/
+├── README.md              # Diese Datei
+├── dev/                   # Development & Setup
+├── editorial/             # Content-Management & Redaktion
+├── tests/                 # Funktionale Tests
+└── validation/            # Code Quality & Linting
+```
+
+---
+
+## 🛠️ dev/ - Development & Setup
+
+**Zweck:** Entwicklungs-Tools und Setup-Skripte
+
+### Verfügbare Skripte
+- `dev.sh` - Development-Server starten (Jekyll)
+- `setup.sh` - Projekt-Setup (Dependencies, Config)
+- `scrape.sh` - Event-Scraping von konfigurierten Quellen
+
+### Verwendung
 ```bash
-./scripts/dev.sh              # Startet Jekyll Development Server
+# Development-Server
+./scripts/dev/dev.sh
+
+# Projekt-Setup
+./scripts/dev/setup.sh
+
+# Events scrapen
+./scripts/dev/scrape.sh
+```
+
+---
+
+## ✏️ editorial/ - Content-Management & Redaktion
+
+**Zweck:** Event-Verwaltung, Deduplication, Content-Generierung
+
+### Event-Management
+- `deduplication_engine.py` - Duplikate erkennen und zusammenführen
+- `archive_old_events.py` - Vergangene Events archivieren
+- `recurring_expander.py` - Wiederkehrende Events generieren
+- `date_enhancer.py` - Event-Datumsfelder erweitern
+
+### Content-Generierung
+- `analyze_flyer.py` - Events aus Flyern extrahieren (AI)
+- `generate_rss_feeds.py` - RSS-Feeds aus Config generieren
+- `regenerate_docs.py` - Projekt-Dokumentation aktualisieren
+
+### Venue-Verwaltung
+- `venue_manager.py` - Programmatische Venue-API
+- `venue_admin.py` - CLI für Venue-Verwaltung
+
+### Verwendung
+```bash
+# Duplikate finden
+python scripts/editorial/deduplication_engine.py
+
+# Alte Events archivieren
+python scripts/editorial/archive_old_events.py
+
+# Recurring Events expandieren (3 Monate)
+python scripts/editorial/recurring_expander.py --months 3
+
+# RSS-Feeds aus Config generieren
+python scripts/editorial/generate_rss_feeds.py
+```
+
+---
+
+## 🧪 tests/ - Funktionale Tests
+
+**Zweck:** JavaScript-Tests für Filter, Events, Bookmarks
+
+### Verfügbare Tests
+- `test_filters.html` - Filter-Logik (Kategorien, Zeit, Radius)
+- `test_events.html` - Event-Manager und Event-Rendering
+- `test_bookmarks.html` - Bookmark-System (Speichern, Laden, Löschen)
+
+### Verwendung
+```bash
+# Tests im Browser öffnen
+open scripts/tests/test_filters.html
+open scripts/tests/test_events.html
+open scripts/tests/test_bookmarks.html
+
+# Oder: Development-Server starten
+./scripts/dev/dev.sh
+# Dann: http://localhost:4000/scripts/tests/
+```
+
+### Test-Struktur
+Jeder Test lädt die Module und testet:
+- ✅ Initialisierung
+- ✅ Kern-Funktionalität
+- ✅ Edge Cases
+- ✅ Fehlerbehandlung
+
+---
+
+## ✅ validation/ - Code Quality & Linting
+
+**Zweck:** Code-Qualität, Syntax-Checks, Lint-Tests
+
+### Verfügbare Validatoren
+- `lint_css.sh` - CSS-Linting (stylelint)
+- `lint_html.sh` - HTML-Validierung (html-validate)
+- `lint_js.sh` - JavaScript-Linting (eslint)
+- `lint_markdown.sh` - Markdown-Linting (markdownlint)
+- `lint_all.sh` - Alle Linter auf einmal
+
+### Verwendung
+```bash
+# Einzelne Linter
+./scripts/validation/lint_css.sh
+./scripts/validation/lint_js.sh
+./scripts/validation/lint_html.sh
+
+# Alle Linter
+./scripts/validation/lint_all.sh
 ```
 
 ### Setup
 ```bash
-./scripts/setup.sh            # Installiert alle Dependencies
+# Node.js-basierte Linter installieren
+npm install -g stylelint stylelint-config-standard
+npm install -g eslint @eslint/js
+npm install -g html-validate
+npm install -g markdownlint-cli
 ```
 
-### Scraping
+---
+
+## 🔄 Typische Workflows
+
+### 1. Neue Events hinzufügen
 ```bash
-./scripts/scrape.sh           # Scrapt alle Quellen aus sources.csv
+# Scrapen
+./scripts/dev/scrape.sh
+
+# Duplikate prüfen
+python scripts/editorial/deduplication_engine.py
+
+# Preview
+./scripts/dev/dev.sh
 ```
 
-## 🐍 Python-Scripts
-
-### Event-Management
-- **`scrape_events.py`** - Event-Scraping von konfigurierten Quellen
-- **`archive_old_events.py`** - Archiviert vergangene Events
-- **`validate_event_dates.py`** - Validiert Event-Datumsangaben
-
-### Flyer-Analyse
-- **`analyze_flyer.py`** - Extrahiert Events aus Bildern/PDFs (AI)
-
-### Venue-Management
-- **`venue_manager.py`** - Programmatisches Venue-API
-- **`venue_admin.py`** - CLI für Venue-Verwaltung
-
-### Utilities
-- **`date_enhancer.py`** - Erweitert Event-Daten um Datumsfelder
-- **`recurring_validator.py`** - Validiert Recurring-Events-Syntax
-- **`regenerate_docs.py`** - Aktualisiert Projekt-Dokumentation
-- **`check_broken_links.py`** - Prüft auf defekte Links
-
-## 📋 Verwendung
-
-### Scraping manuell starten
+### 2. Vor einem Commit
 ```bash
-./scripts/scrape.sh
-# Oder direkt:
-python scripts/scrape_events.py
+# Code-Qualität prüfen
+./scripts/validation/lint_all.sh
+
+# Funktionale Tests
+open scripts/tests/test_filters.html
+
+# Alles OK? Commit!
+git add -A && git commit
 ```
 
-### Events archivieren
+### 3. Monatliche Wartung
 ```bash
-# Standard: 30 Tage
-python scripts/archive_old_events.py
+# Alte Events archivieren
+python scripts/editorial/archive_old_events.py
 
-# Custom: 60 Tage
-python scripts/archive_old_events.py --days 60
+# Recurring Events expandieren
+python scripts/editorial/recurring_expander.py --months 3
 
-# Dry-Run (ohne Änderungen)
-python scripts/archive_old_events.py --dry-run
+# RSS-Feeds neu generieren
+python scripts/editorial/generate_rss_feeds.py
 ```
 
-### Flyer analysieren
-```bash
-python scripts/analyze_flyer.py https://example.com/flyer.pdf
-```
+---
 
-### Venue hinzufügen
-```bash
-python scripts/venue_admin.py add "Kulturzentrum" \
-  --address "Hauptstraße 1, 95028 Hof" \
-  --website "https://example.com" \
-  --wheelchair-accessible
-```
+## 📚 Weitere Dokumentation
 
-### Dokumentation regenerieren
-```bash
-python scripts/regenerate_docs.py
-```
-
-## 🔧 Dependencies
-
-**Ruby:**
-```bash
-bundle install
-```
-
-**Python:**
-```bash
-pip install -r requirements.txt
-```
-
-## 📚 Siehe auch
-
-- [AUTOMATION.md](../docs/AUTOMATION.md) - Automatisierungs-Konfiguration
-- [ADMIN.md](../docs/ADMIN.md) - Admin-Workflows
-- [VENUES.md](../docs/VENUES.md) - Venue-Management
+- **[INSTALL.md](../INSTALL.md)** - Setup-Anleitung
+- **[docs/AUTOMATION.md](../docs/AUTOMATION.md)** - GitHub Actions Workflows
+- **[docs/ADMIN.md](../docs/ADMIN.md)** - Admin-Panel Dokumentation

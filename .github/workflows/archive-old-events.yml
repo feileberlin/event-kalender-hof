@@ -41,10 +41,10 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
             echo "🔍 Dry-run Modus aktiviert"
-            python scripts/archive_old_events.py --days ${{ github.event.inputs.days || 30 }} --dry-run
+            python scripts/editorial/archive_old_events.py --days ${{ github.event.inputs.days || 30 }} --dry-run
             echo "archived=false" >> $GITHUB_OUTPUT
           else
-            python scripts/archive_old_events.py --days ${{ github.event.inputs.days || 30 }} --force
+            python scripts/editorial/archive_old_events.py --days ${{ github.event.inputs.days || 30 }} --force
             
             # Prüfen ob Änderungen vorhanden
             if [ -n "$(git status --porcelain)" ]; then

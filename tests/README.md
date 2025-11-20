@@ -149,7 +149,7 @@ rules: {
 
 ### Build Test schlägt fehl
 - Jekyll: `bundle exec jekyll build --verbose` für Details
-- Python: `python scripts/scrape_events.py` testen
+- Python: `python scripts/editorial/scrape_events.py` testen
 - Dependencies: `bundle install && pip install -r requirements.txt`
 
 ## Workflow Status

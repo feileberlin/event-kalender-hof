@@ -288,7 +288,7 @@ git push origin main
 pip install -r requirements.txt
 
 # Scraping starten
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 
 # Logs prüfen
 cat _events/_logs/*
@@ -340,7 +340,7 @@ Verlinke in Footer (bearbeite `_layouts/base.html`).
 ### "Scraping findet keine Events"
 → Prüfe `_events/_logs/` für Fehler
 → HTML-Struktur der Quellen hat sich ggf. geändert
-→ Scraper muss angepasst werden (siehe `scripts/scrape_events.py`)
+→ Scraper muss angepasst werden (siehe `scripts/editorial/scrape_events.py`)
 
 ### "GitHub Pages Build schlägt fehl"
 → Prüfe Jekyll-Logs in Actions-Tab

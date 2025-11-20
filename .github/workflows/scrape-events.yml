@@ -32,7 +32,7 @@ jobs:
       
       - name: Run Event Scraper
         run: |
-          python scripts/scrape_events.py
+          python scripts/editorial/scrape_events.py
       
       - name: Check for Changes
         id: check_changes

@@ -42,7 +42,7 @@ python3 scripts/validate_event_dates.py
      Quelle: Hof Programm
 ```
 
-### 2. **Date Enhancer** (`scripts/date_enhancer.py`)
+### 2. **Date Enhancer** (`scripts/editorial/date_enhancer.py`)
 
 Hilfsklasse für intelligente Datumserkennung beim Scraping:
 
@@ -260,6 +260,6 @@ Der Validator zeigt Statistiken:
 ## 📚 Weitere Dokumentation
 
 - `scripts/validate_event_dates.py` - Validator-Script
-- `scripts/date_enhancer.py` - Date Enhancer Klasse
-- `scripts/scrape_events.py` - Scraping mit Logging
+- `scripts/editorial/date_enhancer.py` - Date Enhancer Klasse
+- `scripts/editorial/scrape_events.py` - Scraping mit Logging
 - `_events/_logs/README.md` - Logging-System

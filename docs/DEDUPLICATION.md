@@ -62,19 +62,19 @@ Das Deduplication & Enrichment System erkennt automatisch **Duplikate** von Even
 - **`_data/admin_review_queue.json`**: Review-Queue für Admin-Interface
 
 ### Scripts
-- **`scripts/deduplication_engine.py`**: Hauptengine für Deduplication
+- **`scripts/editorial/deduplication_engine.py`**: Hauptengine für Deduplication
 - **`admin.html`**: Admin-Interface (Tab "🔄 Duplikate")
 
 ## Usage
 
 ### 1. Events scrapen
 ```bash
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 ```
 
 ### 2. Duplikate erkennen
 ```bash
-python3 scripts/deduplication_engine.py
+python3 scripts/editorial/deduplication_engine.py
 ```
 
 Output:
@@ -243,7 +243,7 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Run Deduplication
-        run: python3 scripts/deduplication_engine.py
+        run: python3 scripts/editorial/deduplication_engine.py
       
       - name: Commit Results
         run: |
@@ -291,7 +291,7 @@ Bei **High Confidence** (≥95%) automatisch mergen ohne Review.
 
 ### "Review-Queue noch nicht generiert"
 ```bash
-python3 scripts/deduplication_engine.py
+python3 scripts/editorial/deduplication_engine.py
 ```
 
 ### "ModuleNotFoundError: No module named 'yaml'"

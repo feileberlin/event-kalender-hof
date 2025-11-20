@@ -165,7 +165,7 @@ archiving:
 - Aktualisiert README.md Badges
 - Committed Änderungen automatisch
 
-**Script:** `scripts/regenerate_docs.py`
+**Script:** `scripts/editorial/regenerate_docs.py`
 
 **Statistiken:**
 - Event-Counts (Gesamt, Veröffentlicht, Entwürfe, Archiviert, Recurring)
@@ -215,10 +215,10 @@ archiving:
 
 **Ausführung:**
 ```bash
-./scripts/scrape.sh
+./scripts/editorial/scrape.sh
 ```
 
-**Hinweis:** Das Script ruft `scripts/scrape_events.py` auf.
+**Hinweis:** Das Script ruft `scripts/editorial/scrape_events.py` auf.
 
 ## Standorte hinzufügen
 
@@ -280,7 +280,7 @@ gh workflow run regenerate-docs.yml --field reason="Nach großem Update"
 ### Dokumentation regenerieren
 
 ```bash
-python scripts/regenerate_docs.py
+python scripts/editorial/regenerate_docs.py
 ```
 
 ### Sources-Watcher starten
@@ -292,7 +292,7 @@ python scripts/regenerate_docs.py
 ### Archivierung testen
 
 ```bash
-python scripts/archive_old_events.py --days 30 --dry-run
+python scripts/editorial/archive_old_events.py --days 30 --dry-run
 ```
 
 ## Best Practices
@@ -383,9 +383,9 @@ gh run view <run-id> --log
 
 **Lokal testen:**
 ```bash
-python scripts/regenerate_docs.py
+python scripts/editorial/regenerate_docs.py
 # Oder
-python scripts/archive_old_events.py --dry-run
+python scripts/editorial/archive_old_events.py --dry-run
 ```
 
 ## Siehe auch

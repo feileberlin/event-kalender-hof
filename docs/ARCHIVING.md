@@ -16,16 +16,16 @@ Automatische Archivierung alter Events nach `_events/_history/YYYY/` (organisier
 ### Manuell
 ```bash
 # Dry-Run (zeigt nur was passieren würde)
-python scripts/archive_old_events.py --days 30 --dry-run
+python scripts/editorial/archive_old_events.py --days 30 --dry-run
 
 # Tatsächlich archivieren
-python scripts/archive_old_events.py --days 30
+python scripts/editorial/archive_old_events.py --days 30
 
 # Interaktiv (bei jedem Event nachfragen)
-python scripts/archive_old_events.py --days 30 --interactive
+python scripts/editorial/archive_old_events.py --days 30 --interactive
 
 # Custom Threshold (z.B. 60 Tage)
-python scripts/archive_old_events.py --days 60
+python scripts/editorial/archive_old_events.py --days 60
 ```
 
 ## 📋 Script-Optionen
@@ -181,7 +181,7 @@ workflow_dispatch:
 
 **Lokal**:
 ```bash
-python scripts/archive_old_events.py --days 60
+python scripts/editorial/archive_old_events.py --days 60
 ```
 
 ### Schedule anpassen
@@ -208,7 +208,7 @@ schedule:
 ls -lh _events/*.md
 
 # Reduziere Threshold
-python scripts/archive_old_events.py --days 7 --dry-run
+python scripts/editorial/archive_old_events.py --days 7 --dry-run
 ```
 
 ### "Permission denied"
@@ -220,7 +220,7 @@ python scripts/archive_old_events.py --days 7 --dry-run
 ls -la _events/
 
 # Make script executable
-chmod +x scripts/archive_old_events.py
+chmod +x scripts/editorial/archive_old_events.py
 ```
 
 ### "YAML parsing error"
@@ -248,11 +248,11 @@ for f in Path('_events').glob('*.md'):
 **Lösung**:
 1. Prüfe Actions-Log auf GitHub
 2. Stelle sicher: `permissions: contents: write` ist gesetzt
-3. Teste lokal: `python scripts/archive_old_events.py --dry-run`
+3. Teste lokal: `python scripts/editorial/archive_old_events.py --dry-run`
 
 ## 📚 Weitere Infos
 
 - **Archiv-README**: `_events/_history/README.md`
-- **Script-Hilfe**: `python scripts/archive_old_events.py --help`
+- **Script-Hilfe**: `python scripts/editorial/archive_old_events.py --help`
 - **Admin-Guide**: `docs/ADMIN.md`
 - **Workflow-Logs**: GitHub → Actions → "Archive Old Events"

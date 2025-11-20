@@ -73,12 +73,12 @@ Als Admin bist du verantwortlich für:
 #### Verwendung
 
 ```bash
-python scripts/analyze_flyer.py <URL>
+python scripts/editorial/analyze_flyer.py <URL>
 ```
 
 **Beispiel:**
 ```bash
-python scripts/analyze_flyer.py https://example.com/event-flyer.jpg
+python scripts/editorial/analyze_flyer.py https://example.com/event-flyer.jpg
 ```
 
 #### Unterstützte Formate
@@ -106,7 +106,7 @@ python scripts/analyze_flyer.py https://example.com/event-flyer.jpg
 1. **Flyer-URL kopieren** (z.B. von Facebook, Instagram, Website)
 2. **Script ausführen**:
    ```bash
-   python scripts/analyze_flyer.py https://example.com/flyer.jpg
+   python scripts/editorial/analyze_flyer.py https://example.com/flyer.jpg
    ```
 3. **Event-Datei wird erstellt** in `_events/` mit `status: "Entwurf"`
 4. **Prüfen und korrigieren** im Admin-Interface
@@ -265,7 +265,7 @@ git push
 
 ### Event-Quellen verwalten
 
-**Datei:** `scripts/scrape_events.py`
+**Datei:** `scripts/editorial/scrape_events.py`
 
 #### Neue Quelle hinzufügen
 

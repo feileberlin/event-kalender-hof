@@ -50,7 +50,7 @@ echo "🔄 Starte Scraping..."
 echo "======================================"
 
 # Starte Scraping-Script
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 
 RESULT=$?
 

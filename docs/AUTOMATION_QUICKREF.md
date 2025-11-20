@@ -96,7 +96,7 @@ scraping:
 ./scripts/scrape.sh
 
 # Oder direkt Python-Script
-python scripts/scrape_events.py
+python scripts/editorial/scrape_events.py
 ```
 
 ## 📊 Dokumentation regenerieren
@@ -106,7 +106,7 @@ python scripts/scrape_events.py
 **Manuell:**
 ```bash
 # Lokal
-python scripts/regenerate_docs.py
+python scripts/editorial/regenerate_docs.py
 
 # GitHub Actions
 gh workflow run regenerate-docs.yml --field reason="Nach Update"

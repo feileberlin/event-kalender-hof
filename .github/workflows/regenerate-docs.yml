@@ -46,7 +46,7 @@ jobs:
       - name: 📚 Regeneriere Dokumentation
         run: |
           echo "🚀 Starte Dokumentations-Regenerierung..."
-          python scripts/regenerate_docs.py
+          python scripts/editorial/regenerate_docs.py
           echo "✅ Dokumentation erfolgreich regeneriert"
       
       - name: 📊 Zeige Änderungen

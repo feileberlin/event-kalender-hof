@@ -134,13 +134,13 @@ python3 scripts/organizer_manager.py add \
 ### 2. Events scrapen
 
 ```bash
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 ```
 
 ### 3. Deduplication mit Veranstalter-Matching
 
 ```bash
-python3 scripts/deduplication_engine.py
+python3 scripts/editorial/deduplication_engine.py
 ```
 
 Output:

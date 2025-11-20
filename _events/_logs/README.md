@@ -116,4 +116,4 @@ Bei automatisierten Scraping-Läufen (z.B. GitHub Actions) werden die Logs:
 
 ## Support
 
-Bei Fragen zum Logging-System siehe `docs/SCRAPING.md` oder `scripts/scrape_events.py`.
+Bei Fragen zum Logging-System siehe `docs/SCRAPING.md` oder `scripts/editorial/scrape_events.py`.

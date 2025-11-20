@@ -117,7 +117,7 @@ Teste deine Änderungen lokal:
 
 ```bash
 bundle exec jekyll serve
-python scripts/scrape_events.py
+python scripts/editorial/scrape_events.py
 ```
 
 ## Fragen?

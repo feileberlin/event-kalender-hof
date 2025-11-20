@@ -26,7 +26,7 @@ Zentrale Venue-Datenbank mit folgenden Feldern:
 | `notes` | String | Zusätzliche Informationen | `Hauptkulturzentrum der Stadt` |
 | `last_updated` | Date | Letzte Aktualisierung | `2025-11-19` |
 
-### 2. `scripts/venue_manager.py`
+### 2. `scripts/editorial/venue_manager.py`
 Python-Modul für Venue-Verwaltung:
 
 ```python
@@ -57,11 +57,11 @@ missing = manager.find_missing_venues(events)
 - **Auto-Enrichment**: Koordinaten, Adresse und Metadaten werden automatisch zu Events hinzugefügt
 - **Missing-Report**: Zeigt Locations, die noch nicht in venues.csv sind
 
-### 3. `scripts/venue_admin.py`
+### 3. `scripts/editorial/venue_admin.py`
 Interaktives CLI-Tool für Admin-Aufgaben:
 
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 ```
 
 **Funktionen:**
@@ -91,7 +91,7 @@ missing_venues = self.venue_manager.find_missing_venues(self.events)
 
 ### 1. Events scrapen
 ```bash
-python scripts/scrape_events.py
+python scripts/editorial/scrape_events.py
 ```
 
 **Output:**
@@ -122,7 +122,7 @@ Neue Location,Alternative Namen,"Straße 1, 95028 Hof",50.320,11.917,true,true,f
 
 **Option B: Admin-Tool**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 3. Neuen Venue hinzufügen
 # → Interaktives Formular ausfüllen
 ```
@@ -131,19 +131,19 @@ python scripts/venue_admin.py
 
 **Alle Venues anzeigen:**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 1. Alle Venues anzeigen
 ```
 
 **Venue-Details:**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 5. Venue-Details anzeigen
 ```
 
 **Fehlende Venues checken:**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 4. Fehlende Venues aus Events finden
 ```
 
@@ -297,6 +297,6 @@ Freiheitshalle Hof,...,/assets/images/venues/freiheitshalle.jpg
 ## Support
 
 Bei Problemen oder Fragen:
-1. Logs prüfen: `python scripts/venue_admin.py`
+1. Logs prüfen: `python scripts/editorial/venue_admin.py`
 2. CSV validieren: `csvlint _data/venues.csv`
-3. Test-Script: `python scripts/venue_manager.py`
+3. Test-Script: `python scripts/editorial/venue_manager.py`

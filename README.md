@@ -209,16 +209,16 @@ open http://localhost:4000/event-kalender-hof/
 **Scripts testen:**
 ```bash
 # Events scrapen
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 
 # Duplikate finden
-python3 scripts/deduplication_engine.py
+python3 scripts/editorial/deduplication_engine.py
 
 # Alte Events archivieren
-python3 scripts/archive_old_events.py
+python3 scripts/editorial/archive_old_events.py
 
 # Flyer analysieren
-python3 scripts/analyze_flyer.py path/to/flyer.pdf
+python3 scripts/editorial/analyze_flyer.py path/to/flyer.pdf
 ```
 
 ---

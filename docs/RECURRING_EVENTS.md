@@ -610,6 +610,6 @@ Erweiterung für `/admin.html`:
 
 ## Siehe auch
 
-- `scripts/date_enhancer.py` - Automatic Recurring Detection
+- `scripts/editorial/date_enhancer.py` - Automatic Recurring Detection
 - `docs/DATE_VALIDATION.md` - Datums-Validierung
 - `_events/README.md` - Event-Schema Referenz

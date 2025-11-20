@@ -30,7 +30,7 @@ python3 scripts/sources_watcher.py --watch
 🔍 SOURCES.CSV WATCHER
 ================================================================================
 Überwache: _data/sources.csv
-Scraper:   scripts/scrape_events.py
+Scraper:   scripts/editorial/scrape_events.py
 Logs:      _events/_logs
 ================================================================================
 
@@ -75,7 +75,7 @@ python3 scripts/sources_watcher.py --trigger
 ### Option 3: Klassisches Scraping (ohne Watcher)
 
 ```bash
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 ```
 
 ## 📋 Voraussetzungen
@@ -114,7 +114,7 @@ class SourcesChangeHandler(FileSystemEventHandler):
 
 ### 3. Auto-Scraping
 ```python
-subprocess.run([sys.executable, "scripts/scrape_events.py"])
+subprocess.run([sys.executable, "scripts/editorial/scrape_events.py"])
 ```
 
 - Führt `scrape_events.py` aus
@@ -209,7 +209,7 @@ pip install watchdog
 ### "Scraping schlägt fehl"
 ```bash
 # Direkter Test ohne Watcher
-python3 scripts/scrape_events.py
+python3 scripts/editorial/scrape_events.py
 
 # Log-Datei prüfen
 cat _events/_logs/$(ls -t _events/_logs/*-scraping.log | head -1)

@@ -93,7 +93,7 @@ Hier kommt die Beschreibung...
 ### 2. Event-Scraper testen
 
 ```bash
-python scripts/scrape_events.py
+python scripts/editorial/scrape_events.py
 ```
 
 ### 3. Flyer analysieren (AI-powered) 🆕
@@ -102,10 +102,10 @@ python scripts/scrape_events.py
 
 ```bash
 # Beispiel: Event-Flyer von URL analysieren
-python scripts/analyze_flyer.py https://example.com/flyer.jpg
+python scripts/editorial/analyze_flyer.py https://example.com/flyer.jpg
 
 # Oder PDF-Flyer
-python scripts/analyze_flyer.py https://example.com/programm.pdf
+python scripts/editorial/analyze_flyer.py https://example.com/programm.pdf
 ```
 
 **Was passiert:**

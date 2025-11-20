@@ -123,7 +123,7 @@ jobs:
       - name: Test Python Scraper
         run: |
           echo "🔍 Testing Python scraper..."
-          python scripts/scrape_events.py --dry-run || true
+          python scripts/editorial/scrape_events.py --dry-run || true
           echo "✅ Scraper test completed!"
       
       - name: Check Event Files

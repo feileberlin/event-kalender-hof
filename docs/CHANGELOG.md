@@ -54,7 +54,7 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   - Icons in Standort-Dropdown
 
 - **📊 Automatische Dokumentations-Regenerierung**
-  - Neues Script `scripts/regenerate_docs.py` (330+ Zeilen)
+  - Neues Script `scripts/editorial/regenerate_docs.py` (330+ Zeilen)
   - GitHub Actions Workflow (wöchentlich + manuell)
   - Statistiken:
     * Event-Counts (Gesamt, Veröffentlicht, Entwürfe, Archiviert, Recurring)
@@ -269,7 +269,7 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
   - Lokales OCR (Tesseract) als letzte Option
   - Automatisches Geocoding (OpenStreetMap Nominatim)
   - Erstellt Events mit `status: "Entwurf"` für manuelle Prüfung
-  - Script: `python scripts/analyze_flyer.py <URL>`
+  - Script: `python scripts/editorial/analyze_flyer.py <URL>`
 
 ### Dokumentation
 - 📖 **ADMIN.md**: Sektion "Flyer-Analyse" mit Workflow und Beispielen
@@ -335,7 +335,7 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 - `admin.html` - Admin-Interface
 - `assets/js/main.js` - JavaScript-Logik
 - `assets/css/style.css` - Stylesheet
-- `scripts/scrape_events.py` - Event-Scraper
+- `scripts/editorial/scrape_events.py` - Event-Scraper
 - `.github/workflows/jekyll.yml` - Jekyll Deploy
 - `.github/workflows/scrape-events.yml` - Automatisches Scraping
 - `Gemfile` - Ruby-Dependencies

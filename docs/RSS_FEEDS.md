@@ -29,7 +29,7 @@ filters:
 Nach Änderungen an der Config:
 
 ```bash
-python scripts/generate_rss_feeds.py
+python scripts/editorial/generate_rss_feeds.py
 ```
 
 Dies erstellt automatisch die Feed-Dateien im Root oder `feeds/` Verzeichnis.

@@ -58,7 +58,7 @@ recurring:
 Scannt alle Events und erstellt/aktualisiert den Index:
 
 ```bash
-python3 scripts/recurring_expander.py --rebuild-index
+python3 scripts/editorial/recurring_expander.py --rebuild-index
 ```
 
 **Wann ausführen:**
@@ -72,16 +72,16 @@ Generiert fehlende Event-Instanzen für die nächsten X Monate:
 
 ```bash
 # Standard: 3 Monate im Voraus
-python3 scripts/recurring_expander.py
+python3 scripts/editorial/recurring_expander.py
 
 # Nur 1 Monat
-python3 scripts/recurring_expander.py --months 1
+python3 scripts/editorial/recurring_expander.py --months 1
 
 # 6 Monate
-python3 scripts/recurring_expander.py --months 6
+python3 scripts/editorial/recurring_expander.py --months 6
 
 # Ohne Index (vollständiger Scan)
-python3 scripts/recurring_expander.py --no-index
+python3 scripts/editorial/recurring_expander.py --no-index
 ```
 
 **Wann ausführen:**
@@ -119,16 +119,16 @@ _events/
 
 ```bash
 # Dry-Run (zeigt nur was passieren würde)
-python3 scripts/archive_old_events.py --dry-run
+python3 scripts/editorial/archive_old_events.py --dry-run
 
 # Archiviere Events älter als 30 Tage
-python3 scripts/archive_old_events.py --days 30
+python3 scripts/editorial/archive_old_events.py --days 30
 
 # Interaktiv (fragt bei jedem Event)
-python3 scripts/archive_old_events.py --interactive
+python3 scripts/editorial/archive_old_events.py --interactive
 
 # Events älter als 60 Tage
-python3 scripts/archive_old_events.py --days 60
+python3 scripts/editorial/archive_old_events.py --days 60
 ```
 
 **Vor Archivierung:**
@@ -192,7 +192,7 @@ jobs:
         run: pip install -r requirements.txt
       
       - name: Generate recurring events
-        run: python3 scripts/recurring_expander.py --months 3
+        run: python3 scripts/editorial/recurring_expander.py --months 3
       
       - name: Commit changes
         run: |
@@ -207,7 +207,7 @@ jobs:
 
 ```bash
 # Crontab-Eintrag
-0 2 * * 1 cd /pfad/zum/projekt && python3 scripts/recurring_expander.py --months 3
+0 2 * * 1 cd /pfad/zum/projekt && python3 scripts/editorial/recurring_expander.py --months 3
 ```
 
 ## 🐛 Troubleshooting
@@ -217,7 +217,7 @@ jobs:
 **Lösung:**
 ```bash
 # Index neu aufbauen
-python3 scripts/recurring_expander.py --rebuild-index
+python3 scripts/editorial/recurring_expander.py --rebuild-index
 ```
 
 ### Problem: Instanzen fehlen
@@ -229,14 +229,14 @@ python3 scripts/recurring_expander.py --rebuild-index
 
 ```bash
 # Vollständiger Scan ohne Index
-python3 scripts/recurring_expander.py --no-index --months 6
+python3 scripts/editorial/recurring_expander.py --no-index --months 6
 ```
 
 ### Problem: Alte Instanzen nicht archiviert
 
 ```bash
 # Archivierung manuell ausführen
-python3 scripts/archive_old_events.py --days 30
+python3 scripts/editorial/archive_old_events.py --days 30
 ```
 
 ## 📊 Statistik

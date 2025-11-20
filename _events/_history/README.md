@@ -36,13 +36,13 @@ Events werden **automatisch archiviert**:
 ### Via Script
 ```bash
 # Dry-Run (zeigt was passieren würde)
-python scripts/archive_old_events.py --days 30 --dry-run
+python scripts/editorial/archive_old_events.py --days 30 --dry-run
 
 # Tatsächlich archivieren
-python scripts/archive_old_events.py --days 30
+python scripts/editorial/archive_old_events.py --days 30
 
 # Interaktiv (bei jedem Event nachfragen)
-python scripts/archive_old_events.py --days 30 --interactive
+python scripts/editorial/archive_old_events.py --days 30 --interactive
 ```
 
 ### Via GitHub Actions
@@ -139,6 +139,6 @@ sed -i 's/status: "Archiviert"/status: "Öffentlich"/' _events/2025-01-15-event.
 
 ## 📚 Weitere Infos
 
-- **Script-Doku**: `scripts/archive_old_events.py --help`
+- **Script-Doku**: `scripts/editorial/archive_old_events.py --help`
 - **Workflow-Config**: `.github/workflows/archive-old-events.yml`
 - **Admin-Guide**: `docs/ADMIN.md`

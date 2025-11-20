@@ -4,7 +4,7 @@
 
 ### Event-Scraping mit Venue-Enrichment
 ```bash
-python scripts/scrape_events.py
+python scripts/editorial/scrape_events.py
 ```
 
 **Output:**
@@ -29,7 +29,7 @@ python scripts/scrape_events.py
 
 **Option 1: Interaktives Tool**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 3. Neuen Venue hinzufügen
 ```
 
@@ -43,19 +43,19 @@ Neue Location,Alias1,Alias2,"Straße 1, Hof",50.320,11.917,true,true,false,true,
 
 **Alle anzeigen:**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 1. Alle Venues anzeigen
 ```
 
 **Venue suchen:**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 2. Venue suchen
 ```
 
 **Details anzeigen:**
 ```bash
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 5. Venue-Details anzeigen
 ```
 
@@ -100,7 +100,7 @@ Theater Hof,"Stadttheater Hof,Theater,Hof Theater",...
 ### Events ohne Venue
 ```bash
 # Alle Events analysieren
-python scripts/venue_admin.py
+python scripts/editorial/venue_admin.py
 # → Menü: 4. Fehlende Venues aus Events finden
 ```
 
@@ -180,4 +180,4 @@ Event wird nicht auf Karte angezeigt
 - 📖 **Vollständige Doku**: [docs/VENUES.md](VENUES.md)
 - 🛠️ **Admin-Guide**: [docs/ADMIN.md](ADMIN.md)
 - 📝 **Beispiel-Code**: `scripts/venue_examples.py`
-- 🎯 **Admin-Tool**: `scripts/venue_admin.py`
+- 🎯 **Admin-Tool**: `scripts/editorial/venue_admin.py`
