@@ -1,0 +1,73 @@
+---
+layout: base
+permalink: /404.html
+---
+
+<style>
+.error-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.error-404 h1 {
+  font-size: 8em;
+  margin: 0;
+  color: #ff00ff;
+  text-shadow: 3px 3px 0 #00ff00;
+  animation: glitch 2s infinite;
+}
+
+.error-404 p {
+  font-size: 1.5em;
+  margin: 20px 0;
+  color: #666;
+}
+
+.error-404 .redirect-msg {
+  font-size: 1em;
+  color: #999;
+  margin-top: 10px;
+}
+
+.error-404 a {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 15px 30px;
+  background: #00ff00;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  border: 3px solid black;
+  font-size: 1.2em;
+}
+
+.error-404 a:hover {
+  background: #ff00ff;
+  color: white;
+}
+
+@keyframes glitch {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-2px, 2px); }
+  94% { transform: translate(2px, -2px); }
+}
+</style>
+
+<div class="error-404">
+  <h1>404</h1>
+  <p>Diese Seite existiert nicht (mehr).</p>
+  <p class="redirect-msg">Du wirst in 3 Sekunden zur Startseite weitergeleitet...</p>
+  <a href="{{ '/' | relative_url }}">→ Sofort zur Karte</a>
+</div>
+
+<script>
+// Auto-redirect nach 3 Sekunden
+setTimeout(function() {
+  window.location.href = '{{ "/" | relative_url }}';
+}, 3000);
+</script>

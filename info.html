@@ -1,0 +1,274 @@
+---
+layout: base
+title: Info & Kontakt
+---
+
+<style>
+/* Kompaktes Info-Layout */
+.info-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.info-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.info-header h1 {
+  font-size: 2.5em;
+  margin: 0;
+  color: #00ff00;
+  text-shadow: 2px 2px 0 #ff00ff;
+}
+
+.info-header .tagline {
+  font-size: 1.2em;
+  color: #666;
+  margin-top: 10px;
+}
+
+.info-section {
+  margin: 40px 0;
+  padding: 20px;
+  background: #f9f9f9;
+  border-left: 4px solid #ff00ff;
+}
+
+.info-section h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.info-card {
+  padding: 15px;
+  background: white;
+  border: 2px solid #00ff00;
+  border-radius: 4px;
+}
+
+.info-card h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+.feed-list {
+  list-style: none;
+  padding: 0;
+}
+
+.feed-list li {
+  margin: 10px 0;
+  padding: 10px;
+  background: white;
+  border-left: 3px solid #00ff00;
+}
+
+.feed-list code {
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background: #00ff00;
+  color: black;
+  border: 2px solid black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-link:hover {
+  background: #ff00ff;
+  color: white;
+}
+</style>
+
+<div class="info-container">
+  <a href="{{ '/' | relative_url }}" class="back-link">← Zurück zur Karte</a>
+  
+  <div class="info-header">
+    <h1>{{ site.title }}</h1>
+    <p class="tagline">{{ site.description }}</p>
+  </div>
+
+  <!-- Was ist Krawl? -->
+  <div class="info-section">
+    <h2>🎸 Was ist Krawl?</h2>
+    <p>
+      <strong>Krawl</strong> ist ein dezentrales, Open-Source Event-Kalender-System für lokale Communities. 
+      Fork das Projekt, passe es an deine Stadt/Szene an, und gib deiner Community einen zentralen Ort für Events.
+    </p>
+    <p>
+      <strong>Kein Ort?</strong> Krawl funktioniert für <em>jede</em> Community: Städte, Subkulturen (Punk, Metal, Indie), 
+      Maker-Spaces, Hobby-Gruppen, Themen-Netzwerke... Überall wo Menschen zusammenkommen.
+    </p>
+    <p>
+      <strong>Philosophie:</strong> Privacy-First, kein Tracking, keine Accounts nötig, DSGVO-konform, vollständig Open Source.
+    </p>
+  </div>
+
+  <!-- Dieser Fork -->
+  <div class="info-section">
+    <h2>📍 Dieser Fork: {{ site.city.name }}</h2>
+    <p>
+      <strong>Ort:</strong> {{ site.city.name }}, {{ site.city.state }}, {{ site.city.country }}<br>
+      <strong>Population:</strong> {{ site.city.population | number_with_delimiter }}<br>
+      {% if site.city.website %}<strong>Website:</strong> <a href="{{ site.city.website }}" target="_blank">{{ site.city.website }}</a><br>{% endif %}
+      <strong>Kontakt:</strong> <a href="{{ site.github.repository_url }}/discussions">GitHub Discussions</a> / 
+      <a href="{{ site.github.repository_url }}/issues">Issues</a>
+    </p>
+  </div>
+
+  <!-- Services für User -->
+  <div class="info-section">
+    <h2>📡 Services für Nutzer</h2>
+    
+    <h3>RSS-Feeds (für Traditionalisten 😉)</h3>
+    <p>Abonniere Events in deinem Feed-Reader:</p>
+    <ul class="feed-list">
+      {% for feed in site.filters.rss_feeds %}
+      <li>
+        <strong>{{ feed.name }}</strong><br>
+        <code>{{ site.url }}{{ site.baseurl }}/{% if feed.filename == 'feed.xml' %}feed.xml{% else %}feeds/{{ feed.filename }}{% endif %}</code>
+        {% if feed.time %} • Zeit: {{ feed.time }}{% endif %}
+        {% if feed.category %} • Kategorie: {{ feed.category }}{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    
+    <h3>Weitere Features</h3>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🔖 Bookmarks</h3>
+        <p>Merke Events, drucke sie als PDF oder maile sie dir selbst</p>
+      </div>
+      <div class="info-card">
+        <h3>🗺️ GPS-Umkreissuche</h3>
+        <p>Finde Events in deiner Nähe (1-10km Radius)</p>
+      </div>
+      <div class="info-card">
+        <h3>🎯 Filter</h3>
+        <p>Nach Zeit (Sonnenaufgang, Tatort, Vollmond), Kategorie, Ort</p>
+      </div>
+      <div class="info-card">
+        <h3>🔍 Volltext-Suche</h3>
+        <p>Durchsuche alle Event-Titel und Beschreibungen</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Datenschutz -->
+  <div class="info-section">
+    <h2>🔒 Datenschutz & Privacy</h2>
+    
+    <h3>Was wir speichern</h3>
+    <ul>
+      <li><strong>Filter-Einstellungen:</strong> In einem Cookie (365 Tage, löschbar)</li>
+      <li><strong>Standort:</strong> Nur lokal in deinem Browser, nie auf dem Server</li>
+      <li><strong>Analytics:</strong> GoatCounter (Privacy-First, keine Cookies, anonym)</li>
+    </ul>
+    
+    <h3>Was wir NICHT tun</h3>
+    <ul>
+      <li>❌ Kein Tracking</li>
+      <li>❌ Kein Fingerprinting</li>
+      <li>❌ Kein Datenverkauf</li>
+      <li>❌ Keine Accounts/Login nötig</li>
+      <li>❌ Keine persönlichen Daten</li>
+    </ul>
+    
+    <p><strong>TL;DR:</strong> Privacy-First Design. Deine Daten bleiben bei dir. 🔒</p>
+  </div>
+
+  <!-- Fork it! -->
+  <div class="info-section">
+    <h2>🚀 Fork it für deine Community!</h2>
+    <p>
+      Krawl ist Open Source und designed für Forks. Erstelle einen Event-Kalender für deine Stadt, 
+      deine Szene, deinen Hackerspace, deine Hobby-Gruppe...
+    </p>
+    
+    <h3>Quick-Start</h3>
+    <ol>
+      <li>Fork das Repository: <a href="{{ site.github.repository_url }}" target="_blank">{{ site.github.repository_nwo }}</a></li>
+      <li>Passe <code>_config.yml</code> an (Stadt, Kategorien, Filter)</li>
+      <li>Deploy auf GitHub Pages (kostenlos!)</li>
+      <li>Optional: Custom Domain einrichten</li>
+    </ol>
+    
+    <h3>Dokumentation</h3>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>📖 Setup</h3>
+        <p><a href="{{ '/INSTALL' | relative_url }}">Installation Guide</a></p>
+        <p>Schritt-für-Schritt Anleitung</p>
+      </div>
+      <div class="info-card">
+        <h3>🎨 Design</h3>
+        <p>Karten-Styling anpassen</p>
+        <p>4 fertige Presets + Tutorials</p>
+      </div>
+      <div class="info-card">
+        <h3>🌐 Domain</h3>
+        <p>Custom Domain Setup</p>
+        <p>DNS-Konfiguration + SSL</p>
+      </div>
+      <div class="info-card">
+        <h3>🤖 Automation</h3>
+        <p>Scraping, Dedup, Archiving</p>
+        <p>GitHub Actions Workflows</p>
+      </div>
+    </div>
+    
+    <p style="text-align: center; margin-top: 30px;">
+      <a href="{{ site.github.repository_url }}" target="_blank" style="font-size: 1.2em; font-weight: bold;">
+        → Zum GitHub Repository
+      </a>
+    </p>
+  </div>
+
+  <!-- Impressum -->
+  <div class="info-section">
+    <h2>⚖️ Impressum</h2>
+    <p>
+      <strong>Projekt:</strong> Krawl - Open Source Event Calendar<br>
+      <strong>Repository:</strong> <a href="{{ site.github.repository_url }}">{{ site.github.repository_nwo }}</a><br>
+      <strong>Lizenz:</strong> MIT License<br>
+      <strong>Kontakt:</strong> 
+      <a href="{{ site.github.repository_url }}/issues">GitHub Issues</a> / 
+      <a href="{{ site.github.repository_url }}/discussions">Discussions</a>
+    </p>
+    <p>
+      <strong>Technologie:</strong> Jekyll Static Site Generator, GitHub Pages, Leaflet Maps, OpenStreetMap<br>
+      <strong>Analytics:</strong> <a href="https://www.goatcounter.com/" target="_blank">GoatCounter</a> (Privacy-First, Open Source)
+    </p>
+  </div>
+
+  <p style="text-align: center; margin: 40px 0;">
+    <a href="{{ '/' | relative_url }}" class="back-link">← Zurück zur Karte</a>
+  </p>
+</div>
