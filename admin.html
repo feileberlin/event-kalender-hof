@@ -614,6 +614,115 @@ title: Admin - Event-Verwaltung
 .btn-ignore:hover {
     background: #757575;
 }
+
+/* Organizer Info Styles */
+.organizer-info {
+    background: #e8f5e9;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.organizer-info h4 {
+    margin: 0 0 12px 0;
+    color: #2e7d32;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.organizer-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+}
+
+.organizer-detail-item {
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid #4caf50;
+}
+
+.organizer-detail-item strong {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.organizer-detail-item a {
+    color: #2e7d32;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.organizer-detail-item a:hover {
+    text-decoration: underline;
+}
+
+.relationship-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.relationship-badge.established {
+    background: #4caf50;
+    color: white;
+}
+
+.relationship-badge.active {
+    background: #2196f3;
+    color: white;
+}
+
+.relationship-badge.new {
+    background: #ff9800;
+    color: white;
+}
+
+.contact-quick-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.contact-quick-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: #4caf50;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.contact-quick-actions a:hover {
+    background: #388e3c;
+    text-decoration: none !important;
+}
+
+.contact-quick-actions a.secondary {
+    background: #2196f3;
+}
+
+.contact-quick-actions a.secondary:hover {
+    background: #1976d2;
+}
+
 </style>
 
 <div class="admin-container">
@@ -1289,6 +1398,8 @@ function renderClusterCard(cluster) {
                 `).join('')}
             </div>
             
+            ${cluster.organizer_info ? renderOrganizerInfo(cluster.organizer_info) : ''}
+            
             ${cluster.canonical_data.description ? `
                 <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
                     <strong>Beschreibung (merged):</strong>
@@ -1309,6 +1420,114 @@ function renderClusterCard(cluster) {
                 <button class="btn-edit" onclick="viewClusterDetails('${cluster.cluster_id}')">
                     📝 Details anzeigen
                 </button>
+            </div>
+        </div>
+    `;
+}
+
+// Render Organizer Info
+function renderOrganizerInfo(organizer) {
+    if (!organizer) return '';
+    
+    const matchType = organizer.match_type ? `<span style="color: #ff9800; font-size: 11px;">(${organizer.match_type === 'venue_based' ? 'Venue-basiert, ' + Math.round(organizer.confidence * 100) + '% Konfidenz' : ''})</span>` : '';
+    
+    const relationshipBadge = organizer.relationship_status ? 
+        `<span class="relationship-badge ${organizer.relationship_status}">${organizer.relationship_status}</span>` : '';
+    
+    return `
+        <div class="organizer-info">
+            <h4>
+                👤 Veranstalter-Kontakt ${matchType}
+                ${relationshipBadge}
+            </h4>
+            
+            <div class="organizer-details">
+                ${organizer.contact_person ? `
+                    <div class="organizer-detail-item">
+                        <strong>👤 Ansprechpartner</strong>
+                        ${organizer.contact_person}${organizer.contact_role ? ` (${organizer.contact_role})` : ''}
+                    </div>
+                ` : ''}
+                
+                ${organizer.contact_email ? `
+                    <div class="organizer-detail-item">
+                        <strong>📧 E-Mail</strong>
+                        <a href="mailto:${organizer.contact_email}">${organizer.contact_email}</a>
+                    </div>
+                ` : ''}
+                
+                ${organizer.contact_phone ? `
+                    <div class="organizer-detail-item">
+                        <strong>📞 Telefon</strong>
+                        <a href="tel:${organizer.contact_phone.replace(/\s/g, '')}">${organizer.contact_phone}</a>
+                    </div>
+                ` : ''}
+                
+                ${organizer.press_contact ? `
+                    <div class="organizer-detail-item">
+                        <strong>📰 Presse-Kontakt</strong>
+                        ${organizer.press_contact}
+                        ${organizer.press_email ? `<br><a href="mailto:${organizer.press_email}">${organizer.press_email}</a>` : ''}
+                        ${organizer.press_phone ? `<br><a href="tel:${organizer.press_phone.replace(/\s/g, '')}">${organizer.press_phone}</a>` : ''}
+                    </div>
+                ` : ''}
+                
+                ${organizer.best_contact_time ? `
+                    <div class="organizer-detail-item">
+                        <strong>⏰ Beste Erreichbarkeit</strong>
+                        ${organizer.best_contact_time}
+                    </div>
+                ` : ''}
+                
+                ${organizer.preferred_contact_method ? `
+                    <div class="organizer-detail-item">
+                        <strong>✉️ Bevorzugter Kanal</strong>
+                        ${organizer.preferred_contact_method}
+                    </div>
+                ` : ''}
+                
+                ${organizer.website ? `
+                    <div class="organizer-detail-item">
+                        <strong>🌐 Website</strong>
+                        <a href="${organizer.website}" target="_blank" rel="noopener">${organizer.website}</a>
+                    </div>
+                ` : ''}
+                
+                ${organizer.last_contact_date ? `
+                    <div class="organizer-detail-item">
+                        <strong>📅 Letzter Kontakt</strong>
+                        ${new Date(organizer.last_contact_date).toLocaleDateString('de-DE')}
+                    </div>
+                ` : ''}
+            </div>
+            
+            ${organizer.notes ? `
+                <div style="margin-top: 12px; padding: 10px; background: white; border-radius: 6px; font-size: 13px; color: #666;">
+                    <strong>📝 Notizen:</strong> ${organizer.notes}
+                </div>
+            ` : ''}
+            
+            <div class="contact-quick-actions">
+                ${organizer.contact_email ? `
+                    <a href="mailto:${organizer.contact_email}?subject=Veranstaltung: [EVENT_TITEL]&body=Hallo ${organizer.contact_person || ''},%0D%0A%0D%0AIch schreibe Ihnen bezüglich...">
+                        📧 E-Mail schreiben
+                    </a>
+                ` : ''}
+                ${organizer.contact_phone ? `
+                    <a href="tel:${organizer.contact_phone.replace(/\s/g, '')}" class="secondary">
+                        📞 Anrufen
+                    </a>
+                ` : ''}
+                ${organizer.social_media_facebook ? `
+                    <a href="${organizer.social_media_facebook}" target="_blank" rel="noopener" class="secondary">
+                        📘 Facebook
+                    </a>
+                ` : ''}
+                ${organizer.social_media_instagram ? `
+                    <a href="https://instagram.com/${organizer.social_media_instagram.replace('@', '')}" target="_blank" rel="noopener" class="secondary">
+                        📷 Instagram
+                    </a>
+                ` : ''}
             </div>
         </div>
     `;

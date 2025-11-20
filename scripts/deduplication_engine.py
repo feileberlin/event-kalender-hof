@@ -144,7 +144,7 @@ class DeduplicationEngine:
         self.organizers = self.load_organizers()
     
     def load_organizers(self) -> Dict[str, Dict]:
-        """Lädt Veranstalter-Datenbank"""
+        """Lädt Veranstalter-Datenbank mit vollständigen Kontaktdaten"""
         organizers = {}
         if self.organizers_csv.exists():
             with open(self.organizers_csv, 'r', encoding='utf-8') as f:
@@ -154,8 +154,21 @@ class DeduplicationEngine:
                         'aliases': [a.strip() for a in row['aliases'].split(',') if a],
                         'verified_sources': [s.strip() for s in row['verified_sources'].split(',') if s],
                         'typical_venues': [v.strip() for v in row['typical_venues'].split(',') if v],
-                        'website': row['website'],
-                        'contact': row['contact']
+                        'website': row.get('website', ''),
+                        'contact_email': row.get('contact_email', ''),
+                        'contact_phone': row.get('contact_phone', ''),
+                        'contact_person': row.get('contact_person', ''),
+                        'contact_role': row.get('contact_role', ''),
+                        'social_media_facebook': row.get('social_media_facebook', ''),
+                        'social_media_instagram': row.get('social_media_instagram', ''),
+                        'press_contact': row.get('press_contact', ''),
+                        'press_email': row.get('press_email', ''),
+                        'press_phone': row.get('press_phone', ''),
+                        'best_contact_time': row.get('best_contact_time', ''),
+                        'preferred_contact_method': row.get('preferred_contact_method', ''),
+                        'notes': row.get('notes', ''),
+                        'last_contact_date': row.get('last_contact_date', ''),
+                        'relationship_status': row.get('relationship_status', '')
                     }
         return organizers
     
@@ -254,6 +267,28 @@ class DeduplicationEngine:
             self.event_signatures[signature] = cluster_id
             return cluster_id
     
+    def find_organizer_for_event(self, event_data: Dict) -> Optional[Dict]:
+        """Findet Veranstalter-Informationen für ein Event"""
+        organizer_name = event_data.get('organizer', '')
+        location = event_data.get('location', '')
+        
+        # Direkte Übereinstimmung
+        if organizer_name in self.organizers:
+            return self.organizers[organizer_name]
+        
+        # Suche über Aliases
+        for org_name, org_data in self.organizers.items():
+            if organizer_name in org_data['aliases']:
+                return org_data
+        
+        # Suche über typische Venues
+        for org_name, org_data in self.organizers.items():
+            if location in org_data['typical_venues']:
+                # Fuzzy-Match: Venue könnte Hinweis sein
+                return {**org_data, 'match_type': 'venue_based', 'confidence': 0.7}
+        
+        return None
+    
     def detect_organizer_patterns(self):
         """Erkennt Muster: Welcher Veranstalter nutzt welche Quellen?"""
         patterns = {}
@@ -317,6 +352,9 @@ class DeduplicationEngine:
                             'scraped_at': event.get('scraped_at', '')
                         })
                 
+                # Finde passenden Veranstalter (falls vorhanden)
+                organizer_info = self.find_organizer_for_event(merged)
+                
                 review_data.append({
                     'cluster_id': cluster.cluster_id,
                     'title': merged['title'],
@@ -326,6 +364,7 @@ class DeduplicationEngine:
                     'duplicate_count': len(cluster.events),
                     'confidence': cluster.confidence,
                     'source_links': source_links,
+                    'organizer_info': organizer_info,  # Neu: Veranstalter-Kontakte
                     'requires_review': cluster.confidence < 0.9,
                     'data_quality_score': self.calculate_data_quality(merged)
                 })
