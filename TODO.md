@@ -9,12 +9,12 @@
 ## 🔥 High Priority (sofort)
 
 ### ~~1. GoatCounter Script wiederherstellen~~ ✅ ERLEDIGT
-- **Status:** ✅ COMPLETED (2025-01-20)
+- **Status:** ✅ COMPLETED (2025-11-20)
 - **Solution:** Code in `_config.yml` von "krawlist" zu "feileberlin" korrigiert
 - **Files:** `_config.yml` Line 233
 
 ### ~~2. Radius-Filter KISS-Restrukturierung~~ ✅ ERLEDIGT
-- **Status:** ✅ COMPLETED (2025-01-20)
+- **Status:** ✅ COMPLETED (2025-11-20)
 - **Solution:** Radius-Filter von hardcoded zu config-driven migriert
 - **Implementation:**
   - ✅ `_config.yml` → `filters.radius_filters` (key, label, km, default)
@@ -24,7 +24,7 @@
 - **Files:** `_config.yml`, `index.html`, `assets/js/main.js`, `assets/js/modules/filters.js`
 
 ### ~~3. Feature Guard Workflow~~ ✅ ERLEDIGT
-- **Status:** ✅ COMPLETED (2025-01-20)
+- **Status:** ✅ COMPLETED (2025-11-20)
 - **Implementation:** `.github/workflows/feature-guard.yml`
 - **Checks:**
   - ✅ GoatCounter Script in Layouts + Config
@@ -35,69 +35,164 @@
   - ✅ Admin Panel + GitHub Meta Editor
   - ✅ Documentation (README, FEATURES, TODO)
 
+### ~~4. SEO Optimization~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Implementation:**
+  - ✅ Meta Description, Open Graph, Twitter Cards in Layouts
+  - ✅ Canonical URLs für Duplicate Content Prevention
+  - ✅ robots.txt (Crawler-Steuerung, Admin-Ausschluss)
+  - ✅ sitemap.xml (automatisch via jekyll-sitemap)
+  - ✅ Admin-Bereich: noindex/nofollow
+- **Files:** `_layouts/base.html`, `_layouts/map.html`, `_layouts/admin.html`, `robots.txt`, `_config.yml`
+
+### ~~5. PWA Implementation~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Implementation:**
+  - ✅ manifest.json (App-Metadata, standalone mode)
+  - ✅ Service Worker (Network-First Caching, Offline-Support)
+  - ✅ Theme Color (Android Status Bar)
+  - ✅ Apple Touch Icons (iOS)
+  - ✅ Auto-Update Handling
+- **Files:** `manifest.json`, `sw.js`, `_layouts/base.html`, `_layouts/map.html`, `assets/js/main.js`
+
+### ~~6. Accessibility (WCAG 2.1 Level AA)~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Implementation:**
+  - ✅ prefers-reduced-motion Support (Animationen deaktivierbar)
+  - ✅ Skip-to-Content Link (Keyboard Navigation)
+  - ✅ Focus Styles (outline: 2px solid auf allen interaktiven Elementen)
+  - ✅ ARIA Labels (Screen Reader Support)
+  - ✅ role="application" für Karte
+- **Files:** `assets/css/fullscreen.css`, `index.html`
+
 ---
 
 ## ⚡ Medium Priority (bald)
 
-### 4. Filter-Icon-Bug final fixen
+### 7. Filter-Icon-Bug final fixen
 - **Status:** 🟡 PARTIALLY FIXED
 - **Problem:** Icons duplizieren sich manchmal noch
 - **Current Fix:** `data-original-label` Attribut
 - **Remaining Issue:** Edge Cases bei schnellen Filter-Wechseln?
 - **Test:** Mehrfach Filter wechseln, Icons prüfen
 
-### 5. Debug-Switch für Test-Events
+### 8. Performance Optimization
+- **Status:** 🔴 TODO
+- **Maßnahmen:**
+  - Lazy Loading für Event-Marker (nur sichtbare laden)
+  - Resource Hints (dns-prefetch für CDNs)
+  - Image Optimization (WebP für Venue-Fotos)
+  - Code Splitting (separate Bundles für Map/Admin)
+- **Impact:** MEDIUM (Ladezeit-Verbesserung)
+- **Test:** Lighthouse Performance Score > 90
+
+### 9. Debug-Switch für Test-Events
 - **Status:** 🟡 CONFIG ADDED, NOT WIRED
 - **Config:** `_config.yml` → `debug.show_test_events: false`
 - **TODO:** Jekyll Template liest Config, filtert test_event: true
 - **Location:** `index.html` → Event-Loop
 - **Impact:** LOW (nur Development)
 
-### 6. Responsive Filter-Counter
+### 10. Responsive Filter-Counter
 - **Status:** 🟢 WORKING, needs UX polish
 - **Issue:** Counter manchmal zu lang auf Mobile ("123 🎉 Konzerte")
 - **Idea:** Kürzere Labels auf Mobile (nur Icon + Zahl?)
 - **Impact:** LOW (nur UX)
 
+### 11. Event-Validierung verbessern
+- **Status:** 🔴 TODO
+- **Problem:** Scraper erzeugt manchmal inkonsistente Daten
+- **TODO:**
+  - Schema-Validierung (JSON Schema für Events)
+  - Required Fields Check (title, date, venue)
+  - Date Format Validation (ISO 8601)
+  - URL Validation (source links)
+- **Location:** `scripts/validation/validate_events.py`
+- **Impact:** HIGH (Datenqualität)
+
 ---
 
 ## 🌟 Nice-to-Have (später)
 
-### 7. Event-Export (iCal/CSV)
+### 12. Event-Export (iCal/CSV)
 - **Purpose:** Events in Kalender-App importieren
 - **Format:** iCalendar (.ics)
 - **Location:** Bookmark-Toolbar → "📅 Exportieren" Button
 - **Impact:** MEDIUM (Feature-Request)
 
-### 8. Recurring Events UI verbessern
+### 13. Dark Mode
+- **Status:** 🔴 TODO
+- **Implementation:**
+  - CSS: `@media (prefers-color-scheme: dark)`
+  - Toggle in Header (optional)
+  - LocalStorage für Persistenz
+  - Karte: Dark Tiles (OpenStreetMap Dark Mode)
+- **Impact:** MEDIUM (UX-Verbesserung)
+
+### 14. Social Sharing
+- **Status:** 🔴 TODO
+- **Features:**
+  - Share-Button in Event-Popups
+  - Web Share API (Mobile)
+  - Fallback: Copy-to-Clipboard
+  - Pre-filled Text mit Event-Details
+- **Impact:** LOW (Social-Feature)
+
+### 15. Recurring Events UI verbessern
 - **Current:** Admin-Panel hat Preview, aber schwer zu editieren
 - **Idea:** Visual Recurring Editor (Drag & Drop für Exceptions?)
 - **Impact:** LOW (Admin-only)
 
-### 9. Multi-Language Support
+### 16. Multi-Language Support
 - **Current:** Nur Deutsch
 - **Target:** Englisch als zweite Sprache
 - **Approach:** i18n mit Jekyll Liquid
 - **Impact:** HIGH (große Änderung)
 
-### 10. Progressive Web App (PWA)
-- **Features:**
-  - Offline-Modus
-  - App-Install-Prompt
-  - Push-Notifications für neue Events
-- **Tech:** Service Worker, Web App Manifest
-- **Impact:** HIGH (große Feature-Addition)
-
-### 11. Event-Kommentare / Ratings
+### 17. Event-Kommentare / Ratings
 - **Purpose:** Community-Feedback zu Events
 - **Tech:** GitHub Discussions API oder Disqus
 - **Privacy:** GDPR-Considerations
 - **Impact:** HIGH (Social-Feature)
 
-### 12. Venue-Fotos
+### 18. Venue-Fotos
 - **Purpose:** Bilder von Veranstaltungsorten
 - **Source:** Wikimedia Commons oder User-Upload?
 - **Location:** Marker-Popups, Event-Cards
+- **Impact:** MEDIUM (Visual Enhancement)
+
+### 19. Event-Empfehlungen (ML)
+- **Status:** 🔴 TODO (experimentell)
+- **Approach:**
+  - User-History (Bookmarks, geklickte Events)
+  - Collaborative Filtering (ähnliche User)
+  - Content-Based (Kategorie, Veranstaltungsort)
+- **Privacy:** Client-side ML (kein Tracking)
+- **Impact:** HIGH (Feature-Addition)
+
+### 20. Desktop-Notifications
+- **Status:** 🔴 TODO
+- **Trigger:** Neue Events in Bookmark-Kategorien
+- **Tech:** Web Notifications API + Service Worker
+- **Opt-in:** Permission Request
+- **Impact:** MEDIUM (Engagement)
+
+---
+
+## 🐛 Known Bugs
+
+### Bug 1: Filter-Icons duplizieren
+- **Status:** 🟡 PARTIALLY FIXED (data-original-label)
+- **Reproduce:** Schnell zwischen Kategorien wechseln
+- **Priority:** MEDIUM
+
+### Bug 2: Mobile Safari - Map Rendering
+- **Status:** 🔴 OPEN
+- **Issue:** Karte lädt manchmal nicht auf iOS Safari
+- **Workaround:** Seite neu laden
+- **Priority:** HIGH
+
+---
 - **Impact:** MEDIUM (UX-Enhancement)
 
 ---
@@ -154,24 +249,42 @@
 
 **Für neue Features/Bugs:**
 
-1. **Erst hierher eintragen** (oder Copilot sagt Bescheid)
-2. **Impact-Analyse** → Welche Files betroffen?
-3. **Konflikte?** → Überschneidung mit anderen Features?
-4. **User bestätigt** → "OK, implementiere #X"
-5. **Implementation** → Code-Changes
-6. **Update FEATURES.md** → Feature dokumentieren
-7. **Update TODO.md** → In "Completed" verschieben
-8. **Test** → Manuell + CI
-9. **Commit** → Mit Referenz auf TODO #X
+
+5. Security Headers (LOW Priority für GH Pages)
+
+Content Security Policy
+Aber: GitHub Pages setzt bereits viele Header automatisch
+6. Performance (LOW Priority)
+
+Lazy Loading für Bilder
+Resource Hints (preconnect, dns-prefetch)
 
 **Bei Änderungen an bestehenden Features:**
 
-1. **Check FEATURES.md** → Welche Features betroffen?
-2. **Impact warnen** → "Achtung: Betrifft GoatCounter, RSS, etc."
-3. **User bestätigt** → "OK, GoatCounter wird angepasst"
-4. **Implementation** → Mit extra Vorsicht
-5. **Test critical Features** → Feature Guard CI
-6. **Update FEATURES.md** → Änderungen dokumentieren
+1. SEO & Metadata (HIGH Priority)
+
+Meta Description fehlt
+Open Graph Tags (Facebook, LinkedIn)
+Twitter Card Tags
+Canonical URLs
+
+2. PWA Features (MEDIUM Priority)
+
+manifest.json (App-Installation auf Mobile)
+Service Worker (Offline-Funktionalität)
+Theme Color
+
+3. SEO Infrastructure (HIGH Priority)
+
+robots.txt (Crawler-Steuerung)
+sitemap.xml (Search Engine Discovery)
+
+4. Accessibility (MEDIUM Priority)
+
+lang Attribut ist da ✓, aber:
+prefers-reduced-motion für Animationen
+Skip-to-Content Links
+ARIA Labels für Filter
 
 ---
 
