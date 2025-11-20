@@ -19,9 +19,10 @@ import yaml
 from venue_manager import VenueManager
 
 # Konfiguration
-EVENTS_DIR = Path("_events")
-LOGS_DIR = Path("_events/_logs")
-SOURCES_CSV = Path("_data/sources.csv")
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+EVENTS_DIR = PROJECT_ROOT / "_events"
+LOGS_DIR = PROJECT_ROOT / "_events" / "_logs"
+SOURCES_CSV = PROJECT_ROOT / "_data" / "sources.csv"
 
 def load_sources():
     """Lädt Event-Quellen aus CSV-Datei"""

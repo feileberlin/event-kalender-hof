@@ -2,6 +2,8 @@
 
 **Single Source of Truth** für alle aktiven Features im Event-Kalender.
 
+**Last Updated:** 2025-11-20
+
 **Zweck:** Verhindert versehentliches Löschen/Überschreiben von Features bei Änderungen.
 
 **Update:** Bei jeder Feature-Addition/Removal diese Datei aktualisieren!
@@ -126,7 +128,7 @@
 - **Location:**
   - JS: `assets/js/modules/map.js` → `MapManager`
   - HTML: `index.html` → `#map`
-  - CSS: `assets/css/main.css` → `.fullscreen-map`
+  - CSS: `assets/css/fullscreen.css` → `.fullscreen-map`
 - **Features:**
   - Fullscreen-Karte (OpenStreetMap)
   - Event-Marker mit Popups
@@ -170,7 +172,7 @@
 ### Responsive Filter (Inline Selects)
 - **Status:** 🟢 ACTIVE
 - **Location:** `index.html` → `.inline-select`
-- **CSS:** `assets/css/main.css`
+- **CSS:** `assets/css/fullscreen.css`
 - **Features:**
   - Mobile-First Design
   - Emojis als Icons

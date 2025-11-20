@@ -13,6 +13,8 @@ from typing import Dict, List, Tuple, Optional
 from difflib import SequenceMatcher
 import yaml
 
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+
 
 class EventCluster:
     """Repräsentiert ein Cluster von ähnlichen/doppelten Events"""

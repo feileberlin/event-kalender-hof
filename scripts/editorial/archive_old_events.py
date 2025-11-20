@@ -13,9 +13,10 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import List, Dict, Tuple, Set
 
-EVENTS_DIR = Path("_events")
-HISTORY_DIR = Path("_events/_history")
-RECURRING_INDEX = Path("_data/recurring_index.json")
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+EVENTS_DIR = PROJECT_ROOT / "_events"
+HISTORY_DIR = PROJECT_ROOT / "_events" / "_history"
+RECURRING_INDEX = PROJECT_ROOT / "_data" / "recurring_index.json"
 
 
 class EventArchiver:

@@ -50,6 +50,17 @@ Die **nächsten Events** in **relativer Nähe** zu deinem Kontext:
 
 ---
 
+## 🚀 Usage
+
+1. **Öffne die Karte:** [hof.krawl.ist](https://feileberlin.github.io/event-kalender-hof/)
+2. **Filter anpassen:** Zeitraum, Umkreis (🚶 1km, 🚴 3km, 🚌 10km), Kategorie
+3. **Event anklicken:** Details, Beschreibung, Link zum Veranstalter
+4. **Bookmark setzen:** Event merken und später als PDF exportieren
+
+**Admin?** Siehe [INSTALL.md](INSTALL.md) für Setup-Anleitung.
+
+---
+
 ## 🎯 Warum dieses Projekt?
 
 **Das Problem:**
@@ -327,7 +338,8 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 | Datei | Zielgruppe | Inhalt |
 |-------|------------|--------|
 | **[docs/QUICKSTART.md](docs/QUICKSTART.md)** | Alle | Schnelleinstieg in 5 Minuten |
-| **[docs/ADMIN.md](docs/ADMIN.md)** | Admins | Event-Verwaltung, Scraping-Konfiguration |
+| **[INSTALL.md](INSTALL.md)** | Admins | Installation, Konfiguration, erste Schritte |
+| **[docs/ADMIN.md](docs/ADMIN.md)** | Admins | Event-Verwaltung, Scraping (erweitert) |
 | **[docs/DEDUPLICATION.md](docs/DEDUPLICATION.md)** | Admins/Devs | Duplikat-Erkennung & Enrichment |
 | **[docs/ORGANIZER_CRM.md](docs/ORGANIZER_CRM.md)** | Admins | Veranstalter-CRM, Networking, Kontakte |
 | **[docs/BOOKMARKS.md](docs/BOOKMARKS.md)** | Alle/Devs | Bookmark-System: Merken, Drucken, Mailen |
@@ -337,7 +349,7 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 | **[docs/SOURCES_WATCHER.md](docs/SOURCES_WATCHER.md)** | Admins/Devs | Auto-Scraping bei sources.csv Änderungen |
 | **[docs/RECURRING_EVENTS.md](docs/RECURRING_EVENTS.md)** | Admins/Devs | Wiederkehrende Events (Basis) |
 | **[docs/RECURRING_EVENTS_ADVANCED.md](docs/RECURRING_EVENTS_ADVANCED.md)** | Devs | Erweiterte Recurring-Logik |
-| **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** | Entwickler | Tests, Code-Style, Pull Requests |
+| **[CONTRIBUTING.md](docs/CONTRIBUTING.md)** | Entwickler | Tests, Code-Style, Pull Requests |
 
 ---
 
@@ -440,7 +452,7 @@ Krawl funktioniert für jede Community, die Events hat:
 
 *"Krawl — events finden, nicht suchen."*  
 *Für Krawlisten, von Krawlisten.*
-| **[docs/PROJECT.md](docs/PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz, Timeline |
+| **[PROJECT.md](docs/PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz, Timeline |
 | **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | Alle | Versionshistorie (v0.1.0 → v1.7.0) |
 | **[docs/ANALYTICS.md](docs/ANALYTICS.md)** | Admins | GoatCounter Analytics-Integration |
 
@@ -471,7 +483,7 @@ status: "Öffentlich"
 ---
 ```
 
-Details: [docs/ADMIN.md](docs/ADMIN.md#manuelles-event-erstellen)
+Details: [docs/ADMIN.md](docs/ADMIN.md)
 
 ## 🧪 Testing
 
@@ -482,7 +494,7 @@ node test_filters.js
 
 Die Test Suite validiert HTML ↔ JavaScript Konsistenz automatisch.
 
-Details: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md#testing)
+Details: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
 
 ## 🤝 Beitragen
 
@@ -520,7 +532,7 @@ MIT License - siehe [LICENSE](LICENSE)
 - Account-System (optional, für Sync)
 - Bookmark-Statistiken & Empfehlungen
 
-Vollständige Roadmap: [docs/PROJECT.md](docs/PROJECT.md#roadmap)
+Vollständige Roadmap: [docs/PROJECT.md](docs/PROJECT.md)
 
 ---
 

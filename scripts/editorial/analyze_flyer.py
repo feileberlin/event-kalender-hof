@@ -373,7 +373,7 @@ Antworte NUR mit JSON."""
         filename = f"{date_str}-{title_slug}.md"
         
         # Pfad
-        events_dir = Path(__file__).parent.parent / '_events'
+        events_dir = Path(__file__).parent.parent.parent / '_events'
         events_dir.mkdir(exist_ok=True)
         filepath = events_dir / filename
         

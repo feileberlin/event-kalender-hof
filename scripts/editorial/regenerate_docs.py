@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 
 # Projekt-Root
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 def load_config():
     """Lädt _config.yml"""

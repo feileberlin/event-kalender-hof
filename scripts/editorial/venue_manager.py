@@ -11,7 +11,8 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from difflib import SequenceMatcher
 
-VENUES_CSV = Path("_data/venues.csv")
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+VENUES_CSV = PROJECT_ROOT / "_data" / "venues.csv"
 
 
 class VenueManager:
