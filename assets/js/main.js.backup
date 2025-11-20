@@ -1,0 +1,1127 @@
+// Event-Kalender Hauptlogik
+let map;
+let markers = [];
+let userLocation = null;
+let filteredEvents = [];
+let lastSelectedLocation = 'rathaus'; // Track für Browser-Standort Refresh
+
+// LOCATIONS wird jetzt dynamisch aus index.html geladen (locations.csv)
+// Siehe: <script> Block in index.html
+
+// Cookie-Verwaltung
+const COOKIE_NAME = 'eventKalenderPrefs';
+const BOOKMARKS_COOKIE_NAME = 'eventKalenderBookmarks';
+const COOKIE_DAYS = 365;
+
+function savePrefsToCookie() {
+    const prefs = {
+        category: document.getElementById('categoryFilter')?.value || '',
+        time: document.getElementById('timeFilter')?.value || 'sunrise',
+        radius: document.getElementById('radiusFilter')?.value || '3',
+        location: document.getElementById('locationSelect')?.value || 'rathaus'
+    };
+
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (COOKIE_DAYS * 24 * 60 * 60 * 1000));
+    document.cookie = `${COOKIE_NAME}=${JSON.stringify(prefs)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+    console.log('Präferenzen gespeichert:', prefs);
+}
+
+function loadPrefsFromCookie() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === COOKIE_NAME) {
+            try {
+                const prefs = JSON.parse(decodeURIComponent(value));
+                console.log('Präferenzen geladen:', prefs);
+                return prefs;
+            } catch (e) {
+                console.error('Fehler beim Laden der Präferenzen:', e);
+            }
+        }
+    }
+    return null;
+}
+
+// ==========================================
+// BOOKMARK-SYSTEM
+// ==========================================
+
+let bookmarkedEvents = new Set();
+
+function saveBookmarksToCookie() {
+    const bookmarks = Array.from(bookmarkedEvents);
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (COOKIE_DAYS * 24 * 60 * 60 * 1000));
+    document.cookie = `${BOOKMARKS_COOKIE_NAME}=${JSON.stringify(bookmarks)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+    console.log('Bookmarks gespeichert:', bookmarks);
+    updateBookmarkUI();
+}
+
+function loadBookmarksFromCookie() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === BOOKMARKS_COOKIE_NAME) {
+            try {
+                const bookmarks = JSON.parse(decodeURIComponent(value));
+                bookmarkedEvents = new Set(bookmarks);
+                console.log('Bookmarks geladen:', bookmarks);
+                return bookmarks;
+            } catch (e) {
+                console.error('Fehler beim Laden der Bookmarks:', e);
+            }
+        }
+    }
+    return [];
+}
+
+function toggleBookmark(eventUrl) {
+    if (bookmarkedEvents.has(eventUrl)) {
+        bookmarkedEvents.delete(eventUrl);
+    } else {
+        bookmarkedEvents.add(eventUrl);
+    }
+    saveBookmarksToCookie();
+
+    // UI aktualisieren
+    const allBookmarkButtons = document.querySelectorAll(`[data-event-url="${eventUrl}"]`);
+    allBookmarkButtons.forEach(btn => {
+        updateBookmarkButton(btn, bookmarkedEvents.has(eventUrl));
+    });
+
+    // Event-Card markieren
+    const eventCard = document.querySelector(`[data-event-url-card="${eventUrl}"]`);
+    if (eventCard) {
+        if (bookmarkedEvents.has(eventUrl)) {
+            eventCard.classList.add('bookmarked');
+        } else {
+            eventCard.classList.remove('bookmarked');
+        }
+    }
+}
+
+function updateBookmarkButton(button, isBookmarked) {
+    if (isBookmarked) {
+        button.innerHTML = '⭐ Gemerkt';
+        button.classList.add('bookmarked');
+        button.setAttribute('title', 'Aus Merkliste entfernen');
+    } else {
+        button.innerHTML = '☆ Merken';
+        button.classList.remove('bookmarked');
+        button.setAttribute('title', 'Zur Merkliste hinzufügen');
+    }
+}
+
+function updateBookmarkUI() {
+    const count = bookmarkedEvents.size;
+    const toolbar = document.getElementById('bookmarks-toolbar');
+
+    if (count > 0) {
+        toolbar.style.display = 'flex';
+        document.getElementById('bookmark-count').textContent = count;
+    } else {
+        toolbar.style.display = 'none';
+    }
+}
+
+function getBookmarkedEventData() {
+    const now = new Date();
+    const bookmarkedData = [];
+
+    bookmarkedEvents.forEach(url => {
+        const event = allEvents.find(e => e.url === url);
+        if (event) {
+            // Prüfen ob Event noch gültig ist (veröffentlicht + in Zukunft)
+            if (event.status !== 'Öffentlich') return;
+
+            const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
+            if (eventDate < now) return;
+
+            bookmarkedData.push(event);
+        }
+    });
+
+    // Nach Datum sortieren
+    bookmarkedData.sort((a, b) => {
+        const dateA = new Date(a.date + 'T' + (a.start_time || '00:00'));
+        const dateB = new Date(b.date + 'T' + (b.start_time || '00:00'));
+        return dateA - dateB;
+    });
+
+    return bookmarkedData;
+}
+
+function printBookmarks() {
+    const events = getBookmarkedEventData();
+
+    if (events.length === 0) {
+        alert('Keine gültigen Termine in der Merkliste.\n\nStellen Sie sicher, dass die Events:\n- Veröffentlicht sind\n- In der Zukunft liegen');
+        return;
+    }
+
+    // HTML für Druck generieren
+    const printWindow = window.open('', '_blank');
+    let html = `
+        <!DOCTYPE html>
+        <html lang="de">
+        <head>
+            <meta charset="UTF-8">
+            <title>Meine gemerkten Events - Event-Kalender Hof</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    max-width: 800px;
+                    margin: 20px auto;
+                    padding: 20px;
+                    color: #333;
+                }
+                h1 {
+                    color: #2c3e50;
+                    border-bottom: 3px solid #8b4513;
+                    padding-bottom: 10px;
+                }
+                .meta {
+                    color: #666;
+                    font-size: 14px;
+                    margin-bottom: 30px;
+                }
+                .event {
+                    margin-bottom: 25px;
+                    padding: 15px;
+                    border-left: 4px solid #fa3;
+                    background: #f9f9f9;
+                    page-break-inside: avoid;
+                }
+                .event-title {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #2c3e50;
+                    margin-bottom: 8px;
+                }
+                .event-date {
+                    font-weight: bold;
+                    color: #8b4513;
+                    margin-bottom: 5px;
+                }
+                .event-location {
+                    color: #666;
+                    margin-bottom: 5px;
+                }
+                .event-description {
+                    margin-top: 10px;
+                    line-height: 1.5;
+                }
+                @media print {
+                    body { margin: 0; padding: 15mm; }
+                    .no-print { display: none; }
+                }
+            </style>
+        </head>
+        <body>
+            <h1>📌 Meine gemerkten Events</h1>
+            <div class="meta">
+                Generiert am: ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}<br>
+                Anzahl Events: ${events.length}
+            </div>
+    `;
+
+    events.forEach((event, idx) => {
+        const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
+        const dateStr = eventDate.toLocaleDateString('de-DE', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+        const timeStr = event.start_time ? ` um ${event.start_time} Uhr` : '';
+
+        html += `
+            <div class="event">
+                <div class="event-title">${idx + 1}. ${event.title}</div>
+                <div class="event-date">📅 ${dateStr}${timeStr}</div>
+                <div class="event-location">📍 ${event.location}</div>
+                ${event.category ? `<div class="event-location">🏷️ ${event.category}</div>` : ''}
+                ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
+            </div>
+        `;
+    });
+
+    html += `
+            <div class="no-print" style="margin-top: 30px; text-align: center;">
+                <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                    🖨️ Drucken / Als PDF speichern
+                </button>
+            </div>
+        </body>
+        </html>
+    `;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+}
+
+function emailBookmarks() {
+    const events = getBookmarkedEventData();
+
+    if (events.length === 0) {
+        alert('Keine gültigen Termine in der Merkliste.\n\nStellen Sie sicher, dass die Events:\n- Veröffentlicht sind\n- In der Zukunft liegen');
+        return;
+    }
+
+    // E-Mail Body generieren
+    let body = `Meine gemerkten Events - Event-Kalender Hof\n`;
+    body += `Generiert am: ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n`;
+    body += `\n${'='.repeat(60)}\n\n`;
+
+    events.forEach((event, idx) => {
+        const eventDate = new Date(event.date + 'T' + (event.start_time || '00:00'));
+        const dateStr = eventDate.toLocaleDateString('de-DE', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+        const timeStr = event.start_time ? ` um ${event.start_time} Uhr` : '';
+
+        body += `${idx + 1}. ${event.title}\n`;
+        body += `📅 ${dateStr}${timeStr}\n`;
+        body += `📍 ${event.location}\n`;
+        if (event.category) body += `🏷️ ${event.category}\n`;
+        if (event.description) body += `\n${event.description}\n`;
+        body += `\n${'-'.repeat(60)}\n\n`;
+    });
+
+    // mailto: Link erstellen
+    const subject = encodeURIComponent(`Meine gemerkten Events (${events.length} Termine)`);
+    const mailBody = encodeURIComponent(body);
+    const mailtoLink = `mailto:?subject=${subject}&body=${mailBody}`;
+
+    // Prüfen ob Body zu lang ist (Browser-Limit ~2000 Zeichen)
+    if (mailtoLink.length > 2000) {
+        alert('Die Merkliste ist zu lang für eine E-Mail.\n\nBitte nutzen Sie stattdessen:\n- 🖨️ Drucken / Als PDF speichern\n- Oder merken Sie weniger Events vor');
+        return;
+    }
+
+    window.location.href = mailtoLink;
+}
+
+function clearAllBookmarks() {
+    if (confirm(`Wirklich alle ${bookmarkedEvents.size} gemerkten Events löschen?`)) {
+        bookmarkedEvents.clear();
+        saveBookmarksToCookie();
+
+        // UI aktualisieren
+        document.querySelectorAll('.bookmark-btn').forEach(btn => {
+            updateBookmarkButton(btn, false);
+        });
+        document.querySelectorAll('.event-card').forEach(card => {
+            card.classList.remove('bookmarked');
+        });
+    }
+}
+
+function applyPrefs(prefs) {
+    if (!prefs) return;
+
+    const categoryFilter = document.getElementById('categoryFilter');
+    const timeFilter = document.getElementById('timeFilter');
+    const radiusFilter = document.getElementById('radiusFilter');
+    const locationSelect = document.getElementById('locationSelect');
+
+    if (categoryFilter && prefs.category !== undefined) {
+        categoryFilter.value = prefs.category;
+    }
+    if (timeFilter && prefs.time) {
+        timeFilter.value = prefs.time;
+    }
+    if (radiusFilter && prefs.radius) {
+        radiusFilter.value = prefs.radius;
+    }
+    if (locationSelect && prefs.location) {
+        locationSelect.value = prefs.location;
+    }
+
+    console.log('Präferenzen angewendet');
+}
+
+// Initialisierung
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Event-Kalender initialisiert');
+    console.log('Anzahl aller Events:', allEvents.length);
+    console.log('Events:', allEvents);
+
+    // Präferenzen und Bookmarks aus Cookies laden
+    const savedPrefs = loadPrefsFromCookie();
+    loadBookmarksFromCookie();
+    updateBookmarkUI();
+
+    initMap();
+    calculateDawnTime();
+
+    // Warten bis Karte geladen ist, dann Events anzeigen
+    setTimeout(() => {
+        // Präferenzen anwenden BEVOR Filter setup
+        if (savedPrefs) {
+            applyPrefs(savedPrefs);
+        }
+
+        setupEventListeners();
+
+        // Standort setzen (nach Event Listeners!)
+        const locationSelect = document.getElementById('locationSelect');
+        if (locationSelect) {
+            setLocation(locationSelect.value);
+        }
+
+        filterAndDisplayEvents();
+    }, 200);
+});
+
+// Karte initialisieren
+function initMap() {
+    console.log('Initialisiere Karte...');
+
+    // Prüfen, ob das Karten-Element existiert
+    const mapElement = document.getElementById('map');
+    if (!mapElement) {
+        console.error('Karten-Element nicht gefunden!');
+        return;
+    }
+
+    try {
+        map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Rathaus-Marker (Zentrum)
+        const rathausIcon = L.divIcon({
+            className: 'rathaus-marker',
+            html: '<div class="marker-icon">🏛️</div>',
+            iconSize: [30, 30]
+        });
+
+        // Rathaus-Marker (immer sichtbar)
+        const rathausMarker = L.marker([config.defaultCenter.lat, config.defaultCenter.lng], {icon: rathausIcon})
+            .addTo(map)
+            .bindPopup('<strong>Rathaus Hof an der Saale</strong><br>Zentrum des Kalenders');
+
+        // Öffne Popup standardmäßig wenn keine Events
+        if (allEvents.length === 0) {
+            rathausMarker.openPopup();
+        }
+
+        console.log('Karte erfolgreich initialisiert');
+
+        // Karte nach kurzer Verzögerung neu laden (für korrekte Tile-Darstellung)
+        setTimeout(() => {
+            map.invalidateSize();
+            console.log('Kartengröße aktualisiert');
+        }, 100);
+    } catch (error) {
+        console.error('Fehler beim Initialisieren der Karte:', error);
+    }
+}
+
+// Umkreis-Änderung mit Zoom synchronisieren (Einweg: Radius → Zoom)
+function syncZoomWithRadius() {
+    if (!map) return;
+
+    const radiusFilter = document.getElementById('radiusFilter');
+    if (!radiusFilter) return;
+
+    const radius = radiusFilter.value;
+    const currentZoom = map.getZoom();
+
+    // Radius zu Zoom-Level Mapping:
+    let targetZoom;
+    if (radius === '1') {
+        targetZoom = 16;
+    } else if (radius === '3') {
+        targetZoom = 14; // DEFAULT
+    } else if (radius === '10') {
+        targetZoom = 12;
+    } else {
+        targetZoom = 9; // Unbegrenzt: Zeige ~60 km Zoom
+    }
+
+    // Nur zoomen wenn deutlicher Unterschied
+    if (Math.abs(currentZoom - targetZoom) >= 1) {
+        const center = userLocation || config.defaultCenter;
+        map.setView([center.lat, center.lng], targetZoom, {
+            animate: true,
+            duration: 0.5
+        });
+        console.log(`Radius ${radius} km → Zoom ${targetZoom}`);
+    }
+}
+
+// Morgendämmerung berechnen
+function calculateDawnTime() {
+    const now = new Date();
+    let dawnDate = new Date(now);
+
+    // Wenn es nach 6:30 Uhr ist, nimm morgen früh 6:30
+    // Wenn es vor 6:30 Uhr ist, nimm heute 6:30
+    if (now.getHours() >= 6 && now.getMinutes() >= 30) {
+        dawnDate.setDate(dawnDate.getDate() + 1);
+    }
+
+    dawnDate.setHours(6, 30, 0, 0);
+
+    return dawnDate;
+}
+
+// Events filtern (nur kommende, Zeitfilter wird in filterAndDisplayEvents angewendet)
+function getUpcomingEvents() {
+    const now = new Date();
+
+    console.log('Jetzt:', now);
+
+    const upcomingEvents = allEvents.filter(event => {
+        const eventDateTime = new Date(`${event.date}T${event.startTime || '00:00'}`);
+        console.log(`Event: ${event.title}, Zeit: ${eventDateTime}, Kommend: ${eventDateTime >= now}`);
+        return eventDateTime >= now;
+    }).sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.startTime || '00:00'}`);
+        const dateB = new Date(`${b.date}T${b.startTime || '00:00'}`);
+        return dateA - dateB;
+    });
+
+    console.log('Gefilterte Events:', upcomingEvents.length);
+    return upcomingEvents;
+}
+
+// Events filtern und anzeigen
+function filterAndDisplayEvents() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const categoryFilter = document.getElementById('categoryFilter').value;
+    const timeFilter = document.getElementById('timeFilter').value;
+    const radiusFilter = parseFloat(document.getElementById('radiusFilter').value);
+
+    let events = getUpcomingEvents();
+
+    // Suchfilter
+    if (searchTerm) {
+        events = events.filter(event =>
+            event.title.toLowerCase().includes(searchTerm) ||
+            event.description.toLowerCase().includes(searchTerm) ||
+            event.location.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    // Kategorie-Filter
+    if (categoryFilter) {
+        events = events.filter(event => event.category === categoryFilter);
+    }
+
+    // Zeit-Filter
+    const now = new Date();
+    if (timeFilter === 'sunrise') {
+        // Bis Sonnenaufgang (6:30 Uhr nächster Tag oder heute wenn vor 6:30)
+        const dawn = calculateDawnTime();
+        events = events.filter(event => {
+            const eventDate = new Date(`${event.date}T${event.startTime || '00:00'}`);
+            return eventDate <= dawn;
+        });
+    } else if (timeFilter === 'tatort') {
+        // Bis zum Tatort (Sonntag 20:15 Uhr)
+        const tatortTime = new Date(now);
+        // Finde nächsten Sonntag
+        const daysUntilSunday = (7 - tatortTime.getDay()) % 7;
+        if (daysUntilSunday === 0 && (tatortTime.getHours() > 20 || (tatortTime.getHours() === 20 && tatortTime.getMinutes() >= 15))) {
+            // Wenn heute Sonntag nach 20:15, nimm nächsten Sonntag
+            tatortTime.setDate(tatortTime.getDate() + 7);
+        } else if (daysUntilSunday > 0) {
+            tatortTime.setDate(tatortTime.getDate() + daysUntilSunday);
+        }
+        tatortTime.setHours(20, 15, 0, 0);
+        events = events.filter(event => {
+            const eventDate = new Date(`${event.date}T${event.startTime || '00:00'}`);
+            return eventDate <= tatortTime;
+        });
+    }
+    // 'all' = kein Zeitfilter
+
+    // Radius-Filter (nur wenn Benutzerstandort vorhanden UND Filter nicht "Alle" oder "Taxi")
+    if (userLocation && radiusFilter < 999) {
+        events = events.filter(event => {
+            const distance = calculateDistance(
+                userLocation.lat, userLocation.lng,
+                event.coordinates.lat, event.coordinates.lng
+            );
+            return distance <= radiusFilter;
+        });
+    }
+
+    filteredEvents = events;
+    displayEventsOnMap();
+    displayEventList();
+    updateCategoryFilterDisplay();
+    updateLocationSelectDisplay();
+}
+
+// Kategorie-Filter mit Event-Counts aktualisieren
+function updateCategoryFilterDisplay() {
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (!categoryFilter) return;
+
+    const selectedCategory = categoryFilter.value;
+    const upcomingEvents = getUpcomingEvents();
+
+    // Counts pro Kategorie berechnen
+    const categoryCounts = {
+        '': upcomingEvents.length,
+        'Musik': 0,
+        'Theater': 0,
+        'Sport': 0,
+        'Kultur': 0,
+        'Markt': 0,
+        'Fest': 0,
+        'Sonstiges': 0
+    };
+
+    // Aktuell gefilterte Events nach Radius/Zeit zählen
+    const radiusFilter = document.getElementById('radiusFilter');
+    const timeFilter = document.getElementById('timeFilter');
+    const radius = radiusFilter ? radiusFilter.value : '3';
+    const timeValue = timeFilter ? timeFilter.value : 'sunrise';
+
+    upcomingEvents.forEach(event => {
+        // Radius-Filter anwenden
+        if (userLocation && radius !== '999999') {
+            const distance = calculateDistance(
+                userLocation.lat, userLocation.lng,
+                event.coordinates.lat, event.coordinates.lng
+            );
+            if (distance > parseFloat(radius)) return;
+        }
+
+        // Zeit-Filter anwenden
+        const eventDateTime = new Date(`${event.date}T${event.startTime || '00:00'}`);
+        if (timeValue === 'sunrise') {
+            const dawnTime = calculateDawnTime();
+            if (eventDateTime > dawnTime) return;
+        } else if (timeValue === 'tatort') {
+            const tatortTime = new Date();
+            tatortTime.setHours(20, 15, 0, 0);
+            if (eventDateTime > tatortTime) return;
+        }
+
+        // Count für spezifische Kategorie erhöhen
+        if (event.category && categoryCounts.hasOwnProperty(event.category)) {
+            categoryCounts[event.category]++;
+        }
+    });
+
+    // "Alle Kategorien" Count = Summe aller gefilterten Events
+    categoryCounts[''] = Object.values(categoryCounts).reduce((sum, count, index) => {
+        // Ersten Wert (alte '') überspringen
+        return index === 0 ? 0 : sum + count;
+    }, 0);
+
+    // Options aktualisieren
+    Array.from(categoryFilter.options).forEach(option => {
+        const category = option.value;
+        const icon = option.getAttribute('data-icon') || '';
+        const count = categoryCounts[category] || 0;
+
+        if (category === selectedCategory) {
+            // Aktuell ausgewählte Kategorie - zeige im Footer
+            if (category === '') {
+                option.textContent = `${count} ${icon}Events aller Art`;
+            } else {
+                const eventWord = count === 1 ? 'Event' : 'Events';
+                option.textContent = `${count} ${icon}${category}-${eventWord}`;
+            }
+        } else {
+            // Andere Kategorien - zeige im Dropdown mit Count
+            if (category === '') {
+                option.textContent = `${count} ${icon} Events aller Art`;
+            } else {
+                option.textContent = `${count} ${icon} ${category}`;
+            }
+        }
+    });
+}
+
+// Location-Select Display aktualisieren (analog zu Category-Filter)
+function updateLocationSelectDisplay() {
+    const locationSelect = document.getElementById('locationSelect');
+    if (!locationSelect) return;
+
+    const selectedLocation = locationSelect.value;
+
+    // Options aktualisieren
+    Array.from(locationSelect.options).forEach(option => {
+        const locValue = option.value;
+        const icon = option.getAttribute('data-icon') || '';
+        const baseName = option.textContent.replace(icon, '').trim();
+
+        if (locValue === selectedLocation) {
+            // Aktuell ausgewählter Standort - zeige im Header
+            option.textContent = `${icon} ${baseName}`;
+        } else {
+            // Andere Standorte - zeige im Dropdown
+            option.textContent = `${icon} ${baseName}`;
+        }
+    });
+}
+
+// Events auf Karte anzeigen
+function displayEventsOnMap() {
+    if (!map) {
+        console.error('Karte noch nicht initialisiert');
+        return;
+    }
+
+    console.log('Zeige', filteredEvents.length, 'Events auf Karte');
+
+    // Alte Marker entfernen
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+
+    // Neue Marker hinzufügen
+    filteredEvents.forEach((event, index) => {
+        console.log(`Marker für Event: ${event.title} bei [${event.coordinates.lat}, ${event.coordinates.lng}]`);
+
+        const eventIcon = L.divIcon({
+            className: 'event-marker',
+            html: `<div class="marker-icon" style="background: ${getCategoryColor(event.category)}">${getCategoryEmoji(event.category)}</div>`,
+            iconSize: [35, 35]
+        });
+
+        const marker = L.marker([event.coordinates.lat, event.coordinates.lng], {icon: eventIcon})
+            .addTo(map)
+            .bindPopup(`
+                <div class="event-popup">
+                    <strong>${event.title}</strong><br>
+                    <em>${event.category || 'Event'}</em><br>
+                    📅 ${new Date(event.date).toLocaleDateString('de-DE')}<br>
+                    🕐 ${event.startTime} Uhr<br>
+                    📍 ${event.location}<br>
+                    <button class="popup-bookmark-btn bookmark-btn ${bookmarkedEvents.has(event.url) ? 'bookmarked' : ''}" 
+                            data-event-url="${event.url}" 
+                            onclick="toggleBookmark('${event.url}')"
+                            style="margin: 8px 0; padding: 5px 10px; cursor: pointer; border: none; border-radius: 4px; background: #ff9800; color: white; font-size: 12px; font-weight: 600;">
+                        ${bookmarkedEvents.has(event.url) ? '⭐ Gemerkt' : '☆ Merken'}
+                    </button><br>
+                    <a href="${event.url}" class="popup-link">Details →</a>
+                </div>
+            `);
+
+        marker.on('click', () => {
+            highlightEvent(index);
+            // GoatCounter: Track Event-Clicks
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/event/${event.title.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`,
+                    title: `Event: ${event.title}`,
+                    event: true
+                });
+            }
+        });
+        markers.push(marker);
+    });
+
+    // Karte an Marker anpassen oder auf Standard-Zentrum setzen
+    if (markers.length > 0) {
+        const group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.1));
+        console.log('Karte an', markers.length, 'Marker angepasst');
+    } else {
+        // Wenn keine Marker, zeige Standard-Ansicht
+        map.setView([config.defaultCenter.lat, config.defaultCenter.lng], config.defaultZoom);
+        console.log('Keine Marker - Standard-Ansicht');
+    }
+}
+
+// Event-Liste anzeigen
+function displayEventList() {
+    const eventList = document.getElementById('eventList');
+
+    console.log('Anzeige von', filteredEvents.length, 'Events');
+
+    // Loading Spinner ausblenden
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    if (loadingSpinner) {
+        loadingSpinner.style.display = 'none';
+    }
+
+    if (filteredEvents.length === 0) {
+        eventList.innerHTML = '<div class="no-events">Keine Events gefunden. 😔<br><small>Tipp: Ändere den Zeitfilter oder prüfe ob Events für die kommenden Stunden eingetragen sind.</small></div>';
+        return;
+    }
+
+    eventList.innerHTML = filteredEvents.map((event, index) => {
+        const isBookmarked = bookmarkedEvents.has(event.url);
+        return `
+        <div class="event-card ${isBookmarked ? 'bookmarked' : ''}" data-index="${index}" data-event-url-card="${event.url}" onclick="handleEventCardClick(event, ${index})">
+            <div class="event-card-header" style="border-left: 4px solid ${getCategoryColor(event.category)}">
+                <h3>${getCategoryEmoji(event.category)} ${event.title}</h3>
+                <span class="event-category">${event.category || 'Event'}</span>
+            </div>
+            <div class="event-card-body">
+                <p class="event-datetime">
+                    📅 ${new Date(event.date).toLocaleDateString('de-DE', {weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric'})}
+                    &nbsp;|&nbsp;
+                    🕐 ${event.startTime}${event.endTime ? ' - ' + event.endTime : ''} Uhr
+                </p>
+                <p class="event-location">📍 ${event.location}</p>
+                <p class="event-description">${event.description || ''}</p>
+                ${event.tags && event.tags.length > 0 ?
+        `<div class="event-tags-inline">${event.tags.map(tag => `<span class="tag-small">${tag}</span>`).join('')}</div>`
+        : ''}
+            </div>
+            <div class="event-card-footer">
+                <button class="btn-bookmark bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
+                        data-event-url="${event.url}" 
+                        onclick="event.stopPropagation(); toggleBookmark('${event.url}')"
+                        title="${isBookmarked ? 'Aus Merkliste entfernen' : 'Zur Merkliste hinzufügen'}">
+                    ${isBookmarked ? '⭐ Gemerkt' : '☆ Merken'}
+                </button>
+                <a href="${event.url}" class="btn-small" onclick="event.stopPropagation()">Details ansehen →</a>
+            </div>
+        </div>
+    `;
+    }).join('');
+}
+
+// Event-Card Click Handler (stoppt bei Bookmark/Link-Clicks)
+function handleEventCardClick(e, index) {
+    // Nur fokussieren wenn nicht auf Button/Link geklickt wurde
+    if (e.target.closest('button, a')) {
+        return;
+    }
+    focusEvent(index);
+}
+
+// Event auf Karte fokussieren
+function focusEvent(index) {
+    const event = filteredEvents[index];
+    map.setView([event.coordinates.lat, event.coordinates.lng], 16);
+    markers[index].openPopup();
+    highlightEvent(index);
+}
+
+// Event in Liste hervorheben
+function highlightEvent(index) {
+    document.querySelectorAll('.event-card').forEach((card, i) => {
+        if (i === index) {
+            card.classList.add('highlighted');
+            card.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+        } else {
+            card.classList.remove('highlighted');
+        }
+    });
+}
+
+// Benutzerstandort verwenden
+function setLocation(locationType) {
+    console.log('Setze Standort:', locationType);
+
+    // Prüfe ob Karte existiert
+    if (!map) {
+        console.warn('Karte noch nicht initialisiert, warte...');
+        setTimeout(() => setLocation(locationType), 100);
+        return;
+    }
+
+    // Browser-Standort
+    if (locationType === 'browser') {
+        if (!navigator.geolocation) {
+            alert('Geolocation wird von Ihrem Browser nicht unterstützt.');
+            return;
+        }
+
+        const locationSelect = document.getElementById('locationSelect');
+        locationSelect.disabled = true;
+
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                console.log('Browser-Standort ermittelt:', userLocation);
+
+                // Entferne alten Standort-Marker
+                markers.forEach(marker => {
+                    if (marker.options.className === 'user-location-marker') {
+                        map.removeLayer(marker);
+                    }
+                });
+
+                // Benutzerpunkt auf Karte
+                const userIcon = L.divIcon({
+                    className: 'user-location-marker',
+                    html: '<div class="marker-icon" style="background: #4CAF50; box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);">👤</div>',
+                    iconSize: [30, 30]
+                });
+
+                const userMarker = L.marker([userLocation.lat, userLocation.lng], {icon: userIcon, className: 'user-location-marker'})
+                    .addTo(map)
+                    .bindPopup('<strong>📍 Dein Standort</strong>')
+                    .openPopup();
+
+                markers.push(userMarker);
+
+                // Karte zentrieren
+                map.setView([userLocation.lat, userLocation.lng], 14);
+
+                // Select wieder aktivieren
+                locationSelect.disabled = false;
+                lastSelectedLocation = 'browser';
+
+                // Radius-Filter automatisch auf 3 km setzen, wenn unbegrenzt
+                const radiusFilterElement = document.getElementById('radiusFilter');
+                if (radiusFilterElement && radiusFilterElement.value === '999999') {
+                    radiusFilterElement.value = '3';
+                    console.log('Radius-Filter automatisch auf 3 km gesetzt');
+                }
+
+                // Events neu filtern und anzeigen
+                filterAndDisplayEvents();
+
+                console.log('Browser-Standort aktiv');
+            },
+            (error) => {
+                let errorMessage = 'Standort konnte nicht ermittelt werden.';
+                switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = 'Standortzugriff wurde verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = 'Standortinformationen sind nicht verfügbar.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = 'Zeitüberschreitung bei der Standortabfrage.';
+                    break;
+                }
+                alert(errorMessage);
+                locationSelect.disabled = false;
+                // Fallback zu Rathaus
+                locationSelect.value = 'rathaus';
+                setLocation('rathaus');
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+        return;
+    }
+
+    // Rathaus oder Bahnhof
+    const location = LOCATIONS[locationType];
+    if (!location) {
+        console.error('Unbekannter Standort:', locationType);
+        return;
+    }
+
+    userLocation = {
+        lat: location.lat,
+        lng: location.lng
+    };
+
+    console.log(`Standort gesetzt: ${location.name}`, userLocation);
+
+    // Entferne alten Standort-Marker
+    markers.forEach(marker => {
+        if (marker.options.className === 'user-location-marker') {
+            map.removeLayer(marker);
+        }
+    });
+
+    // Marker für feste Standorte
+    const locationData = LOCATIONS[locationType];
+    const icon = locationData?.icon || '📍';
+    const color = locationData?.color || '#2c3e50';
+    const locationIcon = L.divIcon({
+        className: 'user-location-marker',
+        html: `<div class="marker-icon" style="background: ${color};">${icon}</div>`,
+        iconSize: [30, 30]
+    });
+
+    const locationMarker = L.marker([userLocation.lat, userLocation.lng], {icon: locationIcon, className: 'user-location-marker'})
+        .addTo(map)
+        .bindPopup(`<strong>${location.name}</strong>`)
+        .openPopup();
+
+    markers.push(locationMarker);
+
+    // Karte zentrieren
+    map.setView([userLocation.lat, userLocation.lng], 14);
+
+    // Radius-Filter automatisch auf 3 km setzen, wenn unbegrenzt
+    const radiusFilterElement = document.getElementById('radiusFilter');
+    if (radiusFilterElement && radiusFilterElement.value === '999999') {
+        radiusFilterElement.value = '3';
+    }
+
+    // Events neu filtern
+    filterAndDisplayEvents();
+    lastSelectedLocation = locationType;
+}
+
+// Distanz berechnen (Haversine-Formel)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Erdradius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+// Kategorie-Farbe
+function getCategoryColor(category) {
+    const colors = {
+        'Musik': '#e91e63',
+        'Theater': '#9c27b0',
+        'Sport': '#2196f3',
+        'Kultur': '#ff9800',
+        'Markt': '#4caf50',
+        'Fest': '#f44336',
+        'Sonstiges': '#607d8b'
+    };
+    return colors[category] || '#757575';
+}
+
+// Kategorie-Emoji
+function getCategoryEmoji(category) {
+    const emojis = {
+        'Musik': '🎵',
+        'Theater': '🎭',
+        'Sport': '⚽',
+        'Kultur': '🎨',
+        'Markt': '🛒',
+        'Fest': '🎉',
+        'Sonstiges': '📅'
+    };
+    return emojis[category] || '📅';
+}
+
+// Event-Listener einrichten
+function setupEventListeners() {
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const timeFilter = document.getElementById('timeFilter');
+    const radiusFilter = document.getElementById('radiusFilter');
+    const useLocation = document.getElementById('useLocation');
+    const searchToggle = document.getElementById('searchToggle');
+    const searchPanel = document.getElementById('searchPanel');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const eventSidebar = document.getElementById('eventSidebar');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', filterAndDisplayEvents);
+    }
+
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', () => {
+            const category = categoryFilter.value || 'alle';
+            filterAndDisplayEvents();
+            savePrefsToCookie();
+            // GoatCounter: Track Filter-Nutzung
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/filter/category/${category}`,
+                    title: `Filter: ${category}`,
+                    event: true
+                });
+            }
+        });
+    }
+
+    if (timeFilter) {
+        timeFilter.addEventListener('change', () => {
+            const time = timeFilter.value;
+            filterAndDisplayEvents();
+            savePrefsToCookie();
+            // GoatCounter: Track Zeit-Filter
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/filter/time/${time}`,
+                    title: `Zeit: ${time}`,
+                    event: true
+                });
+            }
+        });
+    }
+
+    if (radiusFilter) {
+        radiusFilter.addEventListener('change', () => {
+            const radius = radiusFilter.value;
+            syncZoomWithRadius();
+            filterAndDisplayEvents();
+            savePrefsToCookie();
+            // GoatCounter: Track Radius-Filter
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/filter/radius/${radius}km`,
+                    title: `Radius: ${radius}km`,
+                    event: true
+                });
+            }
+        });
+    }
+
+    // Standort-Select
+    const locationSelect = document.getElementById('locationSelect');
+    if (locationSelect) {
+        locationSelect.addEventListener('change', (e) => {
+            const selectedLocation = e.target.value;
+
+            // Wenn "Mein Standort" erneut gewählt wird, Standort neu abfragen
+            if (selectedLocation === 'browser' && lastSelectedLocation === 'browser') {
+                console.log('Standort wird neu abgefragt...');
+            }
+
+            setLocation(selectedLocation);
+            savePrefsToCookie();
+            // GoatCounter: Track Standort-Wechsel
+            if (window.goatcounter) {
+                goatcounter.count({
+                    path: `/location/${selectedLocation}`,
+                    title: `Standort: ${selectedLocation}`,
+                    event: true
+                });
+            }
+        });
+
+        // Initial: NICHT setzen, wird in DOMContentLoaded gemacht
+    }
+
+    // Such-Toggle
+    if (searchToggle && searchPanel) {
+        searchToggle.addEventListener('click', () => {
+            searchPanel.classList.toggle('collapsed');
+            searchPanel.classList.toggle('expanded');
+            if (searchPanel.classList.contains('expanded')) {
+                searchInput.focus();
+            }
+        });
+    }
+
+    // Sidebar-Toggle
+    if (sidebarToggle && eventSidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            eventSidebar.classList.toggle('collapsed');
+        });
+    }
+
+    console.log('Event-Listener erfolgreich eingerichtet');
+}
