@@ -112,16 +112,22 @@
 - **Idea:** Kürzere Labels auf Mobile (nur Icon + Zahl?)
 - **Impact:** LOW (nur UX)
 
-### 11. Event-Validierung verbessern
-- **Status:** 🔴 TODO
-- **Problem:** Scraper erzeugt manchmal inkonsistente Daten
-- **TODO:**
+### ~~11. Event-Validierung verbessern~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Solution:** Comprehensive schema validator implemented
+- **Implementation:**
   - Schema-Validierung (JSON Schema für Events)
-  - Required Fields Check (title, date, venue)
-  - Date Format Validation (ISO 8601)
+  - Required Fields Check (title, date, location, status)
+  - Date Format Validation (ISO 8601: YYYY-MM-DD)
+  - Time Format Validation (HH:MM)
   - URL Validation (source links)
+  - Coordinate Validation (lat/lng ranges, Germany bounds check)
+  - Status Value Validation (Öffentlich/Entwurf/Archiviert)
+  - Unknown Field Warnings
 - **Location:** `scripts/validation/validate_events.py`
-- **Impact:** HIGH (Datenqualität)
+- **Usage:** `python3 scripts/validation/validate_events.py`
+- **Impact:** HIGH (Datenqualität, findet 30 Fehler in Test-Events)
+- **Files:** `scripts/validation/validate_events.py`
 
 ---
 
