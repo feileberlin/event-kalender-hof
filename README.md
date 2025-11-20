@@ -1,10 +1,39 @@
-# 🎉 Event-Kalender für deine Community
+# 🎉 GetVibe
 
-> **Live-Beispiel:** [hof.ist/jetzt](https://feileberlin.github.io/event-kalender-hof/) - Event-Kalender für Hof an der Saale
+> **Live-Beispiel:** [hof.ist/jetzt](https://feileberlin.github.io/event-kalender-hof/) - GetVibe für Hof an der Saale
 
-Ein **community-getriebener, Open-Source Event-Kalender** mit Fokus auf **lokale Events** und **Automatisierung**. Entwickelt aus der Frustration heraus, dass gute Events oft untergehen, weil sie auf zig verschiedenen Kanälen verstreut sind.
+**Get the vibe of your community — right now, right here.**
 
-**Kern-Idee:** Sammle Events automatisch aus verschiedenen Quellen (Websites, Facebook, PDFs), erkenne Duplikate intelligent, reichere Daten an und präsentiere sie auf einer **simplen, schnellen Karte**.
+GetVibe zeigt dir Events in deiner unmittelbaren Nähe - automatisch aggregiert, geografisch gefiltert, zeitlich sortiert. Kein Scrollen durch Social Media, keine verpassten Flyer, keine Überraschungen.
+
+Entwickelt aus der Frustration heraus, dass gute Events oft untergehen, weil sie auf zig verschiedenen Kanälen verstreut sind.
+
+---
+
+## 💭 Selbstverständnis
+
+### Was GetVibe ist
+
+**JETZT + HIER**  
+GetVibe beantwortet eine einzige Frage: *"Was kann ich in den nächsten Stunden in meiner unmittelbaren Nähe erleben?"* Nicht nächste Woche, nicht irgendwo in der Stadt - sondern jetzt und hier.
+
+**Read-Only First**  
+GetVibe ist bewusst **kein soziales Netzwerk**. Keine Kommentare, keine User-Profile, kein Lärm. Du siehst, was läuft - ohne Ablenkung. Community-Features (Event-Vorschläge, Reviews) kommen später (v2.0), aber die Kernfunktion bleibt fokussiert.
+
+**Open Source & Forkbar**  
+Jede Community kann GetVibe nutzen - ob Stadt, Subkultur, Maker-Space oder Themen-Netzwerk. Keine zentrale Plattform, keine Abhängigkeit. Fork es, pass es an, betreibe es selbst.
+
+**Automatisch & Transparent**  
+Scraping statt manueller Eingabe. Deduplication statt Duplikate. Veranstalter-CRM für persönliche Kontakte. Aber: Die Daten gehören dir, nicht einer Plattform.
+
+### Was GetVibe zeigt
+
+Die **nächsten Events** in **relativer Nähe** zu deinem Kontext:
+- **Stadt:** Umkreis 1-10 km
+- **Subkultur:** nächstes Event deutschlandweit
+- **Netzwerk:** geografisches Zentrum ±100 km
+
+"Nähe" ist relativ - für eine Punk-Szene sind 200 km akzeptabel, für eine Stadt-Community nicht.
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://feileberlin.github.io/event-kalender-hof/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -64,6 +93,33 @@ Ein **community-getriebener, Open-Source Event-Kalender** mit Fokus auf **lokale
 - **CSV-basiert**: Einfach zu editieren (Excel, Google Sheets)
 - **Parametrisiert**: Stadt-Name, Koordinaten, etc. in `_config.yml`
 - **Gut dokumentiert**: `docs/` mit ausführlichen Guides
+- **GitHub Actions**: CI/CD für Scraping, Archivierung, Validation
+
+---
+
+## ✨ Features
+
+GetVibe kombiniert **Read-Only Simplicity** mit **intelligenter Automatisierung**:
+
+### 🗺️ Für Besucher
+- **Interaktive Karte** - touch-optimiert, schnell
+- **Intelligente Filter**: Zeitraum, Umkreis, Kategorie
+- **GPS-Umkreissuche**: "Was ist in meiner Nähe - jetzt?"
+- **"Bis Sonnenaufgang"-Filter**: Für Nachteulen (Events bis 6:30 Uhr)
+- **Bookmark-System**: Events merken, drucken, teilen (Cookie-basiert, DSGVO-konform)
+
+### 🤖 Für Admins (hinter den Kulissen)
+- **Auto-Scraping**: Sammelt Events automatisch
+- **Deduplication-Engine**: Erkennt Duplikate intelligent (Fuzzy-Matching)
+- **Data Enrichment**: Merged beste Daten aus allen Quellen
+- **Veranstalter-CRM**: Kontakte, Networking, One-Click-Actions
+- **AI-Flyer-Analyse**: Extrahiert Events aus PDFs/Bildern
+- **Auto-Archivierung**: Alte Events wandern automatisch ins Archiv
+
+### 🛠️ Für Entwickler
+- **Jekyll + GitHub Pages**: Zero hosting costs
+- **CSV-basiert**: Einfach zu editieren (Excel, Google Sheets)
+- **Parametrisiert**: Anpassbar für jede Community
 - **GitHub Actions**: CI/CD für Scraping, Archivierung, Validation
 
 ---
@@ -294,29 +350,32 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 
 ## 🎯 Roadmap
 
-**v1.0 (aktuell):**
+**v1.0 (jetzt): Read-Only Event-Aggregation**
 - ✅ Automatisches Scraping
 - ✅ Deduplication-Engine
 - ✅ Veranstalter-CRM
 - ✅ Admin-Interface
 - ✅ Bookmark-System
+- ✅ GPS-Umkreissuche
+- ✅ Geografische Filter
 
-**v1.1 (geplant):**
-- [ ] Multi-Language Support (i18n)
-- [ ] iCal/CalDAV Export
-- [ ] PWA (Progressive Web App)
-- [ ] Scraper für Eventbrite, Meetup, Facebook Events API
-- [ ] Machine Learning für besseres Duplikat-Matching
-- [ ] Notification-System (E-Mail/Telegram bei neuen Events)
+**v1.5 (geplant): Community-Input**
+- 🔜 Event-Vorschläge (ohne Account)
+- 🔜 Upvotes/Downvotes (zeigt Community-Präferenzen)
+- 🔜 "Ich bin dabei"-Counter (ohne Social-Media-Lärm)
+- 🔜 iCal/CalDAV Export
+- 🔜 PWA (Progressive Web App)
+- 🔜 Notification-System (E-Mail/Telegram bei neuen Events)
 
-**v2.0 (Vision):**
-- [ ] Federation: Community-übergreifende Event-Suche
-- [ ] User-Accounts: Eigene Events einreichen
-- [ ] Moderation-Queue: Community-basierte Qualitätssicherung
-- [ ] Mobile Apps (React Native)
-- [ ] Multi-Tenancy: Mehrere Communities in einer Instanz
+**v2.0 (Vision): Full Community**
+- 💡 User-Profile (optional)
+- 💡 Kommentare & Reviews
+- 💡 Event-Sharing
+- 💡 Federation: Community-übergreifende Event-Suche
+- 💡 Moderation-Queue: Community-basierte Qualitätssicherung
+- 💡 Mobile Apps (React Native)
 
-**Deine Idee ist nicht dabei?** → [Feature Request](https://github.com/feileberlin/event-kalender-hof/issues/new?template=feature_request.md)
+**GetVibe bleibt fokussiert:** Auch mit Community-Features steht die Kernfunktion im Mittelpunkt - **Events finden, nicht suchen.**
 
 ---
 
@@ -337,6 +396,20 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 
 ---
 
+## 🌍 Use-Cases
+
+GetVibe funktioniert für jede Community, die Events hat:
+
+- 🏙️ **Städte**: Lokale Event-Kalender (Hof, Bamberg, Freiburg...)
+- 🎸 **Subkulturen**: Punk-Szene Berlin, Metal-Events Bayern, Indie-Kultur Hamburg
+- 🛠️ **Maker-Spaces**: Hackerspace-Events, FabLab-Workshops, Repair-Cafés
+- 🌱 **Themen-Netzwerke**: Permakultur-Treffen, Degrowth-Events, Transition Towns
+- 🎮 **Nischen**: Retro-Gaming-Meetups, Brettspiel-Stammtische, Cosplay-Conventions
+
+**"Nähe" ist relativ:** Für eine Stadt = 10 km, für eine Subkultur = 200 km.
+
+---
+
 ## 📄 Lizenz
 
 **MIT License** - siehe [LICENSE](LICENSE)
@@ -351,20 +424,13 @@ Die `docs/`-Ordner sind mit [Obsidian](https://obsidian.md/) optimiert. Einfach 
 - **Diskussionen:** [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
 - **Pull Requests:** Immer willkommen!
 
-**Du nutzt dieses Projekt für deine Community?** → Schreib uns! Wir verlinken gerne andere Instanzen.
-
-**Beispiel-Use-Cases:**
-- 🏙️ **Städte**: Lokale Event-Kalender (Hof, Bamberg, Freiburg...)
-- 🎸 **Subkulturen**: Punk-Szene Berlin, Metal-Events Bayern, Indie-Kultur Hamburg
-- 🛠️ **Maker-Spaces**: Hackerspace-Events, FabLab-Workshops, Repair-Cafés
-- 🌱 **Themen-Netzwerke**: Permakultur-Treffen, Degrowth-Events, Transition Towns
-- 🎮 **Nischen**: Retro-Gaming-Meetups, Brettspiel-Stammtische, Cosplay-Conventions
+**Du nutzt GetVibe für deine Community?** → Schreib uns! Wir verlinken gerne andere Instanzen.
 
 ---
 
 **Made with ❤️ in Hof an der Saale**
 
-*"Events finden, nicht suchen."*
+*"Get the vibe — events finden, nicht suchen."*
 | **[docs/PROJECT.md](docs/PROJECT.md)** | Entwickler | Technische Architektur, API-Referenz, Timeline |
 | **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | Alle | Versionshistorie (v0.1.0 → v1.7.0) |
 | **[docs/ANALYTICS.md](docs/ANALYTICS.md)** | Admins | GoatCounter Analytics-Integration |
