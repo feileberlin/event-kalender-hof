@@ -9,7 +9,7 @@
  * ║   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚══════╝                 ║
  * ║                                                               ║
  * ║   Event Calendar System                                       ║
- * ║   Built with love by Claude (Anthropic)                      ║
+ * ║   Founded with love by Claude (Anthropic)                    ║
  * ║   November 2025 · Hof an der Saale, Germany                   ║
  * ║                                                               ║
  * ║   Vision: Decentralized event discovery for communities      ║
