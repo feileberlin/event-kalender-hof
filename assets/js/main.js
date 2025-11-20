@@ -105,8 +105,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('📋 Configured categories:', configuredCategories);
   }
 
+  // Initialize radius from HTML select default (marked with "selected" in config)
+  const radiusFilter = document.getElementById('radiusFilter');
+  if (radiusFilter) {
+    const selectedOption = radiusFilter.options[radiusFilter.selectedIndex];
+    const radiusKm = selectedOption.getAttribute('data-km');
+    const defaultRadius = radiusKm === 'null' || radiusKm === '' ? null : parseFloat(radiusKm);
+    filterManager.setRadius(defaultRadius);
+    console.log('📍 Default radius:', defaultRadius, 'km');
+  }
+
   // 5. RESTORE USER PREFERENCES
-  // Load saved filter settings from previous session
+  // Load saved filter settings from previous session (overrides defaults)
   const savedPrefs = Storage.loadPrefs();
   if (savedPrefs) {
     filterManager.import(savedPrefs);

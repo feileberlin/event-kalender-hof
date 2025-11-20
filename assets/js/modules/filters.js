@@ -301,8 +301,9 @@ export class FilterManager {
     if (state.timeRange) {
       this.activeFilters.timeRange = state.timeRange;
     }
-    if (state.radius) {
-      this.activeFilters.radius = state.radius;
+    // Radius: Check for undefined (not set) vs null (unlimited)
+    if (state.hasOwnProperty('radius')) {
+      this.activeFilters.radius = state.radius; // Can be null, 0, or number
     }
     if (state.location) {
       this.activeFilters.location = state.location;
