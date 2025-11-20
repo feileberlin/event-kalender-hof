@@ -24,7 +24,8 @@ EVENTS_DIR = Path("_events")
 # Schema definition
 REQUIRED_FIELDS = ["title", "date", "location", "status"]
 OPTIONAL_FIELDS = ["start_time", "end_time", "address", "coordinates", 
-                   "category", "tags", "description", "url", "image", "source"]
+                   "category", "tags", "description", "url", "image", "source",
+                   "test_event", "recurring"]
 VALID_STATUS = ["Öffentlich", "Entwurf", "Archiviert"]
 
 class EventValidator:
@@ -169,7 +170,7 @@ class EventValidator:
                 })
         
         # 7. Check for unknown fields (warnings only)
-        known_fields = set(REQUIRED_FIELDS + OPTIONAL_FIELDS + ['test_event', 'recurring'])
+        known_fields = set(REQUIRED_FIELDS + OPTIONAL_FIELDS)
         for field in data.keys():
             if field not in known_fields:
                 self.warnings.append({
