@@ -1,36 +1,43 @@
 #!/usr/bin/env python3
 """
 Event Archivierungs-Tool
-Verschiebt alte Events automatisch nach _events/_history/{YEAR}/
+Verschiebt alte Events automatisch nach _events/_history/{YYYYMM}/
+Monatliche Archivierung für bessere Übersicht
 """
 
 import os
 import shutil
 import yaml
+import json
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Set
 
 EVENTS_DIR = Path("_events")
 HISTORY_DIR = Path("_events/_history")
+RECURRING_INDEX = Path("_data/recurring_index.json")
 
 
 class EventArchiver:
-    """Verwaltet Archivierung alter Events"""
+    """Verwaltet Archivierung alter Events mit monatlicher Struktur"""
     
-    def __init__(self, days_threshold: int = 30):
+    def __init__(self, days_threshold: int = 30, scan_recurring: bool = True):
         """
         Args:
             days_threshold: Events älter als X Tage werden archiviert (default: 30)
+            scan_recurring: Scanne vor Archivierung nach recurring-Events (default: True)
         """
         self.days_threshold = days_threshold
         self.threshold_date = datetime.now() - timedelta(days=days_threshold)
+        self.scan_recurring = scan_recurring
+        self.recurring_events = {}
         self.stats = {
             'total': 0,
             'archived': 0,
             'already_archived': 0,
             'skipped': 0,
-            'errors': 0
+            'errors': 0,
+            'recurring_found': 0
         }
     
     def load_event_file(self, filepath: Path) -> Dict:
@@ -67,19 +74,54 @@ class EventArchiver:
             return False
     
     def get_archive_path(self, event: Dict, filepath: Path) -> Path:
-        """Bestimmt Ziel-Pfad für archiviertes Event"""
+        """Bestimmt Ziel-Pfad für archiviertes Event (monatliche Struktur)"""
         try:
             event_date_str = event.get('date')
             if isinstance(event_date_str, datetime):
-                year = event_date_str.year
+                year_month = event_date_str.strftime('%Y%m')
             else:
-                year = datetime.strptime(str(event_date_str), '%Y-%m-%d').year
+                dt = datetime.strptime(str(event_date_str), '%Y-%m-%d')
+                year_month = dt.strftime('%Y%m')
             
-            archive_year_dir = HISTORY_DIR / str(year)
-            return archive_year_dir / filepath.name
+            archive_month_dir = HISTORY_DIR / year_month
+            return archive_month_dir / filepath.name
         except Exception:
-            # Fallback: Aktuelles Jahr
-            return HISTORY_DIR / str(datetime.now().year) / filepath.name
+            # Fallback: Aktueller Monat
+            year_month = datetime.now().strftime('%Y%m')
+            return HISTORY_DIR / year_month / filepath.name
+    
+    def check_recurring(self, event: Dict) -> bool:
+        """Prüft ob Event recurring ist und fügt es zum Index hinzu"""
+        recurring_config = event.get('recurring')
+        if recurring_config and recurring_config.get('enabled'):
+            event_id = event.get('event_hash', '')
+            if not event_id:
+                # Generiere ID falls nicht vorhanden
+                import hashlib
+                hash_string = f"{event.get('title', '')}{event.get('date', '')}{event.get('start_time', '')}{event.get('location', '')}".lower()
+                event_id = hashlib.md5(hash_string.encode()).hexdigest()[:12]
+            
+            self.recurring_events[event_id] = {
+                'id': event_id,
+                'title': event.get('title'),
+                'location': event.get('location'),
+                'start_time': event.get('start_time'),
+                'end_time': event.get('end_time', ''),
+                'category': event.get('category'),
+                'tags': event.get('tags', []),
+                'description': event.get('description', ''),
+                'url': event.get('url', ''),
+                'coordinates': event.get('coordinates', {}),
+                'address': event.get('address', ''),
+                'status': event.get('status', 'Öffentlich'),
+                'source': event.get('source', ''),
+                'recurring': recurring_config,
+                'template_file': str(event['_filepath']),
+                'archived_from': '_events'
+            }
+            self.stats['recurring_found'] += 1
+            return True
+        return False
     
     def archive_event(self, event: Dict, dry_run: bool = False) -> bool:
         """
@@ -93,6 +135,11 @@ class EventArchiver:
             True bei Erfolg
         """
         filepath = event['_filepath']
+        
+        # Vor Archivierung: Prüfe auf recurring
+        if self.scan_recurring:
+            self.check_recurring(event)
+        
         archive_path = self.get_archive_path(event, filepath)
         
         # Archive-Verzeichnis erstellen
@@ -195,17 +242,24 @@ class EventArchiver:
             print("\n✅ Keine Events zum Archivieren!")
             return
         
-        # Events nach Jahr gruppieren
-        events_by_year = {}
+        # Events nach Monat gruppieren
+        events_by_month = {}
         for event in events:
-            year = self.get_archive_path(event, event['_filepath']).parent.name
-            if year not in events_by_year:
-                events_by_year[year] = []
-            events_by_year[year].append(event)
+            month = self.get_archive_path(event, event['_filepath']).parent.name
+            if month not in events_by_month:
+                events_by_month[month] = []
+            events_by_month[month].append(event)
         
-        print(f"\n📁 Archiv-Struktur:")
-        for year, year_events in sorted(events_by_year.items()):
-            print(f"  • _history/{year}/: {len(year_events)} Events")
+        print(f"\n📁 Archiv-Struktur (monatlich):")
+        for month, month_events in sorted(events_by_month.items()):
+            # Format: 202511 → November 2025
+            try:
+                year = month[:4]
+                month_num = month[4:]
+                month_name = datetime.strptime(month_num, '%m').strftime('%B')
+                print(f"  • _history/{month}/ ({month_name} {year}): {len(month_events)} Events")
+            except:
+                print(f"  • _history/{month}/: {len(month_events)} Events")
         
         # Bestätigung einholen (wenn nicht dry_run)
         if not dry_run and not interactive:
@@ -234,19 +288,66 @@ class EventArchiver:
             else:
                 self.stats['errors'] += 1
         
+        # Recurring-Index aktualisieren
+        if self.recurring_events and not dry_run:
+            self.update_recurring_index()
+        
         # Abschluss-Statistik
         print("\n" + "="*60)
         print("✅ ARCHIVIERUNG ABGESCHLOSSEN")
         print("="*60)
         print(f"Archiviert: {self.stats['archived']} Events")
+        print(f"Wiederkehrende Events gefunden: {self.stats['recurring_found']}")
         print(f"Fehler: {self.stats['errors']}")
         
         if not dry_run:
             print("\n💡 Nächste Schritte:")
-            print("   1. git add _events/")
+            print("   1. git add _events/ _data/recurring_index.json")
             print("   2. git commit -m 'Archive: Events älter als " + 
-                  f"{self.days_threshold} Tage'")
+                  f"{self.days_threshold} Tage (monatlich)'")
             print("   3. git push")
+            
+            if self.recurring_events:
+                print("\n🔄 Tipp: Führe 'python3 scripts/recurring_expander.py' aus,")
+                print("   um neue Instanzen für wiederkehrende Events zu generieren.")
+    
+    def update_recurring_index(self):
+        """Aktualisiert Recurring-Events-Index"""
+        if not self.recurring_events:
+            return
+        
+        # Lade existierenden Index
+        existing_index = {}
+        if RECURRING_INDEX.exists():
+            try:
+                with open(RECURRING_INDEX, 'r', encoding='utf-8') as f:
+                    index_data = json.load(f)
+                    for event in index_data.get('recurring_events', []):
+                        existing_index[event['id']] = event
+            except Exception as e:
+                print(f"⚠️  Fehler beim Laden des Index: {e}")
+        
+        # Merge mit neuen recurring events
+        existing_index.update(self.recurring_events)
+        
+        # Speichere aktualisierten Index
+        RECURRING_INDEX.parent.mkdir(parents=True, exist_ok=True)
+        index_data = {
+            'last_update': datetime.now().isoformat(),
+            'recurring_events': list(existing_index.values()),
+            'stats': {
+                'total_recurring': len(existing_index),
+                'last_archive_scan': self.stats['recurring_found']
+            }
+        }
+        
+        try:
+            with open(RECURRING_INDEX, 'w', encoding='utf-8') as f:
+                json.dump(index_data, f, indent=2, ensure_ascii=False)
+            print(f"\n💾 Recurring-Index aktualisiert: {RECURRING_INDEX}")
+            print(f"   {len(self.recurring_events)} neue recurring events hinzugefügt")
+        except Exception as e:
+            print(f"⚠️  Fehler beim Speichern des Index: {e}")
 
 
 def main():

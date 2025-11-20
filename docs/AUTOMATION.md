@@ -131,7 +131,9 @@ scraping:
 - Manuell: `workflow_dispatch` (mit days Parameter)
 
 **Funktion:**
-- Verschiebt Events älter als X Tage nach `_events/_history/JAHR/`
+- Verschiebt Events älter als X Tage nach `_events/_history/YYYYMM/` (monatlich)
+- Scannt vor Verschieben nach recurring-Events und pflegt Index
+- Aktualisiert recurring_index.json mit gefundenen wiederkehrenden Events
 - Standard: 30 Tage (konfigurierbar)
 
 **Konfiguration:**

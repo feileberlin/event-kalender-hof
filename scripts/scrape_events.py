@@ -557,6 +557,35 @@ Dieses Event wurde automatisch erfasst und wartet auf Überprüfung durch einen 
 
 
 def main():
+    """
+    Haupt-Scraping-Workflow:
+    1. Bereinigung: Alte Events archivieren (mit Recurring-Scan)
+    2. Scraping: Neue Events von Quellen sammeln
+    3. Recurring: Fehlende Instanzen generieren
+    4. Report: Statistik und fehlende Venues
+    """
+    
+    # SCHRITT 1: BEREINIGUNG & ARCHIVIERUNG
+    print("\n" + "="*80)
+    print("🧹 SCHRITT 1: BEREINIGUNG & ARCHIVIERUNG")
+    print("="*80)
+    
+    try:
+        from archive_old_events import EventArchiver
+        archiver = EventArchiver(days_threshold=30, scan_recurring=True)
+        # Dry-run um zu sehen was passieren würde
+        # Für automatisches Archivieren: dry_run=False setzen
+        archiver.run(dry_run=True, interactive=False)
+    except ImportError:
+        print("⚠️  Archivierung übersprungen (Modul nicht gefunden)")
+    except Exception as e:
+        print(f"⚠️  Fehler bei Archivierung: {e}")
+    
+    # SCHRITT 2: SCRAPING
+    print("\n" + "="*80)
+    print("🔍 SCHRITT 2: EVENT-SCRAPING")
+    print("="*80)
+    
     scraper = EventScraper()
     scraper.run()
     
@@ -574,7 +603,21 @@ def main():
     # Log-Datei speichern
     log_path = scraper.logger.save()
     
-    # Zusätzlicher Terminal-Output für fehlende Venues
+    # SCHRITT 3: RECURRING EVENTS EXPANSION
+    print("\n" + "="*80)
+    print("🔄 SCHRITT 3: RECURRING EVENTS EXPANSION")
+    print("="*80)
+    
+    try:
+        from recurring_expander import RecurringExpander
+        expander = RecurringExpander(lookahead_months=3)
+        expander.run(use_index=True)
+    except ImportError:
+        print("⚠️  Recurring Expansion übersprungen (Modul nicht gefunden)")
+    except Exception as e:
+        print(f"⚠️  Fehler bei Recurring Expansion: {e}")
+    
+    # SCHRITT 4: VENUE REPORT
     if missing_venues:
         print("\n" + "="*60)
         print("📋 VENUE REPORT")

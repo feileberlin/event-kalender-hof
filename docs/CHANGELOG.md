@@ -75,7 +75,7 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
     * `sources_watcher.enabled + debounce_seconds`
   - `archiving` Konfiguration:
     * `days_threshold`: 30 (Event-Alter für Archivierung)
-    * `target_directory`: "_events/_history"
+    * `target_directory`: "_events/_history" (monatliche Unterordner YYYYMM)
   - `scraping` Konfiguration:
     * `max_retries`: 3
     * `timeout_seconds`: 30

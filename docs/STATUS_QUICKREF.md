@@ -6,7 +6,7 @@
 |--------|----------|-------|----------|-------|
 | **Entwurf** | ❌ Nicht sichtbar | ✅ Tab "Entwürfe" | `_events/` | 🟡 Gelb |
 | **Öffentlich** | ✅ Sichtbar | ✅ Tab "Veröffentlicht" | `_events/` | 🟢 Grün |
-| **Archiviert** | ❌ Nicht sichtbar | ✅ Tab "Archiviert" | `_events/_history/YYYY/` | ⚪ Grau |
+| **Archiviert** | ❌ Nicht sichtbar | ✅ Tab "Archiviert" | `_events/_history/YYYYMM/` | ⚪ Grau |
 
 ## 🔄 Status-Workflow
 
@@ -31,7 +31,7 @@
        ↓ Auto-Archivierung (> 30 Tage)
 ┌─────────────┐
 │ Archiviert  │ ← Nicht mehr sichtbar
-│  (Hidden)   │    Location: _events/_history/YYYY/ (Jahr automatisch)
+│  (Hidden)   │    Location: _events/_history/YYYYMM/ (Jahr-Monat automatisch)
 └─────────────┘
 ```
 
@@ -86,15 +86,15 @@ python scripts/archive_old_events.py --days 30
 sed -i 's/status: "Öffentlich"/status: "Archiviert"/' _events/2025-01-15-event.md
 
 # 2. Verschieben
-mkdir -p _events/_history/2025
-mv _events/2025-01-15-event.md _events/_history/2025/
+mkdir -p _events/_history/202511
+mv _events/2025-11-15-event.md _events/_history/202511/
 ```
 
 ### Archiviert → Öffentlich (Restore)
 
 ```bash
 # 1. Zurück verschieben
-mv _events/_history/2025/2025-01-15-event.md _events/
+mv _events/_history/202511/2025-11-15-event.md _events/
 
 # 2. Status ändern
 sed -i 's/status: "Archiviert"/status: "Öffentlich"/' _events/2025-01-15-event.md

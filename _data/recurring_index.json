@@ -1,0 +1,171 @@
+{
+  "last_update": "2025-11-20T12:14:54.080156",
+  "recurring_events": [
+    {
+      "id": "16fc71044123",
+      "title": "Karaoke-Abend im Butler's",
+      "location": "Butler's Café - Restaurant - Bar",
+      "start_time": "18:00",
+      "end_time": "02:00",
+      "category": "Musik",
+      "tags": [
+        "Pub",
+        "Bar",
+        "Karaoke",
+        "Live-Unterhaltung"
+      ],
+      "description": "Irisch-englischer Pub mit Karaoke-Abend",
+      "url": "http://www.butlers-hof.de/",
+      "coordinates": {
+        "lat": 50.3162,
+        "lng": 11.9182
+      },
+      "address": "Luitpoldstraße 4, 95028 Hof",
+      "status": "Öffentlich",
+      "source": "Hof Programm",
+      "recurring": {
+        "enabled": true,
+        "frequency": "weekly",
+        "interval": 1,
+        "by_day": [
+          "WE"
+        ],
+        "start_date": "2025-11-20",
+        "end_date": null,
+        "exceptions": [
+          "2025-12-24",
+          "2025-12-25"
+        ]
+      },
+      "template_file": "_events/2025-11-17-butlers-karaoke.md",
+      "found_in": "_events"
+    },
+    {
+      "id": "7ada8d9101ca",
+      "title": "Stammtisch der Kulturfreunde",
+      "location": "Wirtshaus am Altstadt",
+      "start_time": "19:00",
+      "end_time": "22:00",
+      "category": "Geselligkeit",
+      "tags": [
+        "Stammtisch",
+        "Kultur",
+        "Networking"
+      ],
+      "description": "Monatlicher Stammtisch für Kulturinteressierte",
+      "url": "",
+      "coordinates": {
+        "lat": 50.3197,
+        "lng": 11.9168
+      },
+      "address": "Altstadt 12, 95028 Hof",
+      "status": "Öffentlich",
+      "source": "Kulturverein Hof",
+      "recurring": {
+        "enabled": true,
+        "frequency": "monthly",
+        "interval": 1,
+        "by_day": [
+          "TU"
+        ],
+        "by_set_pos": 2,
+        "start_date": "2025-12-09",
+        "end_date": null,
+        "exceptions": [
+          "2025-12-24",
+          "2026-04-14"
+        ],
+        "additions": [
+          "2025-12-30",
+          "2026-01-05"
+        ]
+      },
+      "template_file": "_events/2025-12-09-stammtisch-kulturfreunde.md",
+      "found_in": "_events"
+    },
+    {
+      "id": "f0e145fcc49b",
+      "title": "Museumsabend - Eintritt frei",
+      "location": "Museum Bayerisches Vogtland",
+      "start_time": "18:00",
+      "end_time": "21:00",
+      "category": "Kultur",
+      "tags": [
+        "Museum",
+        "Kultur",
+        "Kostenlos",
+        "Bildung"
+      ],
+      "description": "Kostenloser Museumsabend jeden ersten Freitag im Monat",
+      "url": "https://www.museum-hof.de",
+      "coordinates": {
+        "lat": 50.3201,
+        "lng": 11.9175
+      },
+      "address": "Sigmundsgraben 6, 95028 Hof",
+      "status": "Öffentlich",
+      "source": "Museum Bayerisches Vogtland",
+      "recurring": {
+        "enabled": true,
+        "frequency": "monthly",
+        "interval": 1,
+        "by_day": [
+          "FR"
+        ],
+        "by_set_pos": 1,
+        "start_date": "2025-12-05",
+        "end_date": null,
+        "exceptions": [
+          "2026-01-01"
+        ]
+      },
+      "template_file": "_events/2025-12-05-museumsabend.md",
+      "found_in": "_events"
+    },
+    {
+      "id": "eb7febc457d2",
+      "title": "Hofer Wochenmarkt",
+      "location": "Maxplatz",
+      "start_time": "08:00",
+      "end_time": "12:00",
+      "category": "Markt",
+      "tags": [
+        "Markt",
+        "Einkaufen",
+        "Geselligkeit",
+        "Regional"
+      ],
+      "description": "Wochenmarkt in der Hofer Innenstadt",
+      "url": "https://www.hof.de/",
+      "coordinates": {
+        "lat": 50.3204,
+        "lng": 11.9187
+      },
+      "address": "Innenstadt/Maxplatz, 95028 Hof",
+      "status": "Öffentlich",
+      "source": "Stadt Hof",
+      "recurring": {
+        "enabled": true,
+        "frequency": "weekly",
+        "interval": 1,
+        "by_day": [
+          "WE",
+          "SA"
+        ],
+        "start_date": "2025-11-19",
+        "end_date": null,
+        "exceptions": [
+          "2025-12-25",
+          "2025-12-26",
+          "2026-01-01"
+        ]
+      },
+      "template_file": "_events/2025-11-19-wochenmarkt.md",
+      "found_in": "_events"
+    }
+  ],
+  "stats": {
+    "total_recurring": 4,
+    "last_scan_files": 17
+  }
+}

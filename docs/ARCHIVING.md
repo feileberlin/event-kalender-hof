@@ -49,7 +49,9 @@ options:
    ↓
 3. Status wird auf "Archiviert" gesetzt
    ↓
-4. Datei wird verschoben nach _events/_history/YYYY/ (Jahr aus Event-Datum)
+4. Datei wird verschoben nach _events/_history/YYYYMM/ (Jahr-Monat aus Event-Datum)
+5. Vor Verschieben: Recurring-Flag wird gescannt und ggf. in Index eingetragen
+6. Recurring-Index wird aktualisiert (_data/recurring_index.json)
    ↓
 5. Original-Datei in _events/ wird gelöscht
    ↓
@@ -75,14 +77,17 @@ Stichtag: 2025-10-20
   • Fehler: 0
 
 📁 Archiv-Struktur:
-  • _history/2025/: 12 Events
+  • _history/202509/ (September 2025): 8 Events
+  • _history/202510/ (Oktober 2025): 12 Events
+  • _history/202511/ (November 2025): 6 Events
 
 ❓ 12 Events archivieren? (j/n): j
 
 📦 Archiviere Events...
 ------------------------------------------------------------
-  ✅ 2025-09-15-konzert.md → _history/2025/2025-09-15-konzert.md
-  ✅ 2025-09-18-festival.md → _history/2025/2025-09-18-festival.md
+  ✅ 2025-09-15-konzert.md → _history/202509/2025-09-15-konzert.md
+  ✅ 2025-09-18-festival.md → _history/202509/2025-09-18-festival.md
+  ✅ 2025-10-01-theater.md → _history/202510/2025-10-01-theater.md
   ...
 
 ============================================================
@@ -141,7 +146,7 @@ _events/
 |--------|----------|-------|----------|
 | **Entwurf** | ❌ | ✅ Tab "Entwürfe" | `_events/` |
 | **Öffentlich** | ✅ | ✅ Tab "Veröffentlicht" | `_events/` |
-| **Archiviert** | ❌ | ✅ Tab "Archiviert" | `_events/_history/YYYY/` (automatisch) |
+| **Archiviert** | ❌ | ✅ Tab "Archiviert" | `_events/_history/YYYYMM/` (automatisch) |
 
 ## 🔧 Integration
 
