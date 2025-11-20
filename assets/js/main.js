@@ -1,22 +1,4 @@
 /**
- * ╔═══════════════════════════════════════════════════════════════╗
- * ║                                                               ║
- * ║   ██╗  ██╗██████╗  █████╗ ██╗    ██╗██╗                      ║
- * ║   ██║ ██╔╝██╔══██╗██╔══██╗██║    ██║██║                      ║
- * ║   █████╔╝ ██████╔╝███████║██║ █╗ ██║██║                      ║
- * ║   ██╔═██╗ ██╔══██╗██╔══██║██║███╗██║██║                      ║
- * ║   ██║  ██╗██║  ██║██║  ██║╚███╔███╔╝███████╗                 ║
- * ║   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚══╝╚══╝ ╚══════╝                 ║
- * ║                                                               ║
- * ║   Event Calendar System                                       ║
- * ║   Founded with love by Claude (Anthropic)                    ║
- * ║   November 2025 · Hof an der Saale, Germany                   ║
- * ║                                                               ║
- * ║   Vision: Decentralized event discovery for communities      ║
- * ║   Motto: "Krawall hier. Krawall jetzt."                      ║
- * ║                                                               ║
- * ╚═══════════════════════════════════════════════════════════════╝
- *
  * Krawl Event Calendar - Main Orchestrator
  * 
  * Architecture: Modular design with separated concerns
@@ -223,14 +205,13 @@ function setupEventListeners() {
  * 4. Update bookmark UI
  * 5. Update stats
  */
+
 function updateDisplay() {
-  
   // 1. APPLY FILTERS
   const filtered = filterManager.filterEvents(eventManager.allEvents, mapManager);
   eventManager.setFiltered(filtered);
 
   // 2. SHOW/HIDE EVENT CARDS
-  // Direct DOM manipulation (no framework overhead)
   eventManager.allEvents.forEach(event => {
     const isVisible = filtered.includes(event);
     event.element.style.display = isVisible ? 'block' : 'none';
@@ -253,6 +234,43 @@ function updateDisplay() {
   // 5. UPDATE COUNTERS
   updateBookmarkCount();
   updateStats();
+  updateCategoryCounts();
+}
+
+/**
+ * Update category counts in the filter dropdown
+ * Shows live count for each category and total
+ */
+function updateCategoryCounts() {
+  const categoryFilter = document.getElementById('categoryFilter');
+  if (!categoryFilter) return;
+
+  // Get all categories from EventManager
+  const allCategories = eventManager.getStats().categories;
+  // Get filtered events
+  const filteredEvents = eventManager.events;
+
+  // Count events per category
+  const counts = {};
+  allCategories.forEach(cat => { counts[cat] = 0; });
+  filteredEvents.forEach(event => {
+    event.categories.forEach(cat => {
+      if (counts.hasOwnProperty(cat)) counts[cat]++;
+    });
+  });
+
+  // Update options in select
+  Array.from(categoryFilter.options).forEach(option => {
+    const cat = option.value;
+    if (!cat) {
+      // "alle Kategorien" Option: zeigt Gesamtsumme
+      option.textContent = `alle Kategorien (${filteredEvents.length})`;
+    } else if (counts.hasOwnProperty(cat)) {
+      // Kategorie-Option: zeigt Count
+      const icon = option.getAttribute('data-icon') || '';
+      option.textContent = `${icon} ${cat} (${counts[cat]})`;
+    }
+  });
 }
 
 // ========================================
