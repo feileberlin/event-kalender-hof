@@ -1,0 +1,35 @@
+# GitHub Discussions Kategorien
+
+labels:
+  - name: feedback
+    color: "0e8a16"
+    description: Allgemeines Feedback zum Event-Kalender
+  - name: bug
+    color: "d73a4a"
+    description: Fehler oder Probleme
+  - name: feature-request
+    color: "a2eeef"
+    description: Feature-Wünsche und Verbesserungsvorschläge
+  - name: question
+    color: "d876e3"
+    description: Fragen zur Nutzung oder Konfiguration
+  - name: event-submission
+    color: "fbca04"
+    description: Vorschlag für neue Events
+
+categories:
+  - name: Feedback
+    emoji: "💬"
+    description: Teile dein Feedback zum Event-Kalender
+  - name: Bugs
+    emoji: "🐛"
+    description: Melde Fehler oder Probleme
+  - name: Ideas
+    emoji: "💡"
+    description: Schlage neue Features vor
+  - name: Q&A
+    emoji: "❓"
+    description: Stelle Fragen
+  - name: Events
+    emoji: "📅"
+    description: Schlage neue Events vor

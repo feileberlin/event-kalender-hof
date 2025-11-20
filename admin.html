@@ -3,11 +3,16 @@ layout: base
 title: Admin - Event-Verwaltung
 ---
 
+<link rel="stylesheet" href="/assets/css/admin.css">
+
+<!-- Inline styles werden durch externes CSS ersetzt, aber fallback bleibt -->
 <style>
+/* Legacy fallback - wird durch admin.css überschrieben */
 .admin-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+}
 }
 
 .admin-header {
@@ -2189,3 +2194,12 @@ switchTab = function(tab) {
 
 </script>
 
+<!-- Feedback/Bug Report Section -->
+<div class="feedback-section">
+    <a href="https://github.com/feileberlin/event-kalender-hof/discussions/new?category=feedback" 
+       class="feedback-link" 
+       target="_blank"
+       rel="noopener noreferrer">
+        🐛 Feedback / Bug melden
+    </a>
+</div>

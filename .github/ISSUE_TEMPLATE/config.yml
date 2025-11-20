@@ -1,0 +1,13 @@
+# GitHub Discussions Konfiguration
+
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Diskussionen & Feedback
+    url: https://github.com/feileberlin/event-kalender-hof/discussions
+    about: Stelle Fragen, gib Feedback oder diskutiere über Features
+  - name: 🐛 Bug Report
+    url: https://github.com/feileberlin/event-kalender-hof/discussions/new?category=bugs
+    about: Melde Fehler oder Probleme mit dem Event-Kalender
+  - name: 💡 Feature Request
+    url: https://github.com/feileberlin/event-kalender-hof/discussions/new?category=ideas
+    about: Schlage neue Features oder Verbesserungen vor
