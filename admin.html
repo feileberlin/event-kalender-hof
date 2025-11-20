@@ -1668,7 +1668,7 @@ function viewClusterDetails(clusterId) {
 
 // Event bearbeiten (zu GitHub weiterleiten)
 function editEvent(filename) {
-    const repoUrl = 'https://github.com/feileberlin/event-kalender-hof';
+    const repoUrl = 'https://github.com/feileberlin/krawl.ist';
     const editUrl = `${repoUrl}/edit/main/_events/${filename}`;
     window.open(editUrl, '_blank');
 }
@@ -1685,7 +1685,7 @@ function publishEvent(filename) {
 function deleteEvent(filename) {
     if (confirm(`Entwurf "${filename}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden!`)) {
         alert(`Um den Entwurf zu löschen, entferne die Datei _events/${filename} aus dem Repository und committe die Änderung.`);
-        const repoUrl = 'https://github.com/feileberlin/event-kalender-hof';
+        const repoUrl = 'https://github.com/feileberlin/krawl.ist';
         window.open(`${repoUrl}/tree/main/_events`, '_blank');
     }
 }
@@ -1694,7 +1694,7 @@ function deleteEvent(filename) {
 function archiveEvent(filename) {
     if (confirm(`Event "${filename}" archivieren?\n\nArchivierte Events werden nicht mehr angezeigt, bleiben aber im Repository erhalten.`)) {
         alert(`Um das Event zu archivieren:\n\n1. Öffne die Datei _events/${filename} auf GitHub\n2. Ändere status: "Öffentlich" zu status: "Archiviert"\n3. Committe die Änderung\n\nDas Event wird dann nicht mehr auf der Website angezeigt.`);
-        const repoUrl = 'https://github.com/feileberlin/event-kalender-hof';
+        const repoUrl = 'https://github.com/feileberlin/krawl.ist';
         window.open(`${repoUrl}/edit/main/_events/${filename}`, '_blank');
     }
 }
@@ -2196,7 +2196,7 @@ switchTab = function(tab) {
 
 <!-- Feedback/Bug Report Section -->
 <div class="feedback-section">
-    <a href="https://github.com/feileberlin/event-kalender-hof/discussions/new?category=feedback" 
+    <a href="https://github.com/feileberlin/krawl.ist/discussions/new?category=feedback" 
        class="feedback-link" 
        target="_blank"
        rel="noopener noreferrer">

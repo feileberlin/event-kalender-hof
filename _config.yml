@@ -3,7 +3,7 @@ title: "krawl.ist/hof"
 description: "Krawall hier. Krawall jetzt. — Events in Hof an der Saale"
 baseurl: ""
 url: "https://krawl.ist"
-repository: "feileberlin/event-kalender-hof"
+repository: "feileberlin/krawl.ist"
 # Cache invalidation: 2025-11-20T00:00:00Z
 
 # Community-spezifische Konfiguration (für Forks anpassen)
