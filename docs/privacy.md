@@ -1,19 +1,40 @@
 ---
 layout: base
-title: Datenschutzerklärung
+title: Impressum & Datenschutz
 ---
 
-# Datenschutzerklärung / Privacy Policy
+# Impressum & Datenschutz
 
-**Event-Kalender Hof an der Saale**  
-Stand: 19. November 2025
+**{{ site.title }}**  
+Stand: {{ site.time | date: "%d. %B %Y" }}
+
+---
+
+## 📚 Dokumentation
+
+### Für Nutzer
+- **[RSS-Feeds]({{ '/docs/RSS_FEEDS' | relative_url }})** - Abonniere Events in deinem Feed-Reader
+- **[GitHub Discussions]({{ site.github.repository_url }}/discussions)** - Community & Support
+- **[Feedback geben]({{ site.github.repository_url }}/discussions/new?category=feedback)** - Verbesserungsvorschläge
+
+### Für Entwickler & Fork-Betreiber
+- **[Installation]({{ '/INSTALL' | relative_url }})** - Setup-Anleitung für eigene Instanz
+- **[Karten-Styling]({{ '/docs/MAP_STYLING' | relative_url }})** - Customize deine Karte
+- **[Domain-Setup]({{ '/docs/DOMAIN_SETUP' | relative_url }})** - Custom Domain konfigurieren
+- **[Repository]({{ site.github.repository_url }})** - Quellcode auf GitHub
+
+---
 
 ## 1. Verantwortlicher
 
-Dieser Event-Kalender ist ein Open-Source-Projekt.  
-Repository: [github.com/feileberlin/event-kalender-hof](https://github.com/feileberlin/event-kalender-hof)
+Dieser Event-Kalender ist ein **Open-Source-Projekt**.
 
-## 2. Datenverarbeitung im Überblick
+**Repository:** [{{ site.github.repository_nwo }}]({{ site.github.repository_url }})  
+**Kontakt:** [GitHub Issues]({{ site.github.repository_url }}/issues) / [Discussions]({{ site.github.repository_url }}/discussions)
+
+---
+
+## 2. Datenschutzerklärung / Privacy Policy
 
 ### 2.1 Cookies
 
@@ -115,12 +136,6 @@ Dieser Service richtet sich an die allgemeine Öffentlichkeit und sammelt bewuss
 Wir behalten uns vor, diese Datenschutzerklärung anzupassen, um sie an geänderte Rechtslagen oder bei Änderungen des Dienstes anzupassen.
 
 Aktuelle Version: Siehe "Stand" oben
-
-## 8. Kontakt
-
-Bei Fragen zum Datenschutz:
-- GitHub Issues: [github.com/feileberlin/event-kalender-hof/issues](https://github.com/feileberlin/event-kalender-hof/issues)
-- GitHub Discussions: [github.com/feileberlin/event-kalender-hof/discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
 
 ---
 
