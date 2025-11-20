@@ -1,5 +1,21 @@
 /* Event-Kalender Hof - Fullscreen Map Layout */
 
+/* ========================================
+   ACCESSIBILITY: Reduced Motion Support
+   ======================================== */
+/* Respektiert Nutzer-Präferenz für reduzierte Bewegung
+   https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 /* Reset und Fullscreen Setup */
 * {
     margin: 0;
@@ -75,6 +91,24 @@ body.fullscreen-layout {
     padding: 10px 20px;
 }
 
+/* Skip-to-Content Link (Accessibility) */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 0 0 4px 0;
+    font-weight: bold;
+}
+
+.skip-to-content:focus {
+    top: 0;
+}
+
 .header-content {
     display: flex;
     align-items: center;
@@ -104,9 +138,12 @@ body.fullscreen-layout {
     transition: all 0.3s;
 }
 
-.search-toggle:hover {
+.search-toggle:hover,
+.search-toggle:focus {
     background: #f8f9fa;
     border-color: #2c3e50;
+    outline: 2px solid #2c3e50;
+    outline-offset: 2px;
 }
 
 /* Such-Panel (ausklappbar) */
@@ -136,6 +173,12 @@ body.fullscreen-layout {
     font-size: 16px;
 }
 
+.search-input:focus {
+    outline: 2px solid #2c3e50;
+    outline-offset: 2px;
+    border-color: #2c3e50;
+}
+
 .button-icon {
     width: 44px;
     height: 44px;
@@ -147,14 +190,22 @@ body.fullscreen-layout {
     transition: all 0.3s;
 }
 
-.button-icon:hover {
+.button-icon:hover,
+.button-icon:focus {
     background: #2c3e50;
     border-color: #2c3e50;
+    outline: 2px solid #2c3e50;
+    outline-offset: 2px;
 }
 
 .button-icon.active {
     background: #4CAF50;
     border-color: #4CAF50;
+}
+
+.button-icon.active:focus {
+    outline: 2px solid #4CAF50;
+}
     color: white;
 }
 
@@ -206,7 +257,8 @@ body.fullscreen-layout {
 }
 
 .inline-select:focus {
-    outline: none;
+    outline: 2px solid #2c3e50;
+    outline-offset: 2px;
     background: rgba(44, 62, 80, 0.1);
     border-bottom-color: #2c3e50;
     border-bottom-style: solid;

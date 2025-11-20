@@ -1,3 +1,3 @@
-commit_message: "feat: SEO optimization - Metadata, robots.txt, sitemap"
-commit_hash: "eb49042"
-commit_date: "2025-11-20 19:18:49"
+commit_message: "feat: PWA implementation - manifest, service worker, offline support"
+commit_hash: "0d053b2"
+commit_date: "2025-11-20 19:25:01"

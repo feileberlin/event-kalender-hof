@@ -3,8 +3,11 @@ layout: map
 title: "Event-Kalender Hof"
 ---
 
+<!-- Skip to Content (Accessibility) -->
+<a href="#map" class="skip-to-content">Direkt zur Karte springen</a>
+
 <!-- Bildschirmfüllende Karte -->
-<div id="map" class="fullscreen-map"></div>
+<div id="map" class="fullscreen-map" role="application" aria-label="Interaktive Karte mit Event-Markern"></div>
 
 <!-- Bookmarks Toolbar (nur sichtbar wenn Bookmarks vorhanden) -->
 <div id="bookmarks-toolbar" class="bookmarks-toolbar" style="display: none;">
@@ -12,13 +15,13 @@ title: "Event-Kalender Hof"
         <span class="toolbar-label">
             <strong id="bookmark-count">0</strong> Events gemerkt
         </span>
-        <button class="toolbar-btn" onclick="printBookmarks()" title="Als PDF drucken">
+        <button class="toolbar-btn" onclick="printBookmarks()" title="Als PDF drucken" aria-label="Bookmarks als PDF drucken">
             🖨️ Drucken
         </button>
-        <button class="toolbar-btn" onclick="emailBookmarks()" title="Per E-Mail versenden">
+        <button class="toolbar-btn" onclick="emailBookmarks()" title="Per E-Mail versenden" aria-label="Bookmarks per E-Mail versenden">
             📧 Mailen
         </button>
-        <button class="toolbar-btn toolbar-btn-clear" onclick="clearAllBookmarks()" title="Alle Bookmarks löschen">
+        <button class="toolbar-btn toolbar-btn-clear" onclick="clearAllBookmarks()" title="Alle Bookmarks löschen" aria-label="Alle Bookmarks löschen">
             🗑️ Alle löschen
         </button>
     </div>
@@ -30,11 +33,15 @@ title: "Event-Kalender Hof"
         <button type="button" id="searchToggle" class="search-toggle" aria-label="Suche öffnen">🔍</button>
         
         <div id="searchPanel" class="search-panel collapsed">
-            <input type="text" id="searchInput" placeholder="Events durchsuchen..." class="search-input">
+            <input type="text" 
+                   id="searchInput" 
+                   placeholder="Events durchsuchen..." 
+                   class="search-input"
+                   aria-label="Event-Suche">
         </div>
         
         <div class="event-info">
-            <select id="categoryFilter" class="inline-select">
+            <select id="categoryFilter" class="inline-select" aria-label="Kategorie filtern">
                 <!-- Default Option -->
                 <option value="" data-icon="{{ site.filters.default_filter_icon }}">{{ site.filters.default_filter_label }}</option>
                 
@@ -53,7 +60,7 @@ title: "Event-Kalender Hof"
                         data-plural="{{ site.filters.others_filter_label }}">Sonstiges</option>
             </select>
             
-            <select id="timeFilter" class="inline-select">
+            <select id="timeFilter" class="inline-select" aria-label="Zeitraum filtern">
                 {% for filter in site.filters.time_filters %}
                 <option value="{{ filter.key }}" 
                         {% if filter.default %}selected{% endif %}
@@ -62,7 +69,7 @@ title: "Event-Kalender Hof"
                 {% endfor %}
             </select>
             
-            <select id="radiusFilter" class="inline-select">
+            <select id="radiusFilter" class="inline-select" aria-label="Umkreis filtern">
                 {% for filter in site.filters.radius_filters %}
                     <option value="{{ filter.key }}"
                         data-km="{{ filter.km }}"
@@ -71,7 +78,7 @@ title: "Event-Kalender Hof"
                 {% endfor %}
             </select>
             
-            <select id="locationSelect" class="inline-select">
+            <select id="locationSelect" class="inline-select" aria-label="Standort wählen">
                 {% for venue in site.data.venues %}
                 {% if venue.location_type != '' and venue.location_type != nil %}
                 <option value="{{ venue.location_type }}" {% if venue.location_type == 'rathaus' %}selected{% endif %} data-icon="{{ venue.icon }}">{{ venue.name }}</option>
@@ -87,8 +94,13 @@ title: "Event-Kalender Hof"
 <footer class="overlay-footer">
     <div class="footer-content">
         <div class="footer-logo-area">
-            <a href="https://github.com/feileberlin/krawl.ist/discussions" class="logo-link" target="_blank" rel="noopener" title="Diskussionen">
-                <img src="{{ '/favicon.svg' | relative_url }}" alt="Logo" class="footer-logo">
+            <a href="https://github.com/feileberlin/krawl.ist/discussions" 
+               class="logo-link" 
+               target="_blank" 
+               rel="noopener" 
+               title="Diskussionen"
+               aria-label="GitHub Diskussionen öffnen">
+                <img src="{{ '/favicon.svg' | relative_url }}" alt="krawl.ist Logo" class="footer-logo">
             </a>
             <div class="build-info" title="Build: {{ site.data.build_info.commit_hash }} - {{ site.data.build_info.commit_date }}">
                 <small>
