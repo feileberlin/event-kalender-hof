@@ -83,7 +83,8 @@ export class FilterManager {
   }
   
   /**
-   * Berechnet n\u00e4chsten Tatort-Termin (Sonntag 20:15)
+   * Berechnet nächsten Tatort-Termin
+   * Tatort = beliebteste TV-Sendung in Deutschland, läuft Sonntags 20:15 Uhr (ARD)
    */
   getNextTatort() {
     const now = new Date();
@@ -226,13 +227,13 @@ export class FilterManager {
         const hours = Math.min(parseFloat(configuredHours), 720);
         cutoff = new Date(Date.now() + hours * 60 * 60 * 1000);
       } else {
-        // Fallback: Astronomische Berechnung
+        // Fallback: Spezielle Berechnungen
         if (timeRange === 'sunrise') {
-          cutoff = this.getNextSunrise();
+          cutoff = this.getNextSunrise();  // ~6 Uhr heute/morgen
         } else if (timeRange === 'tatort') {
-          cutoff = this.getNextTatort();
+          cutoff = this.getNextTatort();  // Nächster Sonntag 20:15 (TV-Sendezeit)
         } else if (timeRange === 'moon') {
-          cutoff = this.getNextMoonPhase();
+          cutoff = this.getNextMoonPhase();  // Astronomische Mondphasen-Berechnung
         }
       }
       

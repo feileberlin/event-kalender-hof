@@ -70,20 +70,20 @@ filters:
   others_filter_icon: "📌"  # Icon für Restkategorie
   
   # Time-Filter-Optionen (bis max. 720h = 1 Monat)
-  # Format: label → Stunden ab jetzt (oder 'sunrise', 'tatort', 'moon' für astronomische Berechnung)
+  # Format: label → Stunden ab jetzt (oder spezielle Berechnungen für sunrise/tatort/moon)
   time_filters:
     - key: "sunrise"
       label: "🌅 bis Sonnenaufgang"
-      hours: 18  # Überschreibt astronomische Berechnung (optional, nutze "sunrise" für echte Berechnung)
+      hours: 18  # Überschreibt Sonnenaufgang-Berechnung (optional, sonst ~6 Uhr)
       default: true  # Dieser Filter ist vorausgewählt
     
     - key: "tatort"
       label: "📺 bis zum nächsten Tatort"
-      # hours: 72  # Optional: Überschreibe mit fester Stundenanzahl (default: astronomische Berechnung)
+      # hours: 72  # Optional: Überschreibe mit fester Stundenanzahl (default: nächster Sonntag 20:15)
     
     - key: "moon"
       label: "🌕 bis Vollmond"  # Label wird dynamisch überschrieben (Vollmond/Neumond)
-      # hours: 336  # Optional: Überschreibe mit fester Stundenanzahl (default: astronomische Berechnung)
+      # hours: 336  # Optional: Überschreibe mit fester Stundenanzahl (default: Mondphasen-Berechnung)
   
   categories:
     - key: "Musik"
