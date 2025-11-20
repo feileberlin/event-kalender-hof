@@ -59,8 +59,10 @@ title: "Event-Kalender Hof"
             </select>
             
             <select id="locationSelect" class="inline-select">
-                {% for location in site.data.locations %}
-                <option value="{{ location.id }}" {% if location.id == 'rathaus' %}selected{% endif %} data-icon="{{ location.icon }}">{{ location.name }}</option>
+                {% for venue in site.data.venues %}
+                {% if venue.location_type != '' and venue.location_type != nil %}
+                <option value="{{ venue.location_type }}" {% if venue.location_type == 'rathaus' %}selected{% endif %} data-icon="{{ venue.icon }}">{{ venue.name }}</option>
+                {% endif %}
                 {% endfor %}
                 <option value="browser" data-icon="🎯">Mein Standort</option>
             </select>
@@ -122,16 +124,18 @@ const allEvents = [
     {% endfor %}
 ];
 
-// Standorte-Konfiguration (aus locations.csv)
+// Standorte-Konfiguration (aus venues.csv - nur Venues mit location_type)
 const LOCATIONS = {
-    {% for location in site.data.locations %}
-    {{ location.id }}: {
-        lat: {{ location.lat }},
-        lng: {{ location.lng }},
-        name: {{ location.name | jsonify }},
-        icon: {{ location.icon | jsonify }},
-        color: {{ location.color | jsonify }}
+    {% for venue in site.data.venues %}
+    {% if venue.location_type != '' and venue.location_type != nil %}
+    {{ venue.location_type }}: {
+        lat: {{ venue.lat }},
+        lng: {{ venue.lng }},
+        name: {{ venue.name | jsonify }},
+        icon: {{ venue.icon | jsonify }},
+        color: {{ venue.color | jsonify }}
     }{% unless forloop.last %},{% endunless %}
+    {% endif %}
     {% endfor %}
 };
 

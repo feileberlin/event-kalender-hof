@@ -1,6 +1,8 @@
-name,aliases,address,lat,lng,wheelchair_accessible,wheelchair_toilet,parking,public_transport,website,phone,capacity,notes,last_updated,icon
-Freiheitshalle Hof,"Freiheitshalle,Kulturzentrum Hof","Kulmbacher Str. 4, 95030 Hof",50.3197,11.9168,true,true,true,true,https://www.freiheitshalle-hof.de,+49 9281 8150,1500,Hauptkulturzentrum der Stadt,2025-11-19,🎭
-Altstadt Hof,"Innenstadt,Altstadt,Hof Zentrum","Ludwigstraße, 95028 Hof",50.3197,11.9168,true,false,false,true,https://www.hof.de,+49 9281 8150,,,2025-11-19,🏛️
-Hauptbahnhof Hof,"Bahnhof Hof,HBF Hof","Ernst-Reuter-Straße 1, 95028 Hof",50.3132,11.9196,true,true,true,true,https://www.bahn.de,,,,2025-11-19,🚂
-Rathaus Hof,"Rathaus","Klosterstraße 1, 95028 Hof",50.3197,11.9168,true,true,false,true,https://www.hof.de,+49 9281 8150,,,2025-11-19,🏛️
-Theater Hof,"Stadttheater Hof","Kulmbacher Str. 5, 95030 Hof",50.3190,11.9170,true,true,true,true,https://www.theater-hof.de,+49 9281 7070,600,Historisches Theater,2025-11-19,🎭
+name,aliases,address,lat,lng,wheelchair_accessible,wheelchair_toilet,parking,public_transport,website,phone,capacity,notes,last_updated,icon,color,location_type
+Freiheitshalle Hof,"Freiheitshalle,Kulturzentrum Hof","Kulmbacher Str. 4, 95030 Hof",50.3197,11.9168,true,true,true,true,https://www.freiheitshalle-hof.de,+49 9281 8150,1500,Hauptkulturzentrum der Stadt,2025-11-19,🎭,#2c3e50,
+Altstadt Hof,"Innenstadt,Altstadt,Hof Zentrum","Ludwigstraße, 95028 Hof",50.3197,11.9168,true,false,false,true,https://www.hof.de,+49 9281 8150,,,2025-11-19,🏛️,#2c3e50,
+Hauptbahnhof Hof,"Bahnhof Hof,HBF Hof","Ernst-Reuter-Straße 1, 95028 Hof",50.3132,11.9196,true,true,true,true,https://www.bahn.de,,,,2025-11-19,🚂,#2c3e50,bahnhof
+Rathaus Hof,"Rathaus","Klosterstraße 1, 95028 Hof",50.3197,11.9168,true,true,false,true,https://www.hof.de,+49 9281 8150,,,2025-11-19,🏛️,#2c3e50,rathaus
+Theater Hof,"Stadttheater Hof","Kulmbacher Str. 5, 95030 Hof",50.3190,11.9170,true,true,true,true,https://www.theater-hof.de,+49 9281 7070,600,Historisches Theater,2025-11-19,🎭,#2c3e50,
+Oberfranken-Kaserne,"Kaserne Hof,Bundeswehr Hof","Wunsiedler Str., 95030 Hof",50.3092,11.9053,false,false,true,true,,,,,2025-11-20,🏰,#2c3e50,kaserne
+Hochschule Hof,"Hochschule für Angewandte Wissenschaften Hof","Alfons-Goppel-Platz 1, 95028 Hof",50.3295,11.9021,true,true,true,true,https://www.hof-university.de,+49 9281 409 3000,,,2025-11-20,🎓,#2c3e50,hochschule
