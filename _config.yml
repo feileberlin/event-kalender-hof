@@ -208,6 +208,10 @@ defaults:
     values:
       layout: "event"
       status: "Entwurf"
+  - scope:
+      path: "admin.html"
+    values:
+      sitemap: false  # Admin-Bereich nicht in Sitemap
 
 # DEPRECATED: Verwende city.center stattdessen
 default_center:
@@ -268,13 +272,6 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
-
-# Sitemap Configuration
-defaults:
-  - scope:
-      path: "admin.html"
-    values:
-      sitemap: false  # Admin-Bereich nicht in Sitemap
 
 # Include assets
 include:

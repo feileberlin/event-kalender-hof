@@ -48,3 +48,4 @@ coverage/
 # Temporary files
 *.tmp
 *.bak
+scripts/tests/node_modules/
