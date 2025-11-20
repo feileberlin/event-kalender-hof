@@ -1,6 +1,6 @@
 # 🔥 Krawl
 
-> **Live-Beispiel:** [hof.krawl.ist](https://feileberlin.github.io/event-kalender-hof/) - Krawl für Hof an der Saale
+> **Live-Beispiel:** [krawl.ist/hof](https://feileberlin.github.io/krawl.ist/hof/) - Krawl für Hof an der Saale
 
 **Krawall hier. Krawall jetzt.**
 
