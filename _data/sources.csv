@@ -1,10 +1,11 @@
 name,url,type,active,notes
-Stadt Hof,"https://www.hof.de/hof/hof_deu/leben/veranstaltungen.html",html,true,Offizielle Veranstaltungsseite
-Freiheitshalle Hof,"https://www.freiheitshalle-hof.de/veranstaltungen/",html,true,Kulturzentrum
-Galeriehaus Hof,"https://www.facebook.com/GaleriehausHof/",facebook,true,Facebook-Seite
-Vanishing Walls,"https://www.facebook.com/people/Vanishing-Walls/100093518893300/",facebook,true,Facebook-Seite
-Punkrock in Hof,"https://www.facebook.com/people/Punk-in-Hof/100090512583516/",facebook,true,Facebook-Seite
-Last Minute Kurse VHS,"https://www.vhshoferland.de/p/last-minute-kurse-646-CAT-KAT282",html,true,Kurse
-Wochenmarkt Rehau,"https://rehau.bayern/de/kultur/veranstaltungen/wochenmarkt",html,true,Märkte
-Wochenmarkt Selb,"https://www.selb.de/freizeit-tourismus/veranstaltungen/detailansicht/selber-wochenmarkt",html,true,Märkte
-Kunstkaufhaus,"https://www.facebook.com/Kunstkaufhaus.Hof/events",facebook,true,Facebook-Kalender
+Wochenmarkt Hof,"https://www.hof.de/hof/hof_deu/leben/veranstaltungen.html",html,true,Offizielle Veranstaltungsseite
+Freiheitshalle,"https://www.freiheitshalle.de/de/die-freiheitshalle/veranstaltungen",html,true,Kulturzentrum
+Galeriehaus,"https://www.facebook.com/GaleriehausHof/events",facebook,true,Kunstkneipe
+Vanishing Walls,"https://www.facebook.com/people/Vanishing-Walls/100093518893300/",facebook,true,Kunstverein
+Punkrock in Hof,"https://www.facebook.com/people/Punk-in-Hof/100090512583516/",facebook,true,Punkrock
+VHS,"https://www.vhshoferland.de/p/last-minute-kurse-646-CAT-KAT282",html,true,Kurs
+Wochenmarkt Rehau,"https://rehau.bayern/de/kultur/veranstaltungen/wochenmarkt",html,true,Markt
+Wochenmarkt Selb,"https://www.selb.de/freizeit-tourismus/veranstaltungen/detailansicht/selber-wochenmarkt",html,true,Markt
+Kunstkaufhaus,"https://www.facebook.com/Kunstkaufhaus.Hof/events",facebook,true,Kunstkneipe
+DiePelle,"https://www.facebook.com/OffTheaterDuPelle/events",facebook,true,Off-Theater

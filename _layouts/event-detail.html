@@ -502,8 +502,8 @@ class EventReminder {
         
         const notification = new Notification('🎉 Event-Erinnerung', {
             body: `${eventTitle}\n\nBeginn in 1 Stunde!\n${eventLocation}`,
-            icon: '/event-kalender-hof/assets/images/favicon.svg',
-            badge: '/event-kalender-hof/assets/images/favicon.ico',
+            icon: '{{ site.baseurl }}/assets/images/favicon.svg',
+            badge: '{{ site.baseurl }}/assets/images/favicon.ico',
             tag: this.eventId,
             requireInteraction: true
         });
