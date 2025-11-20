@@ -1,126 +1,590 @@
 ---
 layout: base
 ---
+
 <article class="event-detail">
-    <header>
-        <h1>{{ page.title }}</h1>
-        <p class="event-meta">
-            📅 {{ page.date | date: "%d.%m.%Y" }}
-            {% if page.start_time %}
-                • 🕐 {{ page.start_time }}
-                {% if page.end_time %}- {{ page.end_time }}{% endif %}
-            {% endif %}
-        </p>
-        {% if page.location %}
-            <p class="event-location">📍 {{ page.location }}</p>
-        {% endif %}
-    </header>
-
-    <div class="event-content">
-        {% if page.image %}
-            <img src="{{ page.image }}" alt="{{ page.title }}" class="event-image">
-        {% endif %}
-
-        <div class="event-description">
-            {{ page.description | markdownify }}
-            {{ content }}
+    <h1>{{ page.title }}</h1>
+    
+    <div class="event-meta">
+        <div class="event-datetime">
+            <strong>📅 Datum:</strong> {{ page.date | date: "%d.%m.%Y" }}<br>
+            <strong>🕐 Zeit:</strong> {{ page.start_time }}{% if page.end_time %} - {{ page.end_time }}{% endif %} Uhr
         </div>
-
+        
+        <div class="event-location">
+            <strong>📍 Ort:</strong> {{ page.location }}<br>
+            {% if page.address %}
+            <span class="address">{{ page.address }}</span>
+            {% endif %}
+        </div>
+        
+        {% if page.category %}
+        <div class="event-category">
+            <strong>Kategorie:</strong> <span class="category-badge">{{ page.category }}</span>
+        </div>
+        {% endif %}
+        
         {% if page.tags %}
-            <div class="event-tags">
-                {% for tag in page.tags %}
-                    <span class="tag">{{ tag }}</span>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <div class="event-actions">
-            {% if page.url %}
-                <a href="{{ page.url }}" class="button" target="_blank" rel="noopener">🔗 Mehr Infos</a>
-            {% endif %}
-            <a href="{{ '/' | relative_url }}" class="button">← Zurück zur Karte</a>
+        <div class="event-tags">
+            <strong>Tags:</strong>
+            {% for tag in page.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
         </div>
+        {% endif %}
+    </div>
+    
+    {% if page.description %}
+    <div class="event-description">
+        <p>{{ page.description }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="event-reminder">
+        <button id="reminderButton" class="btn-reminder">
+            <span id="reminderIcon">⏰</span>
+            <span id="reminderText">Erinnere mich 1h vorher</span>
+        </button>
+        <div id="countdown" class="countdown" style="display: none;">
+            <div class="countdown-label">Event beginnt in:</div>
+            <div class="countdown-timer">
+                <span class="countdown-unit">
+                    <span id="days" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Tage</span>
+                </span>
+                <span class="countdown-unit">
+                    <span id="hours" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Std</span>
+                </span>
+                <span class="countdown-unit">
+                    <span id="minutes" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Min</span>
+                </span>
+                <span class="countdown-unit">
+                    <span id="seconds" class="countdown-number">0</span>
+                    <span class="countdown-unit-label">Sek</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="event-attendance">
+        <button id="attendanceButton" class="btn-attendance">
+            <span id="attendanceIcon">👋</span>
+            <span id="attendanceText">Ich gehe hin</span>
+        </button>
+        <div id="attendanceCount" class="attendance-count">
+            <span id="countNumber">0</span> interessiert
+        </div>
+    </div>
+    
+    <div id="eventRating" class="event-rating" style="display: none;">
+        <h3>📝 Event bewerten</h3>
+        <div class="rating-stars">
+            <button class="star-btn" data-rating="1">⭐</button>
+            <button class="star-btn" data-rating="2">⭐</button>
+            <button class="star-btn" data-rating="3">⭐</button>
+            <button class="star-btn" data-rating="4">⭐</button>
+            <button class="star-btn" data-rating="5">⭐</button>
+        </div>
+        <div class="rating-summary">
+            <div class="average-rating">
+                <span id="avgRating">0.0</span>
+                <span class="rating-stars-display" id="avgStars">☆☆☆☆☆</span>
+            </div>
+            <div class="total-ratings">
+                <span id="totalRatings">0</span> Bewertungen
+            </div>
+        </div>
+        <div class="user-rating-status" id="userRatingStatus"></div>
+        <button id="editRatingBtn" class="btn-edit-rating" style="display: none;">
+            ✏️ Bewertung ändern
+        </button>
+    </div>
+    
+    <div class="event-content">
+        {{ content }}
+    </div>
+    
+    {% if page.coordinates %}
+    <div class="event-map">
+        <h2>Standort</h2>
+        <div id="eventMap" style="height: 300px; margin: 20px 0;"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const map = L.map('eventMap').setView([{{ page.coordinates.lat }}, {{ page.coordinates.lng }}], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                L.marker([{{ page.coordinates.lat }}, {{ page.coordinates.lng }}])
+                    .addTo(map)
+                    .bindPopup('<strong>{{ page.title }}</strong><br>{{ page.location }}')
+                    .openPopup();
+            });
+        </script>
+    </div>
+    {% endif %}
+    
+    {% if page.url %}
+    <div class="event-link">
+        <a href="{{ page.url }}" target="_blank" class="btn-primary">Mehr Informationen</a>
+    </div>
+    {% endif %}
+    
+    <div class="event-footer">
+        <a href="{{ '/' | relative_url }}" class="btn-secondary">← Zurück zur Übersicht</a>
     </div>
 </article>
 
-<style>
-.event-detail {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
+<script>
+// Browser Fingerprinting für eindeutige User-ID
+async function generateFingerprint() {
+    const data = {
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        platform: navigator.platform,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
+        plugins: Array.from(navigator.plugins || []).map(p => p.name).join(','),
+        canvas: getCanvasFingerprint()
+    };
+    
+    const json = JSON.stringify(data);
+    const encoder = new TextEncoder();
+    const dataBuffer = encoder.encode(json);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
 }
 
-.event-detail header {
-    border-bottom: 2px solid #333;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-}
-
-.event-detail h1 {
-    margin: 0 0 0.5rem 0;
-    font-size: 2rem;
-}
-
-.event-meta,
-.event-location {
-    color: #666;
-    margin: 0.25rem 0;
-}
-
-.event-image {
-    width: 100%;
-    max-width: 600px;
-    height: auto;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.event-description {
-    line-height: 1.6;
-    margin: 2rem 0;
-}
-
-.event-tags {
-    margin: 1.5rem 0;
-}
-
-.tag {
-    display: inline-block;
-    background: #f0f0f0;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    margin: 0.25rem;
-    font-size: 0.9rem;
-}
-
-.event-actions {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.button {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background: #333;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background 0.2s;
-}
-
-.button:hover {
-    background: #555;
-}
-
-@media (max-width: 768px) {
-    .event-detail {
-        padding: 1rem;
-    }
-
-    .event-detail h1 {
-        font-size: 1.5rem;
+function getCanvasFingerprint() {
+    try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillText('fingerprint', 2, 2);
+        return canvas.toDataURL().substring(0, 50);
+    } catch(e) {
+        return 'unsupported';
     }
 }
-</style>
+
+// Attendance Counter Management
+class AttendanceCounter {
+    constructor(eventId) {
+        this.eventId = eventId;
+        this.storageKey = `attendance_${eventId}`;
+        this.userKey = `user_attendance_${eventId}`;
+    }
+    
+    async init() {
+        this.fingerprint = await generateFingerprint();
+        this.loadCount();
+        this.updateUI();
+        this.setupEventListener();
+    }
+    
+    loadCount() {
+        const data = localStorage.getItem(this.storageKey);
+        this.count = data ? parseInt(data) : 0;
+        this.userAttending = localStorage.getItem(this.userKey) === this.fingerprint;
+    }
+    
+    saveCount() {
+        localStorage.setItem(this.storageKey, this.count.toString());
+        localStorage.setItem(this.userKey, this.userAttending ? this.fingerprint : '');
+    }
+    
+    toggleAttendance() {
+        if (this.userAttending) {
+            this.count = Math.max(0, this.count - 1);
+            this.userAttending = false;
+        } else {
+            this.count++;
+            this.userAttending = true;
+        }
+        this.saveCount();
+        this.updateUI();
+    }
+    
+    updateUI() {
+        const button = document.getElementById('attendanceButton');
+        const icon = document.getElementById('attendanceIcon');
+        const text = document.getElementById('attendanceText');
+        const countNumber = document.getElementById('countNumber');
+        
+        if (this.userAttending) {
+            button.classList.add('attending');
+            icon.textContent = '✓';
+            text.textContent = 'Ich gehe hin!';
+        } else {
+            button.classList.remove('attending');
+            icon.textContent = '👋';
+            text.textContent = 'Ich gehe hin';
+        }
+        
+        countNumber.textContent = this.count;
+    }
+    
+    setupEventListener() {
+        document.getElementById('attendanceButton').addEventListener('click', () => {
+            this.toggleAttendance();
+        });
+    }
+}
+
+// Rating System Management
+class EventRating {
+    constructor(eventId, eventDate) {
+        this.eventId = eventId;
+        this.eventDate = new Date(eventDate);
+        this.storageKey = `ratings_${eventId}`;
+        this.userRatingKey = `user_rating_${eventId}`;
+    }
+    
+    async init() {
+        this.fingerprint = await generateFingerprint();
+        this.loadRatings();
+        
+        // Zeige Bewertungen nur nach Event-Ende
+        if (this.isEventPast()) {
+            document.getElementById('eventRating').style.display = 'block';
+            this.updateUI();
+            this.setupEventListeners();
+        }
+    }
+    
+    isEventPast() {
+        const now = new Date();
+        return now > this.eventDate;
+    }
+    
+    loadRatings() {
+        const data = localStorage.getItem(this.storageKey);
+        this.ratings = data ? JSON.parse(data) : {};
+        this.userRating = this.ratings[this.fingerprint] || null;
+    }
+    
+    saveRatings() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.ratings));
+    }
+    
+    submitRating(stars) {
+        this.ratings[this.fingerprint] = {
+            stars: stars,
+            timestamp: new Date().toISOString()
+        };
+        this.userRating = this.ratings[this.fingerprint];
+        this.saveRatings();
+        this.updateUI();
+        this.showSuccessMessage();
+    }
+    
+    deleteRating() {
+        if (confirm('Bewertung wirklich löschen?')) {
+            delete this.ratings[this.fingerprint];
+            this.userRating = null;
+            this.saveRatings();
+            this.updateUI();
+        }
+    }
+    
+    calculateAverage() {
+        const values = Object.values(this.ratings).map(r => r.stars);
+        if (values.length === 0) return 0;
+        const sum = values.reduce((a, b) => a + b, 0);
+        return (sum / values.length).toFixed(1);
+    }
+    
+    getTotalRatings() {
+        return Object.keys(this.ratings).length;
+    }
+    
+    getStarsDisplay(rating) {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+        
+        return '⭐'.repeat(fullStars) + 
+               (halfStar ? '✨' : '') + 
+               '☆'.repeat(emptyStars);
+    }
+    
+    updateUI() {
+        const avgRating = this.calculateAverage();
+        const totalRatings = this.getTotalRatings();
+        
+        document.getElementById('avgRating').textContent = avgRating;
+        document.getElementById('avgStars').textContent = this.getStarsDisplay(parseFloat(avgRating));
+        document.getElementById('totalRatings').textContent = totalRatings;
+        
+        // User Status anzeigen
+        const statusDiv = document.getElementById('userRatingStatus');
+        const editBtn = document.getElementById('editRatingBtn');
+        
+        if (this.userRating) {
+            statusDiv.innerHTML = `<div class="user-rating-display">
+                <strong>Deine Bewertung:</strong> ${this.getStarsDisplay(this.userRating.stars)}
+                <span class="rating-date">(${new Date(this.userRating.timestamp).toLocaleDateString('de-DE')})</span>
+            </div>`;
+            editBtn.style.display = 'inline-block';
+            
+            // Highlight user's rating
+            document.querySelectorAll('.star-btn').forEach((btn, idx) => {
+                if (idx < this.userRating.stars) {
+                    btn.classList.add('rated');
+                } else {
+                    btn.classList.remove('rated');
+                }
+                btn.disabled = true;
+            });
+        } else {
+            statusDiv.innerHTML = '';
+            editBtn.style.display = 'none';
+            document.querySelectorAll('.star-btn').forEach(btn => {
+                btn.classList.remove('rated');
+                btn.disabled = false;
+            });
+        }
+    }
+    
+    enableEditing() {
+        document.querySelectorAll('.star-btn').forEach(btn => {
+            btn.disabled = false;
+            btn.classList.remove('rated');
+        });
+        document.getElementById('userRatingStatus').innerHTML = '<p class="edit-mode">✏️ Bewertung bearbeiten...</p>';
+        document.getElementById('editRatingBtn').style.display = 'none';
+    }
+    
+    showSuccessMessage() {
+        const statusDiv = document.getElementById('userRatingStatus');
+        const originalContent = statusDiv.innerHTML;
+        statusDiv.innerHTML = '<p class="success-message">✓ Bewertung gespeichert!</p>';
+        setTimeout(() => {
+            this.updateUI();
+        }, 2000);
+    }
+    
+    setupEventListeners() {
+        document.querySelectorAll('.star-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!btn.disabled) {
+                    const rating = parseInt(btn.dataset.rating);
+                    this.submitRating(rating);
+                }
+            });
+            
+            // Hover Effekt
+            btn.addEventListener('mouseenter', () => {
+                if (!btn.disabled) {
+                    const rating = parseInt(btn.dataset.rating);
+                    document.querySelectorAll('.star-btn').forEach((b, idx) => {
+                        if (idx < rating) {
+                            b.classList.add('hover');
+                        } else {
+                            b.classList.remove('hover');
+                        }
+                    });
+                }
+            });
+        });
+        
+        document.querySelector('.rating-stars').addEventListener('mouseleave', () => {
+            document.querySelectorAll('.star-btn').forEach(btn => {
+                btn.classList.remove('hover');
+            });
+        });
+        
+        document.getElementById('editRatingBtn').addEventListener('click', () => {
+            this.enableEditing();
+        });
+    }
+}
+
+// Event Reminder System
+class EventReminder {
+    constructor(eventId, eventDateTime) {
+        this.eventId = eventId;
+        this.eventDateTime = new Date(eventDateTime);
+        this.reminderKey = `reminder_${eventId}`;
+        this.countdownInterval = null;
+    }
+    
+    async init() {
+        this.fingerprint = await generateFingerprint();
+        this.loadReminder();
+        
+        // Zeige Reminder nur für zukünftige Events
+        if (this.isFutureEvent()) {
+            document.querySelector('.event-reminder').style.display = 'block';
+            this.updateUI();
+            this.setupEventListeners();
+            this.startCountdown();
+            this.checkReminder();
+        }
+    }
+    
+    isFutureEvent() {
+        const now = new Date();
+        return this.eventDateTime > now;
+    }
+    
+    loadReminder() {
+        const data = localStorage.getItem(this.reminderKey);
+        this.reminderSet = data === this.fingerprint;
+    }
+    
+    saveReminder() {
+        if (this.reminderSet) {
+            localStorage.setItem(this.reminderKey, this.fingerprint);
+        } else {
+            localStorage.removeItem(this.reminderKey);
+        }
+    }
+    
+    async requestNotificationPermission() {
+        if (!('Notification' in window)) {
+            alert('Dein Browser unterstützt keine Push-Benachrichtigungen.');
+            return false;
+        }
+        
+        if (Notification.permission === 'granted') {
+            return true;
+        }
+        
+        if (Notification.permission !== 'denied') {
+            const permission = await Notification.requestPermission();
+            return permission === 'granted';
+        }
+        
+        return false;
+    }
+    
+    async toggleReminder() {
+        if (!this.reminderSet) {
+            const hasPermission = await this.requestNotificationPermission();
+            if (!hasPermission) {
+                alert('Bitte erlaube Benachrichtigungen in den Browser-Einstellungen.');
+                return;
+            }
+            this.reminderSet = true;
+        } else {
+            this.reminderSet = false;
+        }
+        
+        this.saveReminder();
+        this.updateUI();
+        this.checkReminder();
+    }
+    
+    checkReminder() {
+        if (!this.reminderSet) return;
+        
+        const now = new Date();
+        const oneHourBefore = new Date(this.eventDateTime.getTime() - 60 * 60 * 1000);
+        const timeUntilReminder = oneHourBefore - now;
+        
+        if (timeUntilReminder > 0) {
+            // Setze Timeout für Erinnerung
+            setTimeout(() => {
+                this.sendNotification();
+            }, timeUntilReminder);
+        }
+    }
+    
+    sendNotification() {
+        if (!this.reminderSet || Notification.permission !== 'granted') return;
+        
+        const eventTitle = document.querySelector('h1').textContent;
+        const eventLocation = document.querySelector('.event-location').textContent.trim();
+        
+        const notification = new Notification('🎉 Event-Erinnerung', {
+            body: `${eventTitle}\n\nBeginn in 1 Stunde!\n${eventLocation}`,
+            icon: '{{ site.baseurl }}/assets/images/favicon.svg',
+            badge: '{{ site.baseurl }}/assets/images/favicon.ico',
+            tag: this.eventId,
+            requireInteraction: true
+        });
+        
+        notification.onclick = function() {
+            window.focus();
+            this.close();
+        };
+    }
+    
+    startCountdown() {
+        const countdownEl = document.getElementById('countdown');
+        
+        if (!this.isFutureEvent()) {
+            countdownEl.style.display = 'none';
+            return;
+        }
+        
+        countdownEl.style.display = 'block';
+        
+        const updateCountdown = () => {
+            const now = new Date();
+            const diff = this.eventDateTime - now;
+            
+            if (diff <= 0) {
+                clearInterval(this.countdownInterval);
+                countdownEl.innerHTML = '<div class="countdown-label">🎉 Event läuft jetzt!</div>';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        };
+        
+        updateCountdown();
+        this.countdownInterval = setInterval(updateCountdown, 1000);
+    }
+    
+    updateUI() {
+        const button = document.getElementById('reminderButton');
+        const icon = document.getElementById('reminderIcon');
+        const text = document.getElementById('reminderText');
+        
+        if (this.reminderSet) {
+            button.classList.add('reminder-active');
+            icon.textContent = '✓';
+            text.textContent = 'Erinnerung aktiv';
+        } else {
+            button.classList.remove('reminder-active');
+            icon.textContent = '⏰';
+            text.textContent = 'Erinnere mich 1h vorher';
+        }
+    }
+    
+    setupEventListeners() {
+        document.getElementById('reminderButton').addEventListener('click', () => {
+            this.toggleReminder();
+        });
+    }
+}
+
+// Initialisierung
+document.addEventListener('DOMContentLoaded', function() {
+    const eventId = '{{ page.id | replace: "/", "_" }}';
+    const eventDate = '{{ page.date | date: "%Y-%m-%d" }}T{{ page.end_time | default: "23:59" }}';
+    const eventStartTime = '{{ page.date | date: "%Y-%m-%d" }}T{{ page.start_time }}';
+    
+    const counter = new AttendanceCounter(eventId);
+    counter.init();
+    
+    const rating = new EventRating(eventId, eventDate);
+    rating.init();
+    
+    const reminder = new EventReminder(eventId, eventStartTime);
+    reminder.init();
+});
+</script>
