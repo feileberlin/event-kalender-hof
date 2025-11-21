@@ -1,0 +1,16 @@
+{
+  "name": "Hauptbahnhof Hof",
+  "slug": "hauptbahnhof-hof",
+  "address": "Ernst-Reuter-Straße 1, 95028 Hof",
+  "coords": {
+    "lat": 50.3197,
+    "lng": 11.9175
+  },
+  "wheelchair_accessible": true,
+  "public_transport": true,
+  "capacity": null,
+  "website": null,
+  "phone": null,
+  "icon": "📍",
+  "color": "#2c3e50"
+}

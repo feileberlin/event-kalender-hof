@@ -1,0 +1,16 @@
+{
+  "name": "Altstadt Hof",
+  "slug": "altstadt-hof",
+  "address": "Ludwigstraße, 95028 Hof",
+  "coords": {
+    "lat": 50.3197,
+    "lng": 11.9175
+  },
+  "wheelchair_accessible": true,
+  "public_transport": true,
+  "capacity": null,
+  "website": null,
+  "phone": "+49 9281 8150",
+  "icon": "📍",
+  "color": "#2c3e50"
+}

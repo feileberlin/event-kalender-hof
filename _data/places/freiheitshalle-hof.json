@@ -1,0 +1,16 @@
+{
+  "name": "Freiheitshalle Hof",
+  "slug": "freiheitshalle-hof",
+  "address": "Kulmbacher Str. 4, 95030 Hof",
+  "coords": {
+    "lat": 50.3197,
+    "lng": 11.9175
+  },
+  "wheelchair_accessible": true,
+  "public_transport": true,
+  "capacity": 1500,
+  "website": null,
+  "phone": "+49 9281 8150",
+  "icon": "📍",
+  "color": "#2c3e50"
+}

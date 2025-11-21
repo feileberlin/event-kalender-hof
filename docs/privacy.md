@@ -71,7 +71,7 @@ Wenn Sie die Option **"🎯 Mein Standort"** wählen:
 - **Daten:** Keine personenbezogenen Daten, keine Cookies, keine IP-Speicherung
 - **DSGVO:** Vollständig konform, kein Consent-Banner nötig
 - **Tracking:** Aggregierte Daten (welche Events beliebt, Uhrzeiten, Gerätetypen)
-- **Dashboard:** Öffentlich einsehbar unter [event-kalender-hof.goatcounter.com](https://event-kalender-hof.goatcounter.com)
+- **Dashboard:** Öffentlich einsehbar unter [krawl-ist.goatcounter.com](https://krawl-ist.goatcounter.com) (Legacy: [event-kalender-hof.goatcounter.com](https://event-kalender-hof.goatcounter.com))
 - **Datenschutz:** [GoatCounter Privacy Policy](https://www.goatcounter.com/help/privacy)
 
 **Was wird getrackt:**

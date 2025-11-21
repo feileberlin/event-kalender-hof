@@ -34,8 +34,8 @@ Diese Anleitung hilft dir, den Event-Kalender für **deine Community** anzupasse
 ### Via GitHub CLI (empfohlen)
 
 ```bash
-gh repo fork feileberlin/event-kalender-hof --clone
-cd event-kalender-hof
+gh repo fork feileberlin/krawl.ist --clone
+cd krawl.ist
 ```
 
 ---
@@ -363,8 +363,8 @@ Verlinke in Footer (bearbeite `_layouts/base.html`).
 **Du kommst nicht weiter?**
 
 1. **Dokumentation durchsuchen**: [docs/](docs/)
-2. **Issues prüfen**: [github.com/feileberlin/event-kalender-hof/issues](https://github.com/feileberlin/event-kalender-hof/issues)
-3. **Diskussion starten**: [github.com/feileberlin/event-kalender-hof/discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
+2. **Issues prüfen**: [github.com/feileberlin/krawl.ist/issues](https://github.com/feileberlin/krawl.ist/issues)
+3. **Diskussion starten**: [github.com/feileberlin/krawl.ist/discussions](https://github.com/feileberlin/krawl.ist/discussions)
 4. **Issue öffnen**: Beschreibe dein Problem detailliert
 
 **Du hast es geschafft?** 🎉

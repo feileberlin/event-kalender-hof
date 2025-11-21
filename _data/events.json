@@ -1,0 +1,13 @@
+{
+  "version": "2.0",
+  "schema": "https://krawl.ist/schema/events-v2.json",
+  "generated_at": "2025-11-21T15:00:00Z",
+  "generator": "krawl.ist-scraper-v2",
+  "meta": {
+    "total_events": 0,
+    "sources_scraped": 0,
+    "last_scrape": null,
+    "next_scrape": null
+  },
+  "events": []
+}

@@ -1,0 +1,32 @@
+metadata:
+  name: "Papercut"
+  version: "1.0.0"
+  description: "South Park-inspiriertes Papercut-Theme"
+  author: "krawl.ist"
+
+icons:
+  search: "🔍"
+  bookmark: "📌"
+  delete: "🗑️"
+  location: "📍"
+
+markers:
+  type: "svg_avatar"
+  default:
+    size: 120
+    shape: "character"
+
+avatars:
+  enabled: true
+  style: "papercut"
+  flyer:
+    width: 60
+    height: 80
+    colors: ["#ffb3ba", "#bae1ff", "#baffc9"]
+  venue_scenery:
+    enabled: true
+  characters:
+    - name: "punk"
+      hair_style: "mohawk"
+    - name: "loser"  
+      hair_style: "messy"

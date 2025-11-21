@@ -181,7 +181,7 @@ Schritt 1: Lokaler Test
 
 Schritt 2: Git Commit
   $ git add .
-  $ git commit -m "Initial commit: Event-Kalender Hof v1.0"
+  $ git commit -m "Initial commit: krawl.ist v1.0"
   $ git push origin main
 
 Schritt 3: GitHub Pages aktivieren
@@ -191,10 +191,11 @@ Schritt 3: GitHub Pages aktivieren
   4. Warten (~2 Minuten)
 
 Schritt 4: Website öffnen
-  → https://feileberlin.github.io/event-kalender-hof
+  → https://krawl.ist
+  → GitHub Pages: https://feileberlin.github.io/krawl.ist
 
 Schritt 5: Admin-Bereich testen
-  → https://feileberlin.github.io/event-kalender-hof/admin.html
+  → https://krawl.ist/admin.html
 
 ═══════════════════════════════════════════════════════════════════════════
 📋 CHAT-BEFEHLE HISTORIE
@@ -284,9 +285,9 @@ Neue Kategorie hinzufügen:
 ═══════════════════════════════════════════════════════════════════════════
 
 GitHub:
-  • Repository: github.com/feileberlin/event-kalender-hof
-  • Issues: github.com/feileberlin/event-kalender-hof/issues
-  • Discussions: github.com/feileberlin/event-kalender-hof/discussions
+  • Repository: github.com/feileberlin/krawl.ist
+  • Issues: github.com/feileberlin/krawl.ist/issues
+  • Discussions: github.com/feileberlin/krawl.ist/discussions
 
 Dokumentation:
   • README.md - Vollständige Dokumentation
@@ -321,7 +322,7 @@ Alle Anforderungen wurden erfüllt:
 
 ═══════════════════════════════════════════════════════════════════════════
 
-Viel Erfolg mit dem Event-Kalender Hof! 🎉
+Viel Erfolg mit ~~Event-Kalender Hof~~ krawl.ist! 🎉
 
 Entwickelt mit ❤️ für Hof an der Saale
 

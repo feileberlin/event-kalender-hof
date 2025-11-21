@@ -6,7 +6,7 @@
 
 ## 🎯 Übersicht
 
-- **Haupt-Domain:** `krawl.ist` → zeigt auf `feileberlin.github.io/event-kalender-hof`
+- **Haupt-Domain:** `krawl.ist` → zeigt auf `feileberlin.github.io/krawl.ist` (GitHub Repository Slug bleibt aus technischen Gründen)
 - **Subdomain-Struktur:** `hof.krawl.ist`, `punk-berlin.krawl.ist` etc. (für Forks)
 - **DNS-Provider:** Wo auch immer du `krawl.ist` registrierst
 
@@ -154,7 +154,7 @@ hof.krawl.ist
 
 **Lösung:**
 - Für Custom Domain (`krawl.ist`): `baseurl: ""`  (LEER!)
-- Für GitHub Pages ohne Custom Domain (`feileberlin.github.io/event-kalender-hof`): `baseurl: "/event-kalender-hof"`
+- Für GitHub Pages ohne Custom Domain (`feileberlin.github.io/krawl.ist`): `baseurl: "/krawl.ist"`
 
 **Aktuell (`_config.yml`):**
 ```yaml
@@ -232,7 +232,7 @@ xdg-open https://krawl.ist  # Linux
 Falls Probleme auftreten:
 1. Prüfe DNS mit `dig` (siehe oben)
 2. Prüfe GitHub Actions Logs (Build-Fehler?)
-3. GitHub Issues: https://github.com/feileberlin/event-kalender-hof/issues
+3. GitHub Issues: https://github.com/feileberlin/krawl.ist/issues
 
 ---
 

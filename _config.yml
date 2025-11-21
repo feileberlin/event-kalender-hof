@@ -39,6 +39,32 @@ debug:
   show_test_events: true   # Zeigt Lorem-Ipsum-Test-Events (immer aktuell, für Entwicklung)
   test_event_count: 10     # Anzahl der Test-Events (falls show_test_events: true)
 
+# Theme Configuration
+# Vorkonfigurierte Themes in assets/themes/
+# Verfügbare Themes: default-dark, light, cyberpunk, nature, minimal, papercut
+# Eigene Themes: CSS-Datei in assets/themes/ anlegen und hier referenzieren
+theme:
+  active: "default-dark"  # Name des aktiven Themes (ohne .css)
+  available:
+    - name: "default-dark"
+      label: "Dark (Standard)"
+      description: "Dunkles Theme mit roten Akzenten"
+    - name: "light"
+      label: "Light"
+      description: "Heller Modus für bessere Lesbarkeit"
+    - name: "cyberpunk"
+      label: "Cyberpunk"
+      description: "Neon & Futuristisch"
+    - name: "nature"
+      label: "Nature"
+      description: "Grüne Erdtöne für Nachhaltigkeits-Events"
+    - name: "papercut"
+      label: "Papercut"
+      description: "South Park-Style mit SVG-Avatar-Markern"
+    - name: "minimal"
+      label: "Minimal"
+      description: "Schwarz-Weiß Reduktion"
+
 city:
   name: "Hof an der Saale"
   name_short: "Hof"

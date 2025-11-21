@@ -9,7 +9,7 @@
 
 export class MapManager {
   
-  constructor(mapElementId, initialCenter = [50.3195, 11.9173], initialZoom = 13) {
+  constructor(mapElementId, initialCenter = [50.3195, 11.9173], initialZoom = 13, options = {}) {
     // State
     this.map = null;                    // Leaflet map instance
     this.markers = [];                  // Track markers for cleanup
@@ -19,6 +19,12 @@ export class MapManager {
     this.mapElementId = mapElementId;   // DOM element ID
     this.center = initialCenter;        // Default: Hof, Germany
     this.zoom = initialZoom;            // Default zoom level
+    
+    // Avatar generator (optional, for papercut theme)
+    this.avatarGenerator = options.avatarGenerator || null;
+    this.organizersData = options.organizersData || {};
+    this.venuesData = options.venuesData || {};
+    this.usePapercutMarkers = options.usePapercutMarkers || false;
   }
 
   // ========================================
@@ -65,18 +71,37 @@ export class MapManager {
   /**
    * Add event marker to map
    * @param {string} iconUrl - Optional custom marker icon
+   * @param {Object} eventData - Full event data (for papercut avatars)
    * @returns {Marker} Leaflet marker instance
    */
-  addMarker(lat, lng, popupContent, iconUrl) {
+  addMarker(lat, lng, popupContent, iconUrl, eventData = null) {
     if (!this.map) return null;
 
-    // Custom icon or default pin
-    const icon = iconUrl ? L.icon({
-      iconUrl,
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],        // Point of icon that touches the map
-      popupAnchor: [0, -32]        // Where popup opens relative to icon
-    }) : undefined;
+    let icon = undefined;
+    
+    // Papercut theme: Generate SVG avatar
+    if (this.usePapercutMarkers && this.avatarGenerator && eventData) {
+      const organizerData = this.findOrganizerData(eventData);
+      const venueData = this.findVenueData(eventData);
+      
+      const avatarUrl = this.avatarGenerator.generateAvatar(eventData, organizerData, venueData);
+      
+      icon = L.icon({
+        iconUrl: avatarUrl,
+        iconSize: [200, 400],
+        iconAnchor: [100, 390],       // Bottom center of venue base
+        popupAnchor: [0, -390]       // Popup above top layer
+      });
+    } 
+    // Standard theme: Custom icon or default
+    else if (iconUrl) {
+      icon = L.icon({
+        iconUrl,
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],        // Point of icon that touches the map
+        popupAnchor: [0, -32]        // Where popup opens relative to icon
+      });
+    }
 
     const marker = L.marker([lat, lng], icon ? { icon } : {})
       .bindPopup(popupContent)
@@ -86,6 +111,50 @@ export class MapManager {
     this.markers.push(marker);
     
     return marker;
+  }
+  
+  /**
+   * Find organizer data by name lookup
+   */
+  findOrganizerData(event) {
+    const organizerName = event.organizer || '';
+    
+    // Try exact match
+    if (this.organizersData[organizerName]) {
+      return this.organizersData[organizerName];
+    }
+    
+    // Try case-insensitive match
+    const lowerName = organizerName.toLowerCase();
+    for (const [key, value] of Object.entries(this.organizersData)) {
+      if (key.toLowerCase() === lowerName) {
+        return value;
+      }
+    }
+    
+    return null;
+  }
+  
+  /**
+   * Find venue data by name lookup
+   */
+  findVenueData(event) {
+    const venueName = event.location || event.venue || '';
+    
+    // Try exact match
+    if (this.venuesData[venueName]) {
+      return this.venuesData[venueName];
+    }
+    
+    // Try case-insensitive match
+    const lowerName = venueName.toLowerCase();
+    for (const [key, value] of Object.entries(this.venuesData)) {
+      if (key.toLowerCase() === lowerName) {
+        return value;
+      }
+    }
+    
+    return null;
   }
 
   // ========================================

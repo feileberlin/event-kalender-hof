@@ -308,7 +308,7 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/).
 ## [1.0.0] - 2025-11-17
 
 ### Hinzugefügt
-- 🎉 Initiales Release des Event-Kalender Hof
+- 🎉 Initiales Release von ~~Event-Kalender Hof~~ krawl.ist
 - 📍 Interaktive Leaflet.js 1.9.4 Karte mit Events
 - 🕐 Filter: Nur Events bis Morgendämmerung (6:30 Uhr)
 - 🔍 Such- und Filterfunktionen (Text, Kategorie, Zeit, Radius)

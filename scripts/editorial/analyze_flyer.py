@@ -62,7 +62,7 @@ class FlyerAnalyzer:
         print(f"📥 Downloading: {url}")
         try:
             response = requests.get(url, timeout=30, headers={
-                'User-Agent': 'Mozilla/5.0 (Event-Kalender-Hof/1.0)'
+                'User-Agent': 'Mozilla/5.0 (krawl.ist/1.0)'
             })
             response.raise_for_status()
             return response.content
@@ -346,7 +346,7 @@ Antworte NUR mit JSON."""
                     'format': 'json',
                     'limit': 1
                 },
-                headers={'User-Agent': 'Event-Kalender-Hof/1.0'},
+                headers={'User-Agent': 'krawl.ist/1.0'},
                 timeout=10
             )
             

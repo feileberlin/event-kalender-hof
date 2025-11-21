@@ -1,0 +1,86 @@
+/* Theme: Minimal - Schwarz-Weiß Reduktion */
+
+:root {
+    /* Brand Colors - Monochrom */
+    --color-primary: #000000;
+    --color-secondary: #666666;
+    --color-accent: #999999;
+    
+    /* Background Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-overlay: rgba(255, 255, 255, 0.98);
+    --bg-card: #fafafa;
+    
+    /* Text Colors */
+    --text-primary: #000000;
+    --text-secondary: #666666;
+    --text-muted: #999999;
+    
+    /* UI Colors */
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --hover-bg: #f0f0f0;
+    
+    /* Status Colors - Graustufen */
+    --success: #333333;
+    --warning: #666666;
+    --error: #000000;
+    --info: #444444;
+    
+    /* Interactive Elements */
+    --button-bg: var(--color-primary);
+    --button-hover: var(--color-secondary);
+    --link-color: var(--color-secondary);
+    --link-hover: var(--color-primary);
+    
+    /* Map Specific */
+    --map-marker-color: var(--color-primary);
+    --map-cluster-color: var(--color-secondary);
+    
+    /* Typography */
+    --font-family: 'Helvetica Neue', Arial, sans-serif;
+    --font-size-base: 15px;
+    --line-height-base: 1.5;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Transitions - Instant */
+    --transition-fast: 50ms linear;
+    --transition-normal: 100ms linear;
+    --transition-slow: 200ms linear;
+}
+
+/* Minimal Theme Specifics */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Ultra clean borders */
+button,
+.inline-select,
+.event-card {
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+
+/* No shadows */
+* {
+    box-shadow: none !important;
+}
+
+/* Sharp corners everywhere */
+* {
+    border-radius: 0 !important;
+}
+
+/* Leaflet Map - Grayscale */
+.leaflet-tile-pane {
+    filter: grayscale(100%) contrast(1.1);
+}

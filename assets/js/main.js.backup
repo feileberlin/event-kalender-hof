@@ -168,7 +168,7 @@ function printBookmarks() {
         <html lang="de">
         <head>
             <meta charset="UTF-8">
-            <title>Meine gemerkten Events - Event-Kalender Hof</title>
+            <title>Meine gemerkten Events - krawl.ist</title>
             <style>
                 body {
                     font-family: 'Segoe UI', Arial, sans-serif;
@@ -271,7 +271,7 @@ function emailBookmarks() {
     }
 
     // E-Mail Body generieren
-    let body = `Meine gemerkten Events - Event-Kalender Hof\n`;
+    let body = `Meine gemerkten Events - krawl.ist\n`;
     body += `Generiert am: ${new Date().toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n`;
     body += `\n${'='.repeat(60)}\n\n`;
 

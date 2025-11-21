@@ -1,0 +1,16 @@
+{
+  "name": "Theater Hof",
+  "slug": "theater-hof",
+  "address": "Kulmbacher Str. 5, 95030 Hof",
+  "coords": {
+    "lat": 50.3197,
+    "lng": 11.9175
+  },
+  "wheelchair_accessible": true,
+  "public_transport": true,
+  "capacity": 600,
+  "website": null,
+  "phone": "+49 9281 7070",
+  "icon": "📍",
+  "color": "#2c3e50"
+}

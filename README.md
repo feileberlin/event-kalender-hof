@@ -43,7 +43,7 @@ Die **nächsten Events** in **relativer Nähe** zu deinem Kontext:
 
 "Nähe" ist relativ - für eine Punk-Szene sind 200 km akzeptabel, für eine Stadt-Community nicht.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://feileberlin.github.io/event-kalender-hof/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://krawl.ist/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Jekyll](https://img.shields.io/badge/Jekyll-3.10-red)](https://jekyllrb.com/)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)
@@ -52,7 +52,7 @@ Die **nächsten Events** in **relativer Nähe** zu deinem Kontext:
 
 ## 🚀 Usage
 
-1. **Öffne die Karte:** [hof.krawl.ist](https://feileberlin.github.io/event-kalender-hof/)
+1. **Öffne die Karte:** [hof.krawl.ist](https://krawl.ist/) oder [feileberlin.github.io/krawl.ist](https://feileberlin.github.io/krawl.ist/)
 2. **Filter anpassen:** Zeitraum, Umkreis (🚶 1km, 🚴 3km, 🚌 10km), Kategorie
 3. **Event anklicken:** Details, Beschreibung, Link zum Veranstalter
 4. **Bookmark setzen:** Event merken und später als PDF exportieren
@@ -148,8 +148,8 @@ Krawl kombiniert **Read-Only Simplicity** mit **intelligenter Automatisierung**:
 ### 1. Repository forken
 
 ```bash
-gh repo fork feileberlin/event-kalender-hof --clone
-cd event-kalender-hof
+gh repo fork feileberlin/krawl.ist --clone
+cd krawl.ist
 ```
 
 ### 2. Community-Konfiguration anpassen
@@ -214,7 +214,7 @@ pip install -r requirements.txt
 bundle exec jekyll serve
 
 # 4. Browser öffnen
-open http://localhost:4000/event-kalender-hof/
+open http://localhost:4000/krawl.ist/
 ```
 
 **Scripts testen:**
@@ -239,10 +239,10 @@ python3 scripts/editorial/analyze_flyer.py path/to/flyer.pdf
 **Das Projekt lebt von der Community!** Jede Stadt, die es nutzt, macht es besser.
 
 ### 🐛 Bugs gefunden?
-→ [Issue aufmachen](https://github.com/feileberlin/event-kalender-hof/issues)
+→ [Issue aufmachen](https://github.com/feileberlin/krawl.ist/issues)
 
 ### 💡 Feature-Ideen?
-→ [Discussion starten](https://github.com/feileberlin/event-kalender-hof/discussions)
+→ [Discussion starten](https://github.com/feileberlin/krawl.ist/discussions)
 
 ### 🔧 Code beitragen?
 
@@ -440,8 +440,8 @@ Krawl funktioniert für jede Community, die Events hat:
 
 ## 💬 Kontakt & Community
 
-- **Issues/Bugs:** [GitHub Issues](https://github.com/feileberlin/event-kalender-hof/issues)
-- **Diskussionen:** [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
+- **Issues/Bugs:** [GitHub Issues](https://github.com/feileberlin/krawl.ist/issues)
+- **Diskussionen:** [GitHub Discussions](https://github.com/feileberlin/krawl.ist/discussions)
 - **Pull Requests:** Immer willkommen!
 
 **Du nutzt Krawl für deine Community?** → Schreib uns! Wir verlinken gerne andere Krawl-Instanzen.
@@ -512,8 +512,8 @@ MIT License - siehe [LICENSE](LICENSE)
 
 ## 🆘 Support
 
-- **Issues**: [GitHub Issues](https://github.com/feileberlin/event-kalender-hof/issues)
-- **Diskussionen**: [GitHub Discussions](https://github.com/feileberlin/event-kalender-hof/discussions)
+- **Issues**: [GitHub Issues](https://github.com/feileberlin/krawl.ist/issues)
+- **Diskussionen**: [GitHub Discussions](https://github.com/feileberlin/krawl.ist/discussions)
 
 ## 🎯 Roadmap
 

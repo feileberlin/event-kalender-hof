@@ -3,16 +3,16 @@
 ## Einrichtung (für Repository-Owner)
 
 1. **Account erstellen:** https://www.goatcounter.com/signup
-   - Wähle subdomain: `event-kalender-hof`
+   - Wähle subdomain: `krawl-ist` (Legacy: `event-kalender-hof` für alte Installationen)
    - Email bestätigen
 
 2. **Dashboard öffentlich machen (optional):**
    - Settings → Make stats public
-   - Öffentlicher Link: https://event-kalender-hof.goatcounter.com
+   - Öffentlicher Link: https://krawl-ist.goatcounter.com (Legacy: https://event-kalender-hof.goatcounter.com)
 
 3. **Code ist bereits integriert:**
    ```html
-   <script data-goatcounter="https://event-kalender-hof.goatcounter.com/count"
+   <script data-goatcounter="https://krawl-ist.goatcounter.com/count"
            async src="//gc.zgo.at/count.js"></script>
    ```
 
@@ -65,7 +65,7 @@
 
 ## Dashboard-Zugang
 
-**Öffentlich:** https://event-kalender-hof.goatcounter.com (falls aktiviert)  
+**Öffentlich:** https://krawl-ist.goatcounter.com (falls aktiviert)  
 **Admin:** Login auf goatcounter.com mit Account-Email
 
 ## Support

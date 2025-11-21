@@ -229,8 +229,8 @@
 
 ## 📦 Archiv-Metadaten
 
-- **Projekt:** Krawl (ehemals "Event-Kalender Hof")
-- **Repository:** feileberlin/event-kalender-hof
+- **Projekt:** krawl.ist (ehemals "~~Event-Kalender Hof~~")
+- **Repository:** feileberlin/krawl.ist (GitHub Slug aus technischen Gründen)
 - **Domain:** krawl.ist (geplant)
 - **Zeitraum:** 17.-20. November 2025
 - **Status:** v1.0 fertig, v2.0 (Federation) in Planung

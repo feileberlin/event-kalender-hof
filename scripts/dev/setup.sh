@@ -1,9 +1,9 @@
 #!/bin/bash
-# Setup-Skript für Event-Kalender Hof
+# Setup-Skript für krawl.ist
 
 set -e
 
-echo "🎉 Event-Kalender Hof - Setup"
+echo "🎉 krawl.ist - Setup"
 echo "================================"
 echo ""
 

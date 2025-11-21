@@ -57,7 +57,7 @@ archiving:
 scraping:
   max_retries: 3
   timeout_seconds: 30
-  user_agent: "Mozilla/5.0 (Event-Kalender-Hof-Bot)"
+  user_agent: "Mozilla/5.0 (krawl.ist-Bot)"
 ```
 
 ### Standorte

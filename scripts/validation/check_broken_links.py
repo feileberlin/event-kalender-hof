@@ -33,7 +33,7 @@ class BrokenLinkChecker:
         self.checked_links = set()
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Event-Kalender-Hof/LinkChecker)'
+            'User-Agent': 'Mozilla/5.0 (krawl.ist/LinkChecker)'
         })
         
     def check_url(self, url: str, timeout: int = 10) -> Tuple[bool, int, str]:

@@ -1,0 +1,16 @@
+{
+  "name": "Oberfranken-Kaserne",
+  "slug": "oberfranken-kaserne",
+  "address": "Wunsiedler Str., 95030 Hof",
+  "coords": {
+    "lat": 50.3197,
+    "lng": 11.9175
+  },
+  "wheelchair_accessible": false,
+  "public_transport": true,
+  "capacity": null,
+  "website": null,
+  "phone": null,
+  "icon": "📍",
+  "color": "#2c3e50"
+}

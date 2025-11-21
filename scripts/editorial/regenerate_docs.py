@@ -225,9 +225,9 @@ def update_readme_badges():
     event_stats = count_events()
     
     # Badge-Zeile erstellen
-    badges = f"""[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://feileberlin.github.io/event-kalender-hof/)
+    badges = f"""[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://krawl.ist/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Events](https://img.shields.io/badge/Events-{event_stats['published']}-blue)](https://feileberlin.github.io/event-kalender-hof/)
+[![Events](https://img.shields.io/badge/Events-{event_stats['published']}-blue)](https://krawl.ist/)
 [![Version](https://img.shields.io/badge/Version-v1.7.0-orange)](docs/CHANGELOG.md)"""
     
     with open(readme, 'r', encoding='utf-8') as f:

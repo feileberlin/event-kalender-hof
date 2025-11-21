@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Venue Manager für Event-Kalender Hof
+Venue Manager für krawl.ist
 Verwaltet Veranstaltungsorte mit zusätzlichen Metadaten
 """
 

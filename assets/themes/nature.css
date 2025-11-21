@@ -1,0 +1,75 @@
+/* Theme: Nature - Grün & Nachhaltig */
+
+:root {
+    /* Brand Colors - Natur */
+    --color-primary: #2ecc71;
+    --color-secondary: #27ae60;
+    --color-accent: #f39c12;
+    
+    /* Background Colors - Erdtöne */
+    --bg-primary: #1e3a20;
+    --bg-secondary: #2d5a30;
+    --bg-overlay: rgba(30, 58, 32, 0.95);
+    --bg-card: #345c38;
+    
+    /* Text Colors */
+    --text-primary: #ecf0f1;
+    --text-secondary: #bdc3c7;
+    --text-muted: #95a5a6;
+    
+    /* UI Colors */
+    --border-color: rgba(46, 204, 113, 0.2);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --hover-bg: rgba(46, 204, 113, 0.1);
+    
+    /* Status Colors */
+    --success: #27ae60;
+    --warning: #f39c12;
+    --error: #e74c3c;
+    --info: #3498db;
+    
+    /* Interactive Elements */
+    --button-bg: var(--color-primary);
+    --button-hover: #25a25a;
+    --link-color: var(--color-secondary);
+    --link-hover: #1e8449;
+    
+    /* Map Specific */
+    --map-marker-color: var(--color-primary);
+    --map-cluster-color: var(--color-accent);
+    
+    /* Typography */
+    --font-family: 'Georgia', serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.7;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease-out;
+    --transition-normal: 300ms ease-out;
+    --transition-slow: 500ms ease-out;
+}
+
+/* Nature Theme Specifics */
+body {
+    background: linear-gradient(180deg, #1e3a20 0%, #2d5a30 100%);
+    color: var(--text-primary);
+}
+
+/* Organic shapes */
+.event-card,
+.header-content,
+.footer-content {
+    border-radius: 12px;
+}
+
+button,
+.inline-select {
+    border-radius: 8px;
+}

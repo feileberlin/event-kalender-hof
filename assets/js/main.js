@@ -56,6 +56,7 @@ import { BookmarkManager } from './modules/bookmarks.js';
 import { MapManager } from './modules/map.js';
 import { FilterManager } from './modules/filters.js';
 import { EventManager } from './modules/events.js';
+import { AvatarGenerator } from './modules/avatarGenerator.js';
 
 // ========================================
 // MODULE INSTANCES
@@ -66,6 +67,7 @@ let bookmarkManager;
 let mapManager;
 let filterManager;
 let eventManager;
+let avatarGenerator;
 
 // ========================================
 // APPLICATION LIFECYCLE
@@ -78,13 +80,40 @@ let eventManager;
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🎪 Krawl initializing...');
 
-  // 1. INSTANTIATE MODULES
+  // 1. DETECT THEME & LOAD THEME CONFIG
+  const activeTheme = document.documentElement.getAttribute('data-theme') || 'default-dark';
+  const usePapercutMarkers = activeTheme === 'papercut';
+  console.log('🎨 Active theme:', activeTheme, '| Papercut markers:', usePapercutMarkers);
+  
+  // Load theme config (if available from Jekyll data)
+  let themeConfig = null;
+  if (window.THEME_CONFIG) {
+    themeConfig = window.THEME_CONFIG;
+  }
+
+  // 2. INSTANTIATE MODULES
   bookmarkManager = new BookmarkManager();
-  mapManager = new MapManager('map', [50.3195, 11.9173], 13);
+  
+  // Initialize avatar generator for papercut theme
+  if (usePapercutMarkers) {
+    avatarGenerator = new AvatarGenerator(themeConfig);
+  }
+  
+  // Load organizers and venues data for avatar lookup
+  const organizersData = await loadOrganizersData();
+  const venuesData = await loadVenuesData();
+  
+  mapManager = new MapManager('map', [50.3195, 11.9173], 13, {
+    avatarGenerator: avatarGenerator,
+    organizersData: organizersData,
+    venuesData: venuesData,
+    usePapercutMarkers: usePapercutMarkers
+  });
+  
   filterManager = new FilterManager();
   eventManager = new EventManager();
 
-  // 2. LOAD DATA
+  // 3. LOAD DATA
   // Events are embedded in HTML by Jekyll (static site)
   await eventManager.loadFromDOM();
 
@@ -135,6 +164,42 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   console.log('✅ Krawl ready!');
 });
+
+// ========================================
+// DATA LOADING HELPERS
+// ========================================
+
+/**
+ * Load organizers data from JSON files
+ * Creates name-to-data mapping for avatar lookup
+ */
+async function loadOrganizersData() {
+  try {
+    // Try loading from _data/organizers/*.json files
+    // In production, these would be pre-loaded into a single JSON
+    // For now, return empty object (avatars will use default character)
+    return {};
+  } catch (error) {
+    console.warn('Could not load organizers data:', error);
+    return {};
+  }
+}
+
+/**
+ * Load venues data from JSON files
+ * Creates name-to-data mapping for avatar scenery
+ */
+async function loadVenuesData() {
+  try {
+    // Try loading from _data/places/*.json files
+    // In production, these would be pre-loaded into a single JSON
+    // For now, return empty object (avatars will use default scenery)
+    return {};
+  } catch (error) {
+    console.warn('Could not load venues data:', error);
+    return {};
+  }
+}
 
 // ========================================
 // EVENT LISTENERS
@@ -285,7 +350,8 @@ function updateDisplay() {
   filtered.forEach(event => {
     if (event.lat && event.lng) {
       const popup = `<strong>${event.title}</strong><br>${event.date}<br>${event.venue}`;
-      mapManager.addMarker(event.lat, event.lng, popup, event.imageUrl);
+      // Pass full event data for papercut avatar generation
+      mapManager.addMarker(event.lat, event.lng, popup, event.imageUrl, event);
     }
   });
 

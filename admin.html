@@ -3,7 +3,7 @@ layout: admin
 title: Admin - Event-Verwaltung
 ---
 
-<link rel="stylesheet" href="/assets/css/admin.css">
+<link rel="stylesheet" href="{{ '/assets/css/admin.css' | relative_url }}">
 
 <!-- Inline styles werden durch externes CSS ersetzt, aber fallback bleibt -->
 <style>
@@ -1520,7 +1520,7 @@ async function loadDuplicates() {
                 <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
                 <h3>Review-Queue noch nicht generiert</h3>
                 <p style="color: #666;">Führe den Deduplication-Scan aus:</p>
-                <pre style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: left;">cd /workspaces/event-kalender-hof
+                <pre style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 20px 0; text-align: left;">cd /workspaces/krawl.ist
 python3 scripts/deduplication_engine.py</pre>
                 <p style="color: #666;">Dies erstellt die Datei <code>_data/admin_review_queue.json</code></p>
             </div>

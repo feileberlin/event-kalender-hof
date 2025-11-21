@@ -47,6 +47,10 @@
     
     <!-- Normalize CSS for Skeleton -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    
+    <!-- Theme System: Load active theme from config -->
+    <link rel="stylesheet" href="{{ '/assets/themes/' | append: site.theme.active | append: '.css' | relative_url }}">
+    
     <!-- Custom Styles -->
     <link rel="stylesheet" href="{{ '/assets/css/fullscreen.css' | relative_url }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">

@@ -133,13 +133,27 @@
 
 ## 🌟 Nice-to-Have (später)
 
-### 12. Event-Export (iCal/CSV)
+### ~~12. Flyer-Analyzer (OCR für Event-Bilder)~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-21)
+- **Solution:** OCR-Tool mit Tesseract/EasyOCR/Ollama Support
+- **Implementation:**
+  - ✅ `scripts/json_workflow/flyer_analyzer.py` (CLI + Python API)
+  - ✅ Unterstützt URLs und lokale Dateien
+  - ✅ Extrahiert: Titel, Datum, Zeit, Ort, Preis, Beschreibung
+  - ✅ Interaktiver Review-Modus mit Edit-Funktion
+  - ✅ JSON-Output für Scraper-Integration
+  - ✅ Drei OCR-Engines: Tesseract (schnell), EasyOCR (genau), Ollama (intelligent)
+- **Use Case:** Facebook/Instagram Event-Flyer automatisch erfassen
+- **Files:** `scripts/json_workflow/flyer_analyzer.py`, `scripts/json_workflow/README_FLYER.md`
+- **Usage:** `python scripts/json_workflow/flyer_analyzer.py "https://fb.com/image.jpg" -i`
+
+### 13. Event-Export (iCal/CSV)
 - **Purpose:** Events in Kalender-App importieren
 - **Format:** iCalendar (.ics)
 - **Location:** Bookmark-Toolbar → "📅 Exportieren" Button
 - **Impact:** MEDIUM (Feature-Request)
 
-### 13. Dark Mode
+### 14. Dark Mode
 - **Status:** 🔴 TODO
 - **Implementation:**
   - CSS: `@media (prefers-color-scheme: dark)`
@@ -148,7 +162,7 @@
   - Karte: Dark Tiles (OpenStreetMap Dark Mode)
 - **Impact:** MEDIUM (UX-Verbesserung)
 
-### 14. Social Sharing
+### 15. Social Sharing
 - **Status:** 🔴 TODO
 - **Features:**
   - Share-Button in Event-Popups
@@ -157,30 +171,30 @@
   - Pre-filled Text mit Event-Details
 - **Impact:** LOW (Social-Feature)
 
-### 15. Recurring Events UI verbessern
+### 16. Recurring Events UI verbessern
 - **Current:** Admin-Panel hat Preview, aber schwer zu editieren
 - **Idea:** Visual Recurring Editor (Drag & Drop für Exceptions?)
 - **Impact:** LOW (Admin-only)
 
-### 16. Multi-Language Support
+### 17. Multi-Language Support
 - **Current:** Nur Deutsch
 - **Target:** Englisch als zweite Sprache
 - **Approach:** i18n mit Jekyll Liquid
 - **Impact:** HIGH (große Änderung)
 
-### 17. Event-Kommentare / Ratings
+### 18. Event-Kommentare / Ratings
 - **Purpose:** Community-Feedback zu Events
 - **Tech:** GitHub Discussions API oder Disqus
 - **Privacy:** GDPR-Considerations
 - **Impact:** HIGH (Social-Feature)
 
-### 18. Venue-Fotos
+### 19. Venue-Fotos
 - **Purpose:** Bilder von Veranstaltungsorten
 - **Source:** Wikimedia Commons oder User-Upload?
 - **Location:** Marker-Popups, Event-Cards
 - **Impact:** MEDIUM (Visual Enhancement)
 
-### 19. Event-Empfehlungen (ML)
+### 20. Event-Empfehlungen (ML)
 - **Status:** 🔴 TODO (experimentell)
 - **Approach:**
   - User-History (Bookmarks, geklickte Events)
@@ -189,7 +203,7 @@
 - **Privacy:** Client-side ML (kein Tracking)
 - **Impact:** HIGH (Feature-Addition)
 
-### 20. Desktop-Notifications
+### 21. Desktop-Notifications
 - **Status:** 🔴 TODO
 - **Trigger:** Neue Events in Bookmark-Kategorien
 - **Tech:** Web Notifications API + Service Worker

@@ -46,6 +46,10 @@
     
     <!-- Normalize CSS for Skeleton -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    
+    <!-- Theme System: Load active theme from config -->
+    <link rel="stylesheet" href="{{ '/assets/themes/' | append: site.theme.active | append: '.css' | relative_url }}">
+    
     <!-- GoatCounter Analytics (Privacy-First, DSGVO-konform) -->
     {% if site.analytics.goatcounter.enabled %}
     <script data-goatcounter="https://{{ site.analytics.goatcounter.code }}.goatcounter.com/count"
