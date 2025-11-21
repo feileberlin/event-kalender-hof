@@ -1,0 +1,14 @@
+{
+  "name": "krawl.ist",
+  "version": "1.0.0",
+  "description": "Event calendar for Hof with sunrise filter",
+  "scripts": {
+    "test": "node scripts/tests/test_filters.js",
+    "test:docs": "node scripts/tests/test_documentation.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {},
+  "private": true
+}

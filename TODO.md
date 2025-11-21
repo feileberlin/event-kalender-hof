@@ -69,29 +69,42 @@
 
 ## ⚡ Medium Priority (bald)
 
-### 7. Filter-Icon-Bug final fixen
-- **Status:** 🟡 PARTIALLY FIXED
-- **Problem:** Icons duplizieren sich manchmal noch
-- **Current Fix:** `data-original-label` Attribut
-- **Remaining Issue:** Edge Cases bei schnellen Filter-Wechseln?
-- **Test:** Mehrfach Filter wechseln, Icons prüfen
+### ~~7. Filter-Icon-Bug final fixen~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Solution:** Verbesserte Regex für robusteres Icon-Parsing
+- **Implementation:**
+  - Erweiterte Unicode-Ranges für alle Emoji-Kategorien
+  - Kombiniertes Pattern für Zahlen + Emojis in einem Regex
+  - Bessere Fehlerbehandlung in updateCategoryCounts()
+- **Files:** `assets/js/main.js`
 
-### 8. Performance Optimization
-- **Status:** 🔴 TODO
-- **Maßnahmen:**
-  - Lazy Loading für Event-Marker (nur sichtbare laden)
-  - Resource Hints (dns-prefetch für CDNs)
-  - Image Optimization (WebP für Venue-Fotos)
-  - Code Splitting (separate Bundles für Map/Admin)
-- **Impact:** MEDIUM (Ladezeit-Verbesserung)
+### ~~8. Performance Optimization~~ ✅ PARTIALLY COMPLETED
+- **Status:** 🟡 IN PROGRESS
+- **Completed:**
+  - ✅ Resource Hints (dns-prefetch, preconnect für CDNs)
+    - cdnjs.cloudflare.com (Normalize CSS)
+    - unpkg.com (Leaflet.js)
+    - gc.zgo.at (GoatCounter Analytics)
+    - tile.openstreetmap.org (Map Tiles)
+  - ✅ Preconnect mit crossorigin für kritische Resources
+- **Remaining:**
+  - 🔴 Lazy Loading für Event-Marker (nur sichtbare laden)
+  - 🔴 Image Optimization (WebP für Venue-Fotos)
+  - 🔴 Code Splitting (separate Bundles für Map/Admin)
+- **Impact:** MEDIUM (Ladezeit-Verbesserung, DNS-Lookup gespart)
 - **Test:** Lighthouse Performance Score > 90
+- **Files:** `_layouts/base.html`, `_layouts/map.html`
 
-### 9. Debug-Switch für Test-Events
-- **Status:** 🟡 CONFIG ADDED, NOT WIRED
-- **Config:** `_config.yml` → `debug.show_test_events: false`
-- **TODO:** Jekyll Template liest Config, filtert test_event: true
-- **Location:** `index.html` → Event-Loop
-- **Impact:** LOW (nur Development)
+### ~~9. Debug-Switch für Test-Events~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Solution:** Jekyll Template filtert Test-Events basierend auf Config
+- **Implementation:**
+  - Prüfung auf `event.test_event` Flag in index.html
+  - Conditional Rendering basierend auf `site.debug.show_test_events`
+  - Test-Events erhalten zusätzlich `testEvent: true` Property in JS
+  - Normale Events erhalten `testEvent: false` Property
+- **Usage:** In `_config.yml` setze `debug.show_test_events: false` um Test-Events zu verstecken
+- **Files:** `index.html`
 
 ### 10. Responsive Filter-Counter
 - **Status:** 🟢 WORKING, needs UX polish
@@ -99,16 +112,22 @@
 - **Idea:** Kürzere Labels auf Mobile (nur Icon + Zahl?)
 - **Impact:** LOW (nur UX)
 
-### 11. Event-Validierung verbessern
-- **Status:** 🔴 TODO
-- **Problem:** Scraper erzeugt manchmal inkonsistente Daten
-- **TODO:**
+### ~~11. Event-Validierung verbessern~~ ✅ ERLEDIGT
+- **Status:** ✅ COMPLETED (2025-11-20)
+- **Solution:** Comprehensive schema validator implemented
+- **Implementation:**
   - Schema-Validierung (JSON Schema für Events)
-  - Required Fields Check (title, date, venue)
-  - Date Format Validation (ISO 8601)
+  - Required Fields Check (title, date, location, status)
+  - Date Format Validation (ISO 8601: YYYY-MM-DD)
+  - Time Format Validation (HH:MM)
   - URL Validation (source links)
+  - Coordinate Validation (lat/lng ranges, Germany bounds check)
+  - Status Value Validation (Öffentlich/Entwurf/Archiviert)
+  - Unknown Field Warnings
 - **Location:** `scripts/validation/validate_events.py`
-- **Impact:** HIGH (Datenqualität)
+- **Usage:** `python3 scripts/validation/validate_events.py`
+- **Impact:** HIGH (Datenqualität, findet 30 Fehler in Test-Events)
+- **Files:** `scripts/validation/validate_events.py`
 
 ---
 

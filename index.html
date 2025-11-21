@@ -128,7 +128,23 @@ title: "Event-Kalender Hof"
 // Event-Daten aus Jekyll
 const allEvents = [
     {% for event in site.events %}
+    {% comment %}Filter: Nur öffentliche Events + Debug-Switch für Test-Events{% endcomment %}
     {% if event.status == "Öffentlich" %}
+        {% assign should_include = false %}
+        {% assign is_test = false %}
+        
+        {% comment %}Prüfe ob Event angezeigt werden soll{% endcomment %}
+        {% if event.test_event %}
+            {% if site.debug.show_test_events %}
+                {% assign should_include = true %}
+                {% assign is_test = true %}
+            {% endif %}
+        {% else %}
+            {% assign should_include = true %}
+            {% assign is_test = false %}
+        {% endif %}
+        
+        {% if should_include %}
     {
         title: {{ event.title | jsonify }},
         date: "{{ event.date | date: '%Y-%m-%d' }}",
@@ -143,8 +159,10 @@ const allEvents = [
             lat: {{ event.coordinates.lat | default: site.default_center.lat }},
             lng: {{ event.coordinates.lng | default: site.default_center.lng }}
         },
-        tags: {{ event.tags | jsonify }}
+        tags: {{ event.tags | jsonify }},
+        testEvent: {{ is_test }}
     }{% unless forloop.last %},{% endunless %}
+        {% endif %}
     {% endif %}
     {% endfor %}
 ];
