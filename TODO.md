@@ -280,33 +280,34 @@ Resource Hints (preconnect, dns-prefetch)
 
 **Bei Änderungen an bestehenden Features:**
 
-1. SEO & Metadata (HIGH Priority)
+## 📝 Change Management Notes
 
-Meta Description fehlt
-Open Graph Tags (Facebook, LinkedIn)
-Twitter Card Tags
-Canonical URLs
+**Alle folgenden Punkte aus der alten Change Management Liste sind bereits implementiert:**
 
-2. PWA Features (MEDIUM Priority)
+### ~~1. SEO & Metadata~~ ✅ ERLEDIGT (siehe #4 im Backlog)
+- ✅ Meta Description in `_layouts/base.html`
+- ✅ Open Graph Tags (Facebook, LinkedIn)
+- ✅ Twitter Card Tags
+- ✅ Canonical URLs
 
-manifest.json (App-Installation auf Mobile)
-Service Worker (Offline-Funktionalität)
-Theme Color
+### ~~2. PWA Features~~ ✅ ERLEDIGT (siehe #5 im Backlog)
+- ✅ manifest.json vorhanden
+- ✅ Service Worker (sw.js) mit Network-First Strategie
+- ✅ Theme Color in manifest.json und meta tags
 
-3. SEO Infrastructure (HIGH Priority)
+### ~~3. SEO Infrastructure~~ ✅ ERLEDIGT (siehe #4 im Backlog)
+- ✅ robots.txt mit Sitemap-Verweis
+- ✅ jekyll-sitemap Plugin aktiv in `_config.yml`
 
-robots.txt (Crawler-Steuerung)
-sitemap.xml (Search Engine Discovery)
-
-4. Accessibility (MEDIUM Priority)
-
-lang Attribut ist da ✓, aber:
-prefers-reduced-motion für Animationen
-Skip-to-Content Links
-ARIA Labels für Filter
+### ~~4. Accessibility~~ ✅ ERLEDIGT (siehe #6 im Backlog)
+- ✅ lang Attribut vorhanden
+- ✅ prefers-reduced-motion in `assets/css/fullscreen.css`
+- ✅ Skip-to-Content Link in `index.html`
+- ✅ ARIA Labels für alle Filter und interaktive Elemente
+- ✅ role="application" für Karte
 
 ---
 
-**Last Updated:** 2025-11-20  
+**Last Updated:** 2025-11-21  
 **Next Review:** Bei jedem neuen Feature-Request  
 **Maintainer:** GitHub Copilot + User
